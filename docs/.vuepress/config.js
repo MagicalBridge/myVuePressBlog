@@ -6,11 +6,20 @@ module.exports = {
     // navbar: false, // 配置这个选项，将会在所有页面禁用导航栏
     lastUpdated: '最后更新时间',
     sidebar: 'auto',
-    head: [["link", { rel: "icon", href: "/icon.jpeg" }]],
+    head: [["link", { rel: "icon", href: "/icon.png" }]],
     nav: [
       {
         text: "前端面试之道",
         link: '/interview/'
+      },
+      {
+        text: "webpack",
+        items: [
+          {
+            text: 'webpack基础',
+            link: '/webpack/webpack-base'
+          }
+        ]
       },
       {
         text: "写作",
