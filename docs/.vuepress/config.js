@@ -4,29 +4,49 @@ module.exports = {
 
   themeConfig: {
     // navbar: false, // 配置这个选项，将会在所有页面禁用导航栏
-    lastUpdated: '最后更新时间',
-    sidebar: 'auto',
+    lastUpdated: "最后更新时间",
+    sidebar: "auto",
     head: [["link", { rel: "icon", href: "/icon.png" }]],
     nav: [
       {
         text: "前端面试之道",
-        link: '/interview/'
+        link: "/interview/",
       },
       {
         text: "webpack",
         items: [
           {
-            text: 'webpack基础',
-            link: '/webpack/webpack-base'
-          }
-        ]
+            text: "webpack基础",
+            link: "/webpack/webpack-base",
+          },
+        ],
+      },
+      {
+        text: "Node.js",
+        items: [
+          {
+            text: "Node基础",
+            link: "/node/node-base/",
+          },
+          {
+            text: "Express",
+            link: "/node/express/",
+          },
+          {
+            text: "Koa",
+            link: "/node/koa/",
+          },
+        ],
+      },
+      {
+        text: "LeetCode算法题解",
+        link: "/leetCode/",
       },
       {
         text: "写作",
-        link: '/writing/'
+        link: "/writing/",
       },
     ],
-    sidebar: [
-    ],
+    sidebar: [],
   },
 }
