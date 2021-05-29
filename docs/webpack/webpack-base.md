@@ -6,7 +6,7 @@ sidebar: auto
 本质上, webpack是一个用于现代`JavaScript`应用程序的静态模块打包工具，当webpack处理程序的时候，它会在内部构建一个依赖图(dependency graph), 这个依赖图对应映射到项目所需要的每个模块，并生成一个或者多个`bundle`。
 
 ## 1.1如何安装
-在 npm 项目中执行如下命令，可以安装响应模块。
+在 npm 项目中执行如下命令，可以安装对应的模块。
 ```bash
 npm install  webpack webpack-cli --save-dev
 ```

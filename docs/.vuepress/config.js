@@ -4,7 +4,7 @@ module.exports = {
 
   themeConfig: {
     // navbar: false, // 配置这个选项，将会在所有页面禁用导航栏
-    lastUpdated: "最后更新时间",
+    // lastUpdated: "最后更新时间",
     sidebar: "auto",
     head: [["link", { rel: "icon", href: "/icon.png" }]],
     nav: [
@@ -36,6 +36,15 @@ module.exports = {
             text: "Koa",
             link: "/node/koa/",
           },
+        ],
+      },
+      {
+        text: "nginx",
+        items: [
+          {
+            text: "nginx",
+            link: "/nginx/nginx-base/",
+          }
         ],
       },
       {
