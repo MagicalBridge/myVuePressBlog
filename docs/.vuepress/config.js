@@ -52,7 +52,7 @@ module.exports = {
         link: "/leetCode/",
       },
       {
-        text: "写作",
+        text: "通俗写作",
         link: "/writing/",
       },
     ],
