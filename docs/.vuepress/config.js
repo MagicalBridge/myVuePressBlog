@@ -13,6 +13,10 @@ module.exports = {
         link: "/interview/",
       },
       {
+        text: "React",
+        link: "/react/",
+      },
+      {
         text: "webpack",
         items: [
           {
