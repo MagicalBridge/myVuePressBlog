@@ -13,6 +13,15 @@ module.exports = {
         link: "/interview/",
       },
       {
+        text: "Vue",
+        items: [
+          {
+            text: "Vue内部原理剖析",
+            link: "/vue/vue-analysis/",
+          },
+        ],
+      },
+      {
         text: "React",
         link: "/react/",
       },
