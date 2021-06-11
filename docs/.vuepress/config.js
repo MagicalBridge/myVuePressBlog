@@ -19,6 +19,10 @@ module.exports = {
             text: "Vue内部原理剖析",
             link: "/vue/vue-analysis/",
           },
+          {
+            text: "Vue组件探索",
+            link: "/vue/vue-component/",
+          },
         ],
       },
       {
