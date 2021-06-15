@@ -132,3 +132,136 @@ prop 定义了这个组件有哪些可配置的属性，组件的核心功能也
 <slot>提交</slot>
 ```
 
+#### 自定义事件 event
+
+现在我们给组件`<i-button>` 添加一个点击事件，目前有两种写法，我们先看自定义事件event:
+
+```vue
+<template>
+  <button @click="handleClick">
+    <slot></slot>
+  </button>
+</template>
+<script>
+  export default {
+    methods: {
+      handleClick (event) {
+        this.$emit('on-click', event);
+      }
+    }
+  }
+</script>
+```
+
+通过 `$emit`,就可以出发自定义事件 `on-click`, 在父级通过`@on-click`来监听。
+
+```vue
+<i-button @on-click="handleClick"></i-button>
+```
+
+上面的click事件，是在组件内部的 `<button>` 元素上声明的，这里还有另一种方法，直接在父级声明，但是为了区分原生事件和自定义事件，要用到事件修饰符`.native`,所以上面的示例也可以这样写
+
+```vue
+<i-button @click.native="handleClick"></i-button>
+```
+
+如果不写 `.native` 修饰符，那上面的 `@click` 就是自定义事件 click，而非**原生事件**click, 但是我们在组件中只触发了 `on-click`事件，而不是 `click`,所以直接写 `@click` 会监听不到。
+
+### 组件的通信
+一般来说，组件可以有以下几种关系
+
+
+![组件的关系](../../images/vue/vue-component/01.png)
+
+A 和 B、B 和 C、B 和 D 都是父子关系，C 和 D 是兄弟关系，A 和 C 是隔代关系（可能隔多代）。组件间经常会通信，Vue.js 内置的通信手段一般有两种：
+
+- `ref`: 给元素或者组件注册引用信息；
+- `$parent` / `$children`: 访问父 / 子实例。
+
+这两种都是直接得到组件实例，使用后可以直观调用组件的方法或者访问数据，比如下面的示例中，用ref来访问组件：（部分代码省略）
+
+```js
+// component-a
+export default {
+  data () {
+    return {
+      title: 'Vue.js'
+    }
+  },
+  methods: {
+    sayHello () {
+      window.alert('Hello');
+    }
+  }
+}
+```
+
+```vue
+<template>
+  <component-a ref="comA"></component-a>
+</template>
+<script>
+  export default {
+    mounted () {
+      const comA = this.$refs.comA;
+      console.log(comA.title);  // Vue.js
+      comA.sayHello();  // 弹窗
+    }
+  }
+</script>
+```
+
+`$parent` 和 `$children` 类似，也是基于当前上下文访问父组件或全部子组件的。
+
+这两种方法的弊端是，无法在跨级或兄弟间通信，比如下面的结构：
+
+```vue
+// parent.vue
+<component-a></component-a>
+<component-b></component-b>
+<component-b></component-b>
+```
+
+我们想在 component-a 中，访问到引用它的页面中（这里就是 parent.vue）的两个 component-b 组件，那这种情况下，就得配置额外的插件或者工具了，比如 Vuex 和Bus的解决方案，不过他们都是依赖第三方插件的存在，这在开发独立组件的时候是不可取的，后续我们会介绍一些其他的黑科技，用于解决这种问题。
+
+## 组件的通信1： provide / inject
+
+我们在上面已经提到  ref 和 $parent / $children 在跨级通信的时候是有弊端的。当组件A和组件B中间隔了数代（甚至不确定具体级别）时候，以往会借助Vuex或者Bus 这样的方案，不得不引入第三方的库来支持。其实 Vue 内置了provide / inject接口。
+
+### 什么是 provide / inject
+
+provide / inject 是vue2.2.0版本后新增的API。
+
+在vue的官方文档中也提到
+
+> provide 和 inject 主要为高阶插件/组件库提供用例。并不推荐直接用于应用程序代码中。
+
+虽然官方不建议，但是用好了也是非常有用的。
+
+我们先来看一下这个API怎么使用，假设有两个组件： **A.vue 和 B.vue** B 是 A的子组件。
+
+```js
+// A.vue
+export default {
+  provide: {
+    name: 'Aresn'
+  }
+}
+
+// B.vue
+export default {
+  inject: ['name'],
+  mounted () {
+    console.log(this.name);  // Aresn
+  }
+}
+```
+
+可以看到 在A.vue里面，我们设置了一个 provide:name,值为Aresn, 它的作用就是将name这个变量提供给它的所有子组件。而在B.vue中通过inject注入了A组件中提供的name变量，那么在组件B中，就可以通过 this.name 访问这个变量了，它的值也是Aresn,这就是provide / inject API 最核心的用法。
+
+需要注意的是:
+
+> provide 和 inject 绑定并不是可响应的。这也是刻意为之，然而，如果你传入了一个可监听的对象，那么其对象的属性还是可响应的。
+
+所以，上面A.vue的name如果改变了，B.vue 的this.name 是不会改变的，仍然是 Aresn.
+
