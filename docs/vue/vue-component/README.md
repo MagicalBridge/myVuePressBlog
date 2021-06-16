@@ -265,3 +265,123 @@ export default {
 
 所以，上面A.vue的name如果改变了，B.vue 的this.name 是不会改变的，仍然是 Aresn.
 
+### 替代Vuex
+
+我们知道，在做vue大型项目的时候，可以使用vuex做状态管理，它是一个专为vue.js开发的状态管理模式，用于集中式存储管理应用的所有组件的状态，并以响应的规则保证状态以一种可以预测的发生变化。
+
+我们在了解了 provide / inject 的用法，下面来看看如何替代vuex，当然，我们的目的并不是为了替代vuex，它还是有相当大的用处，这里只是介绍另一种可能性。
+
+使用vuex，最最主要的目的是跨组件通信、全局数据维护、多人协同开发。需求比如有：用户的登录信息维护、通知信息维护等全局的状态和数据。
+
+一般在webpack中使用vue.js,都会有一个入口文件 main.js 里面通常导入了Vue、VueRouter等库，通常也会导入一个入口组件 app.vue 作为根组件。一个简单的app.vue可能有如下代码：
+
+```vue
+<template>
+  <div>
+    <router-view></router-view>
+  </div>
+</template>
+<script>
+  export default {
+
+  }
+</script>
+```
+
+使用 provide / inject 替代 Vuex, 就是在这个app.vue文件上做文章。
+
+我们把app.vue理解为一个最外层的根组件，用来存储所有需要的全部数据和状态，甚至是计算属性，方法。因为你的项目中所有的组件（包含路由）。它的父组件都是根组件，所以我们把**整个app.vue实例通过 provide 对外提供**。
+
+app.vue
+
+```vue
+<template>
+  <div>
+    <router-view></router-view>
+  </div>
+</template>
+<script>
+  export default {
+    provide () {
+      return {
+        app: this
+      }
+    }
+  }
+</script>
+```
+
+上面，我们把整个app.vue的实例 this 对外提供。命名为 app（这个名字可以自定义，推荐使用app,使用这个名字以后，子组件不能再使用它作为局部属性）。接下来，任何组件（或路由）只要通过 inject 注入 app.vue的app的话，都可以直接通过 this.app.xxx 来访问app.vue中的data、computed、method等内容。
+
+app.vue 是整个项目第一个被渲染的组件，而且只会被渲染一次（即使切换路由，app.vue也不会被再次渲染），利用这个特性，很适合做一次全局状态数据管理，例如：我们将用户的登录信息保存起来：
+
+app.vue 部分代码省略
+
+```vue
+<script>
+  export default {
+    provide () {
+      return {
+        app: this
+      }
+    },
+    data () {
+      return {
+        userInfo: null
+      }
+    },
+    methods: {
+      getUserInfo () {
+        // 这里通过 ajax 获取用户信息后，赋值给 this.userInfo，以下为伪代码
+        $.ajax('/user/info', (data) => {
+          this.userInfo = data;
+        });
+      }
+    },
+    mounted () {
+      this.getUserInfo();
+    }
+  }
+</script>
+```
+
+这样，任何页面或者组件，只要通过 inject 注入app后，就可以直接访问 userInfo的数据了，比如:
+
+```vue
+<template>
+  <div>
+    {{ app.userInfo }}
+  </div>
+</template>
+<script>
+  export default {
+    inject: ['app']
+  }
+</script>
+```
+
+是不是很简单呢？ 除了直接使用数据，还可以调用方法。比如在某个页面里，修改了个人资料，这时一开始在`app.vue`里面获取的`userInfo` 已经不是最新的了，需要重新获取，可以这样使用:
+
+```vue
+<template>
+  <div>
+    {{ app.userInfo }}
+  </div>
+</template>
+<script>
+  export default {
+    inject: ['app'],
+    methods: {
+      changeUserInfo () {
+        // 这里修改完用户数据后，通知 app.vue 更新，以下为伪代码
+        $.ajax('/user/update', () => {
+          // 直接通过 this.app 就可以调用 app.vue 里的方法
+          this.app.getUserInfo();
+        })
+      }
+    }
+  }
+</script>
+```
+
+同样非常简单。只要理解了 `this.app` 是直接获取整个 `app.vue` 的实例后，使用起来就得心应手了。想一想，配置复杂的 Vuex 的全部功能，现在是不是都可以通过 `provide / inject` 来实现了呢？
