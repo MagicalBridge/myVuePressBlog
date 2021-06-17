@@ -56,6 +56,19 @@ module.exports = {
         ],
       },
       {
+        text: "数据库",
+        items: [
+          {
+            text: "mySql",
+            link: "/database/mysql/",
+          },
+          {
+            text: "mongodb",
+            link: "/database/mongodb/",
+          }
+        ],
+      },
+      {
         text: "nginx",
         items: [
           {
