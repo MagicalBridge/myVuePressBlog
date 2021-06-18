@@ -38,3 +38,71 @@ a.push(1);
 console.log(b); // 输出[1]
 ```
 在以上代码中，创建了一个对象类型`a`(数组)，再把`a`的地址赋值给了变量`b`，最后改变`a`的值，打印`b`时，`b`的值也同步发生了改变，因为它们在内存中使用的是同一个地址，改变其中任何一变量的值，都会影响到其他变量。
+
+函数参数是对象的情况
+
+```js
+function test(preson) {
+  person.age = 26;
+  person = {
+    name: 'louis',
+    age: 28
+  }
+  return person
+}
+
+const p1 = {
+  name: 'mac',
+  age: 25
+}
+const p2 = test(p1)
+
+console.log(p1); => ?
+console.log(p2); => ?
+```
+
+对于上面的代码，你是否能够正确的写出结果呢？ 我们来解析一下：
+
+- 首先 函数传递参数是传递的对象指针的副本。
+- 到函数内部修改参数的属性这一步，我相信大家都知道，当前p1的值也被修改了。
+- 但是当我们重新为`person`分配一个对象的时候就出现了分歧 请看下图。
+
+![参数是对象类型](../images/interview/01.png)
+
+所以 最后 person 拥有了一个新的地址 (指针)，也就是和 p1 没有任何关系了，导致了最终两个变量的值是不相同的。
+
+#### typeof vs instanceof
+
+> 涉及面试题: typeof 是否能够正确的判断类型？ instanceof 能正确判断类型的原理是什么？
+
+`typeof` 对于原始类型来说，除了 `null` 都可以显示正确的类型
+
+```js
+typeof 1 // 'number'
+typeof "1" // 'string'
+typeof undefined // 'undefined'
+typeof true // 'boolean'
+typeof Symbol() // 'symbol'
+```
+
+`typeof` 对于对象来说，除了函数都会显示 `object`，所以说 `typeof` 并不能准确判断变量到底是什么类型.
+
+```js
+typeof [] // 'object'
+typeof {} // 'object'
+typeof console.log // 'function'
+```
+
+如果我们想判断一个对象的正确类型，这个时候可以考虑使用 `instanceof`,因为内部机制是通过原型链来判断的。
+
+```js
+const Person = function() {}
+const p1 = new Person()
+p1 instanceof Person // true
+
+var str = 'hello world'
+str instanceof String // false
+
+var str1 = new String('hello world')
+str1 instanceof String // true
+```

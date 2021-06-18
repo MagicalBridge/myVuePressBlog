@@ -78,8 +78,17 @@ module.exports = {
         ],
       },
       {
-        text: "LeetCode算法题解",
-        link: "/leetCode/",
+        text: "算法题解",
+        items: [
+          {
+            text: "leetCode算题解",
+            link: "/leetCode/leetCode/",
+          },
+          {
+            text: "面试题",
+            link: "/leetCode/valuableBook/",
+          }
+        ],
       },
       {
         text: "通俗写作",
