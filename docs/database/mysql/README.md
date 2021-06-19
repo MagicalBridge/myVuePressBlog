@@ -74,4 +74,106 @@ show create database db3;
 show create database db1;
 ```
 
+### 2.3 修改数据库
+
+#### 2.3.1 修改数据库默认的字符集
+
+```sql
+ALTER DATABASE 数据库名 DEFAULT CHARACTER SET 字符集;
+```
+
+#### 2.3.2 具体操作
+- 将db3数据库的字符集修改成utf8
+
+```sql
+alter database db3 character set utf8;
+```
+
+### 2.4 删除数据库
+
+#### 2.4.1 删除数据库的语法
+
+```sql
+DROP DATABASE 数据库名;
+```
+
+#### 2.4.2 具体操作：
+- 每行SQL语句需要选中再执行。
+- 删除db2数据库
+```sql
+drop database db2;
+```
+
+### 2.5 使用数据库
+
+#### 2.5.1 查看正在使用的数据库
+
+```sql
+SELECT DATABASE();
+```
+
+#### 2.5.2 使用/切换数据库
+
+```sql
+USE 数据库名;
+```
+
+#### 2.5.3 具体操作
+```sql
+-- 查看正在使用的数据库
+select database();
+-- 改变要使用的数据库
+use db4;
+```
+
+## 3、DDL操作表结构
+
+### 3.1 创建表
+
+### 3.1.1 创建表的格式
+
+```sql
+CREATE TABLE 表名 (
+  字段名 1 字段类型 1,
+  字段名 2 字段类型 2
+);
+```
+
+### 3.1.2 关键字说明
+| 创建表的关键字| 说明 |
+|  -----  |  -----  |
+|CREATE|创建         |
+|TABLE|表           | 
+
+
+### 3.2 MySQL数据类型
+
+
+#### 3.2.1 常使用的数据类型如下
+| 类型| 描述 |
+|  -----  |  -----  |
+|   int   |    整型  |
+|double   |  浮点型  | 
+|varchar  |  字符串型 | 
+|date     |  日期类型，格式为yyyy-MM-dd,只有年月日，没有时分秒 | 
+
+#### 3.2.2 详细数据类型
+
+![详细数据类型](../../images/database/mysql/01.png)
+
+
+#### 3.2.3 具体操作
+
+- 创建student表，包含 id，name, birthday 字段
+
+```sql
+create table student (
+  id int, -- 整数
+  name varchar(20), -- 字符串
+  birthday date -- 生日，最后没有逗号
+);
+```
+
+
+
 

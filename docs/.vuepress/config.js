@@ -23,6 +23,14 @@ module.exports = {
             text: "Vue组件探索",
             link: "/vue/vue-component/",
           },
+          {
+            text: "Vuex源码解析",
+            link: "/vue/vuex/",
+          },
+          {
+            text: "Vue-Router源码解析",
+            link: "/vue/vue-router/",
+          },
         ],
       },
       {

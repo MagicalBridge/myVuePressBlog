@@ -174,6 +174,35 @@ function observer (value) {
 }
 ```
 
+最后，让我们用`oberve`来封装一个Vue吧
+
+在Vue的构造函数中，对options的data处理，这里的data大家都很熟悉，就是平时我们写在Vue项目中的data属性(实际上是一个函数，这里当做一个对象来处理)。
+
+```js
+class Vue {
+  /* vue的构造类 */
+  constructor(optioons) {
+    this._data = options.data;
+    observe(this._data);
+  }
+}
+```
+
+这样我们只要new 一个 Vue对象，就会将data中的数据，进行「响应式」化。如果我们对data的属性进行下面的操作，就会触发cb方法更新视图。
+```js
+let o = new Vue({
+  data:{
+    test:"test",
+  }
+});
+
+o._data.test = "hello"; /*视图更新了*/ 
+```
+
+至此，响应式原理已经介绍完毕了，接下来我们来介绍「响应式系统」的另一部分 —— 「依赖收集」。
+
+
+
 
 
 
