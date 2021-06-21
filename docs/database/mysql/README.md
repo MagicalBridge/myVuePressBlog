@@ -174,6 +174,54 @@ create table student (
 );
 ```
 
+### 3.3 查看表
+
+#### 3.3.1 查看某个数据库中所有的表
+
+```sql
+SHOW TABLES;
+```
+
+#### 3.3.2 查看表结构
+
+```sql
+DESC 表名
+```
+
+#### 3.3.3 查看建表的SQL语句
+```sql
+SHOW CREATE TABLE 表名;
+```
+
+#### 3.3.4 具体操作
+- 查看person数据库中所有的表
+```sql
+use person;
+show tables;
+```
+
+- 查看 student 表的结构
+```sql
+desc student;
+```
+
+- 查看 student 创建表的SQL语句
+```sql
+show create table student;
+```
+执行结果：
+` 存在的目的是为了避免关键字的冲突
+```
+CREATE TABLE `student` (
+`id` int(11) DEFAULT NULL,
+`name` varchar(20) DEFAULT NULL,
+`birthday` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
+```
+
+
+
+
 
 
 
