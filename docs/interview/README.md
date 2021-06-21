@@ -106,3 +106,28 @@ str instanceof String // false
 var str1 = new String('hello world')
 str1 instanceof String // true
 ```
+
+### this
+
+`this`是很多人会混淆的概念，但是其实一点也不复杂，我们先来看看几个函数调用的场景
+```js
+function foo() {
+  console.log(this.a)
+}
+var a = 1;
+foo();
+
+const obj = {
+  a:2,
+  foo: foo,
+}
+obj.foo();
+
+const c = new foo();
+```
+
+接下来我们一个个分析上面的几个场景
+- 对于直接调用 `foo` 来说,不管`foo`函数放在了什么地方，`this`一定指向window
+- 对于`obj.foo()`来说，我们只需要记住，谁调用了函数，谁就是`this`,所以在这个场景下`foo`函数中的`this`就是`obj`对象。
+- 对于 `new`的方式来说， `this`被永远绑定在了 `c` 上面，不会被任何方式改变 `this`
+
