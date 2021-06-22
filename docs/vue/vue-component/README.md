@@ -362,6 +362,7 @@ app.vue 部分代码省略
 
 是不是很简单呢？ 除了直接使用数据，还可以调用方法。比如在某个页面里，修改了个人资料，这时一开始在`app.vue`里面获取的`userInfo` 已经不是最新的了，需要重新获取，可以这样使用:
 
+某个页面：
 ```vue
 <template>
   <div>
@@ -385,3 +386,79 @@ app.vue 部分代码省略
 ```
 
 同样非常简单。只要理解了 `this.app` 是直接获取整个 `app.vue` 的实例后，使用起来就得心应手了。想一想，配置复杂的 Vuex 的全部功能，现在是不是都可以通过 `provide / inject` 来实现了呢？
+
+### 进阶技巧
+
+如果你的项目足够复杂，或者需要多个协同开发，在 `app.vue`里会写非常多的代码，多到结构复杂难以维护，这个时候使用Vue.js的混合 mixins,将不同的逻辑分开到不同的js文件里面。
+
+比如上面的用户信息，就可以放到混合里面：
+
+user.js
+
+```js
+export default {
+  data() {
+    return {
+      userInfo: null
+    }
+  },
+  methods:{
+    getUserInfo() {
+      // 这里通过ajax获取用户信息后，赋值给this.userInfo 以下为伪代码
+      $.ajax('/user/info', (data)=>{
+        this.userInfo = data;
+      })
+    }
+  },
+  mounted() {
+    this.getUserInfo();
+  }
+}
+```
+然后在app.vue中混合：
+
+app.vue
+
+```vue
+<script>
+  import mixins_user from '../mixins/user.js';
+
+  export default {
+    mixins: [mixins_user],
+    data () {
+      return {
+
+      }
+    }
+  }
+</script>
+```
+
+这样，和用户信息相关的逻辑，都可以在 user.js 里面维护，或者由个人来维护，app.vue 也就很容易维护了。
+
+### 独立组件中使用
+
+只要一个组件使用了 provide 向下提供了数据，那其它所有的子组件都可以通过 inject 来注入，不管中间隔了多少代，而且可以注入来自多个不同父级提供的数据，需要注意的是，一旦注入某个数据，比如上面示例中的app，那这个组件中就不能再声明 app 这个数据了，因为它已经被父级占有了。
+
+独立组件中使用provide/inject的场景，主要是具有联动关系的组件，比如接下来很快会介绍一个实战：具有数据校验功能的表单组件 Form 它其实是两个组件 一个是 Form 一个是 FormItem, FormItem 是 Form 的子组件，它会依赖 Form 组件上的一些特性 props，所以就需要得到父组件Form，这在vue.js 2.2.0 版本以前 是没有 provide/inject 这对API的，而 Form 和 FormItem 不一定是父子关系，中间还可能隔了其他组件，所以不能单纯使用 $parent 来向上获取实例，在vue.js 2.2.0 之前，一种比较可行的方案是使用计算属性动态获取：
+
+```js
+computed: {
+  form () {
+    let parent = this.$parent;
+    while (parent.$options.name !== 'Form') {
+      parent = parent.$parent;
+    }
+    return parent;
+  }
+}
+```
+
+每个组件都可以设置 name 选项，作为组件名的标识，利用这个特点，通过向上遍历，直到找到需要的组件。这个方法可行，但相比一个 inject 来说，太费劲了，而且不那么优雅和 native。如果用 inject，可能只需要一行代码：
+
+```js
+export default {
+  inject: ['form']
+}
+```
+不过，这一切的前提是你使用 Vue.js 2.2.0 以上版本。
