@@ -224,7 +224,7 @@ export default {
 
 我们想在 component-a 中，访问到引用它的页面中（这里就是 parent.vue）的两个 component-b 组件，那这种情况下，就得配置额外的插件或者工具了，比如 Vuex 和Bus的解决方案，不过他们都是依赖第三方插件的存在，这在开发独立组件的时候是不可取的，后续我们会介绍一些其他的黑科技，用于解决这种问题。
 
-## 组件的通信1： provide / inject
+## 三、组件的通信1： provide / inject
 
 我们在上面已经提到  ref 和 $parent / $children 在跨级通信的时候是有弊端的。当组件A和组件B中间隔了数代（甚至不确定具体级别）时候，以往会借助Vuex或者Bus 这样的方案，不得不引入第三方的库来支持。其实 Vue 内置了provide / inject接口。
 
