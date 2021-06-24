@@ -21,3 +21,4 @@ console.log(matrix)
 	[ 0, 0, 0, 0 ]
 ]
 ```
+[call和apply的模拟实现](/javascript/call和apply的模拟实现.md)

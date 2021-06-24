@@ -136,7 +136,7 @@ setInterval(tick, 1000);
 - React DOM 首先会比较元素内容先后的不同，而在渲染过程中只会更新改变了的部分。
 - 即便我们每秒都创建了一个描述整个UI树的新元素，React DOM 也只会更新渲染文本节点中发生变化的内容
 
-### 5、手写实现一版
+## 5、手写实现一版 `React.createElement` 和 `ReactDOM.render`
 让我们来看下面的代码：
 ```jsx
 import React from "react"
@@ -150,8 +150,9 @@ let element = (
 ReactDOM.render(element, document.getElementById("root"))
 ```
 
-我们使用jsx的语法创建了一个element,使用ReactDOM.render方法挂载到了页面中。
-事实上，在内部其实是调用了 React.createElement 这个方法。
+我们使用jsx语法创建了一个`element`变量, 使用`ReactDOM.render`方法挂载到了页面中。事实上，在React内部是调用了 `React.createElement` 这个方法创建**虚拟DOM**, 
+
+为了证明我们的观点，这里直接调用`React.createElement`方法生成 `element`。请看如下代码：
 
 ```jsx
 import React from "react"
@@ -175,7 +176,7 @@ console.log(JSON.stringify(element,null,2));
 ReactDOM.render(element, document.getElementById("root"))
 ```
 
-上面两种写法是等价的, 并且我们尝试打印一下生成的这个`element`元素。返回的形式其实是一个对象，这个就是传说中的**虚拟dom**,
+上面两种写法是等价的, 并且我们尝试打印一下生成的这个`element`元素。返回的其实是一个对象，这个就是传说中的**虚拟DOM**,
 
 ```json
 {
@@ -212,12 +213,14 @@ ReactDOM.render(element, document.getElementById("root"))
 </div>
 ```
 对比jsx我们分析下返回的这个数据的结构有哪些特点:
-- 无论是存在div标签上的属性还是孩子元素，都是放在`props`这个key上的。
-- hello包裹在span标签内，world 是一个文本，都属于孩子元素，所以chidren是一个数组。
+- 无论是`div`标签自身上的属性还是它孩子元素，都是放在`props`这个属性上面存放的。
+- hello文本包裹在`span`标签内，world是一个纯文本，都属于孩子元素，所以chidren形式是一个数组，存放所有孩子元素。
 
-至于原生React 渲染出来的 属性：`key ref _owner _store` 这些属性我们暂时还用不到，所以第一版实现的时候我们先不予考虑,后续如果有需要我们再加上对这些属性的处理。
+至于原生React渲染出来的属性：`key、ref、_owner、_store` 这些属性我们暂时还用不到，所以第一版实现的时候先不予考虑,后续如果有需要我们再加上对这些属性的处理。
 
 注意到上面这些点，我们尝试自己手动实现一版`React.createElement`方法,所能实现的功能要和原生返回的数据结构相仿。
+
+
 
 
 
