@@ -1,7 +1,9 @@
 module.exports = {
   title: "褚鹏飞的博客",
   description: "终于等到你",
-
+  markdown: {
+    lineNumbers: true,
+  },
   themeConfig: {
     // navbar: false, // 配置这个选项，将会在所有页面禁用导航栏
     // lastUpdated: "最后更新时间",
@@ -16,8 +18,12 @@ module.exports = {
         text: "Vue",
         items: [
           {
-            text: "Vue内部原理剖析",
+            text: "Vue2内部原理剖析",
             link: "/vue/vue-analysis/",
+          },
+          {
+            text: "Vue3内部原理剖析",
+            link: "/vue/vue3-analysis/",
           },
           {
             text: "Vue组件探索",
