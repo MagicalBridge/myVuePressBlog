@@ -11,6 +11,17 @@ sidebar: auto
 npm install  webpack webpack-cli --save-dev
 ```
 
+::: tip
+该文档在写作时，使用的 webpack 和 webpack-cli版本信息如下:
+```
+// package.json 
+"devDependencies": {
+  "webpack": "^5.38.1",
+  "webpack-cli": "^4.7.2",
+}
+```
+:::
+
 ## 1.2 入口(entry)
 入口起点(entry point)指示，webpack应该使用哪个模块，来作为构建其内部依赖图(dependency graph)的开始，webpack会找出有哪些模块和库是入口起点（直接和间接）依赖的。
 
@@ -128,6 +139,121 @@ module.exports = {
 +    new HtmlWebpackPlugin({template: './src/index.html'})
 +  ]
 };
+```
+## 1.6模式(mode)
+- 日常开发中一般会用到两套环境
+- 一套是开发时候使用，构建结果用于本地开发测试，不进行代码压缩，会打印debug信息，包含sourceMap文件。
+- 一套构建后的结果就是直接用于线上的，即代码都是压缩后，运行时不打印debug信息，静态文件不包含sourceMap
+- webpack4.x 版本引入了mode概念
+- 当你指定使用 production mode 时候，默认会启用各种性能优化功能，包括构建结果优化以及webpack运行性能优化。
+- 而如果是development mode 时, 默认会开启debug工具，运行时打印详细的错误信息，以及更加快速的增量编译构建。
+
+### 1.6.1 环境差异
+- 开发环境
+  - 需要生成sourcemap文件
+  - 需要打印debug信息
+  - 需要live reload 或者 hot reload 功能
+- 生产环境
+  - 需要分离CSS成单独的文件，以便多个页面共享同一个CSS文件
+  - 需要压缩HTML/CSS/JS代码
+  - 需要压缩图片
+
+### 1.6.2 区分环境的方式
+- 1、通过在`webpack.config.js`中配置mode模式来设置模块内的 `process.env.NODE_ENV`
+
+::: warning
+在当前版本(5.38.1)webpack中，mode字段被认为是必须在配置文件中设置的，如果不设置，webpack会默认使用production。
+:::
+
+下图展示的为 **不设置mode属性** 启动打包命令的提示信息。
+![webpack打包](../images/webpack/01.png)
+
+这种方式我们可以在index.js中查看`process.env.NODE_ENV`信息。
+
+```js
+// index.js
+console.log(process.env.NODE_ENV); // development or production 
+```
+- 2、通过在package.json中的script脚本中传递mode参数,也能实现上述效果:
+```jsoon
+// package.json
+... 省略部分代码
+"scripts": {
+  "dev": "webpack serve --mode=development",
+  "build": "webpack --mode=production"
+},
+```
+
+上面介绍的这两种配置环境变量的方式可以在模块中获取当前的环境变量，但是无法在webpack配置文件中获取此变量
+
+webpack.config.js
+
+```
+console.log('NODE_ENV',process.env.NODE_ENV);// undefined
+```
+
+- 3、通过使用`--env`来设置webpack配置文件的函数参数
+  - 这种形式无法在模块内通过 `process.env.NODE_ENV` 访问
+  - 可以通过 `webpack` 配置文件中 通过函数获取当前环境变量 
+
+```json
+"scripts": {
+  "dev": "webpack serve --env=development",
+  "build": "webpack --env=production",
+}
+```
+index.js
+
+```js
+console.log(process.env.NODE_ENV);// undefined
+```
+
+webpack.config.js
+
+```js
+module.exports = (env,argv) => {
+  console.log('env',env);// development | production
+};
+```
+
+- 4、通过 DefinePlugin 
+  - 设置全局变量（不是window）,所有模块都能读取到这个变量的值
+  - 可以在任意模块内通过 `process.env.NODE_ENV` 获取当前的环境变量
+  - 但是无法在node环境 (webpack 配置文件中)下获取当前的环境变量
+
+```js
+// 这是一个webpack内置的模块
+plugins: [
+  new webpack.DefinePlugin({
+  'process.env.NODE_ENV': JSON.stringify('development'),
+  'NODE_ENV': JSON.stringify('production'),
+  })
+]
+```
+
+index.js
+```js
+console.log(NODE_ENV); // production
+```
+webpack.config.js
+```js
+console.log('process.env.NODE_ENV',process.env.NODE_ENV);// undefined
+console.log('NODE_ENV',NODE_ENV);// error ！！！
+```
+
+- 5、最优解决方案：cross-env
+
+- 只能设置node环境下的变量NODE_ENV
+
+package.json
+```json
+"scripts": {
+  "build": "cross-env NODE_ENV=development webpack"
+}
+```
+webpack.config.js
+```js
+console.log('process.env.NODE_ENV',process.env.NODE_ENV);// development
 ```
 
 # 2.开发环境配置
