@@ -11,8 +11,16 @@ module.exports = {
     head: [["link", { rel: "icon", href: "/icon.png" }]],
     nav: [
       {
-        text: "前端面试之道",
-        link: "/interview/",
+        text: "算法",
+        link: "/algorithms/",
+      },
+      {
+        text: "数据结构",
+        link: "/dataStructure/",
+      },
+      {
+        text: "计算机网络",
+        link: "/network/",
       },
       {
         text: "Vue",
@@ -107,6 +115,10 @@ module.exports = {
       {
         text: "通俗写作",
         link: "/writing/",
+      },
+      {
+        text: "前端面试之道",
+        link: "/interview/",
       },
     ],
     sidebar: [],

@@ -4,7 +4,7 @@ sidebar: auto
 
 # LeetCode算法题解
 
-## 01.两数之和
+## 1.两数之和
 
 [题目描述](https://leetcode-cn.com/problems/two-sum/)
 
@@ -130,7 +130,7 @@ let twoSum = function (nums, target) {
 - 时间复杂度: O(N), 其中 N 是数组中的元素数量。对于每一个元素 x，我们可以 O(1) 地寻找target - x。
 - 空间复杂度: O(N), 其中 N 是数组中的元素数量。主要为哈希表的开销。
 
-## 02.两数相加
+## 2.两数相加
 [题目描述](https://leetcode-cn.com/problems/add-two-numbers/)
 
 > 递归、链表、数学
@@ -351,6 +351,108 @@ var search = function (nums, target) {
 - 时间复杂度： `O(log⁡n)`，其中 n 为`nums`数组的大小。整个算法时间复杂度即为二分查找的时间复杂度`O(log⁡n)`。
 - 空间复杂度： `O(1)` 。我们只需要常数级别的空间存放变量。
 
+
+## 88.合并两个有序数组
+[题目描述](https://leetcode-cn.com/problems/merge-sorted-array/)
+
+> 标签：数组、双指针、排序
+
+给你两个有序整数数组 `nums1` 和 `nums2`, 请你将nums2合并到nums1中，使得nums1 成为一个有序数组。
+
+初始化 nums1 和 nums2 的元素个数分别为 m 和 n 你可以假设nums1空间大小等于m+n 这样它就有足够的空间来存储nums2的元素。
+
+示例1:
+```
+输入：nums1 = [1,2,3,0,0,0], m = 3, nums2 = [2,5,6], n = 3
+输出：[1,2,2,3,5,6]
+```
+
+示例2:
+```
+输入：nums1 = [1], m = 1, nums2 = [], n = 0
+输出：[1]
+```
+提示:
+- nums1.length == m+n
+- nums2.length == n
+- 0 <= m, n <= 200
+- 1 <= m + n <= 200
+- -10^9 <= nums1[i], nums2[i] <= 10^9
+
+### 方法一: 直接合并后排序
+算法
+最直观的方法是先将数组`nums2`放进数组`nums1`的尾部，然后直接对整个数组进行排序。
+
+```js
+/**
+ * @param {number[]} nums1
+ * @param {number} m
+ * @param {number[]} nums2
+ * @param {number} n
+ * @return {void} Do not return anything, modify nums1 in-place instead.
+ */
+var merge = function(nums1, m, nums2, n) {
+  nums1.splice(m, nums1.length-m, ...nums2);
+  nums1.sort((a,b) => a - b )
+}
+```
+[splice用法](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/splice)
+
+复杂度分析
+- 时间复杂度: O((m+n)log(m+n)), 排序序列长度为 m+n 套用快速排序的时间复杂度即可。
+- 空间复杂度: O(log(m+n)), 排序序列长度为 m+nm+n，套用快速排序的空间复杂度即可，平均情况为 O(\log(m+n))O(log(m+n))。
+  
+
+### 方法二：双指针
+算法
+
+方法一没有利用 `nums1` 和 `nums2` 已经被排序的性质。为了利用这一性质，我们可以使用双指针的方法。这一方法将两个数组看作队列，每次从两个数组头部取出比较小的数字放到结果中，看下面的动画演示。
+
+![动画演示](./../../images/leetcode/88/01.gif)
+```js
+/**
+ * @param {number[]} nums1
+ * @param {number} m
+ * @param {number[]} nums2
+ * @param {number} n
+ * @return {void} Do not return anything, modify nums1 in-place instead.
+ */
+var merge = function(nums1,m, nums2,n) {
+  // 两个索引指针
+  let p1 = 0;
+  let p2 = 0;
+  // 生成一个m+n长度的数组默认每个位置填充弄0
+  const sorted = new Array(m+n).fill(0);
+  // 当前遍历到的位置的元素
+  let cur;
+  // 循环内部使用的是后自加的方式
+  // 等于的情况说明已经遍历到了某一个数组的末尾
+  while(p1 < m || p2 < n) {
+    if (p1 === m) {
+      cur = nums2[p2++];
+    } else if () {
+      cur = nums1[p1++]
+    } else if(nums1[p1]< nums2[p2]>) {
+      cur = nums1[p1++]
+    } else {
+      cur = nums2[p2++]
+    }
+    sorted[p1+p2-1] = cur;
+  }
+  
+  for(let i = 0; i !== m+n; ++i) {
+    nums1[i] = sorted[i]
+  }
+}
+```
+复杂度分析:
+- 时间复杂度：O(m+n)。指针移动单调递增，最多移动 m+n次，因此时间复杂度为 O(m+n)。
+- 空间复杂度：O(m+n)。需要建立长度为 m+n 的中间数组 sorted。
+
+
+
+
+
 ## 165.比较版本号
 [题目描述](https://leetcode-cn.com/problems/compare-version-numbers/)
 
@@ -495,12 +597,12 @@ var compareVersion = function (version1, version2) {
 
 第3种情况比较难以检测和处理，我们怎么知道它会继续变大呢，而不是最终得到1呢？ 我们可以仔细想一想，每一位数的最大数字的下一位是多少。
 
-| Digits| Largest|  Next |
-| ----- | -----  | ----- |
-|   1   |   9    |   81  |
-|   2   |  99    |   162 |
-|   3   |  999   |   343 |
-|   4   |  9999  |   324 | 
+| Digits | Largest | Next |
+| ------ | ------- | ---- |
+| 1      | 9       | 81   |
+| 2      | 99      | 162  |
+| 3      | 999     | 343  |
+| 4      | 9999    | 324  |
 
 对于 33 位数的数字，它不可能大于 243243。这意味着它要么被困在 243243 以下的循环内，要么跌到 11。44 位或 44 位以上的数字在每一步都会丢失一位，直到降到 33 位为止。所以我们知道，最坏的情况下，算法可能会在 243243 以下的所有数字上循环，然后回到它已经到过的一个循环或者回到 11。但它不会无限期地进行下去，所以我们排除第三种选择。
 
