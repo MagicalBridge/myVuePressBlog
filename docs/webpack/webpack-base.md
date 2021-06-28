@@ -23,12 +23,12 @@ npm install  webpack webpack-cli --save-dev
 :::
 
 ## 1.2 入口(entry)
-入口起点(entry point)指示，webpack应该使用哪个模块，来作为构建其内部依赖图(dependency graph)的开始，webpack会找出有哪些模块和库是入口起点（直接和间接）依赖的。
+入口起点(entry point)，webpack应该使用哪个模块，来作为构建其内部依赖图(dependency graph)的开始，webpack会找出有哪些模块和库是入口起点（直接和间接）依赖的。
 
-默认值是 `./src/index.js`,但是你可以通过在 `webpack configuration`中配置 entry 属性，来指定一个（或者多个）不同的入口起点。
+默认值是 `./src/index.js`,但是你可以通过在 `webpack configuration`中配置 `entry` 属性，来指定一个（或者多个）不同的入口起点。
 
 ### 1.2.1 src\index.js
-我们在`src`目录中创建`index.js`,代码添加代码如下。
+我们在`src`目录中创建`index.js`,添加代码如下。
 
 ```js
 let title = require('./title.txt');
@@ -36,8 +36,8 @@ document.write(title.default);
 ```
 
 ### 1.2.2 创建 webpack.config.js 文件
-要想对webpack做更加详细的订制化配置，我们需要创建一个配置文件。
-```js
+要想对webpack做更加详细的订制化配置，我们需要创建一个配置文件,并将其命名为 `webpack.config.js`
+```js {3}
 const path = require('path');
 module.exports = {
   entry: './src/index.js',
@@ -53,8 +53,9 @@ module.exports = {
 我们继续在 `webpack.config.js` 中添加 `output` 配置。
 
 
-webpack.config.js
-```js
+**webpack.config.js**
+
+```js {5-8}
 const path = require('path');
 module.exports = {
   entry: './src/index.js',
@@ -69,17 +70,15 @@ module.exports = {
 ## 1.4 loader
 webpack 只能理解 `JavaScrit` 和 `JSON` 文件
 
-loader 让webpack 能够去处理其他类型的文件，并将它们转换为有效模块，以供应用程序使用，以及被添加到依赖中
+`loader`让`webpack`能够去处理其他类型的文件，并将它们转换为有效模块，以供应用程序使用，以及被添加到依赖中。
 
 我们继续在 `webpack.config.js` 中添加 `loader` 配置。
 
-webpack.config.js
+**webpack.config.js**
 
-```js
+```js {9-16}
 const path = require('path');
 module.exports = {
-  mode: 'development',
-  devtool:false,
   entry: './src/index.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -88,7 +87,10 @@ module.exports = {
   // 添加loader模块
   module: {
     rules: [
-      { test: /\.txt$/, use: 'raw-loader' }
+      { 
+        test: /\.txt$/, 
+        use: 'raw-loader' 
+      }
     ]
   }
 };
@@ -100,15 +102,15 @@ module.exports = {
 
 ### 1.5.1 src/index.html
 
-src/index.html
+**src/index.html**
 
 ```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>webpack5</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>webpack5</title>
 </head>
 <body>
 </body>
@@ -117,13 +119,11 @@ src/index.html
 
 ### 1.5.2 webpack.config.js
 
-```js
+```js {3,19-21}
 const path = require('path');
 // 引入 html-webpack-plugin 插件
-+ const HtmlWebpackPlugin = require('html-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
-  mode: 'development',
-  devtool:false,
   entry: './src/index.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -131,15 +131,19 @@ module.exports = {
   },
   module: {
     rules: [
-      { test: /\.txt$/, use: 'raw-loader' }
+      { 
+        test: /\.txt$/, 
+        use: 'raw-loader' 
+      }
     ]
   },
   // 新增加插件配置项
-+  plugins: [
-+    new HtmlWebpackPlugin({template: './src/index.html'})
-+  ]
+  plugins: [
+    new HtmlWebpackPlugin({template: './src/index.html'})
+  ]
 };
 ```
+
 ## 1.6模式(mode)
 - 日常开发中一般会用到两套环境
 - 一套是开发时候使用，构建结果用于本地开发测试，不进行代码压缩，会打印debug信息，包含sourceMap文件。
@@ -162,20 +166,41 @@ module.exports = {
 - 1、通过在`webpack.config.js`中配置mode模式来设置模块内的 `process.env.NODE_ENV`
 
 ::: warning
-在当前版本(5.38.1)webpack中，mode字段被认为是必须在配置文件中设置的，如果不设置，webpack会默认使用production。
+在当前版本(5.38.1)webpack中，mode字段被认为是必须在配置文件中设置的，如果不设置，webpack会默认使用production模式。
 :::
 
 下图展示的为 **不设置mode属性** 启动打包命令的提示信息。
 ![webpack打包](../images/webpack/01.png)
 
-这种方式我们可以在index.js中查看`process.env.NODE_ENV`信息。
+使用这种方式我们可以在`index.js`中查看`process.env.NODE_ENV`信息。
+
+```js {3}
+const path = require('path');
+module.exports = {
+  mode: 'production',
+  entry: './src/index.js',
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'main.js'
+  },
+  // 添加loader模块
+  module: {
+    rules: [
+      { 
+        test: /\.txt$/, 
+        use: 'raw-loader' 
+      }
+    ]
+  }
+};
+```
 
 ```js
 // index.js
 console.log(process.env.NODE_ENV); // development or production 
 ```
-- 2、通过在package.json中的script脚本中传递mode参数,也能实现上述效果:
-```jsoon
+- 2、通过在`package.json`中的`script`脚本中传递`mode参数`,也能实现同样的效果:
+```json
 // package.json
 ... 省略部分代码
 "scripts": {
@@ -186,9 +211,9 @@ console.log(process.env.NODE_ENV); // development or production
 
 上面介绍的这两种配置环境变量的方式可以在模块中获取当前的环境变量，但是无法在webpack配置文件中获取此变量
 
-webpack.config.js
+**webpack.config.js**
 
-```
+```js
 console.log('NODE_ENV',process.env.NODE_ENV);// undefined
 ```
 
@@ -211,8 +236,9 @@ console.log(process.env.NODE_ENV);// undefined
 webpack.config.js
 
 ```js
+// 导出的是一个函数，env 作为参数被传递进来
 module.exports = (env,argv) => {
-  console.log('env',env);// development | production
+  console.log('env',env); // development | production
 };
 ```
 
@@ -231,11 +257,11 @@ plugins: [
 ]
 ```
 
-index.js
+**index.js**
 ```js
 console.log(NODE_ENV); // production
 ```
-webpack.config.js
+**webpack.config.js**
 ```js
 console.log('process.env.NODE_ENV',process.env.NODE_ENV);// undefined
 console.log('NODE_ENV',NODE_ENV);// error ！！！
@@ -267,7 +293,7 @@ npm install webpack-dev-server --save-dev
 
 ### 2.1.2 webpack.config.js
 
-```js
+```js {3-7}
 module.exports = {
   //...其他配置
   devServer: {
@@ -280,15 +306,15 @@ module.exports = {
 
 ### 2.1.3 package.json
 
-```json
+```json {3}
   "scripts": {
     "build": "webpack",
-+   "start": "webpack serve"
+    "start": "webpack serve"
   }
 ```
 
 ## 2.2 支持CSS
-- css-loader 用来翻译处理 @import 和 url() 这类css语法
+- css-loader 用来翻译处理 `@import` 和 `url()` 这类css语法
 - style-loader 可以把css插入到DOM中
 
 ### 2.2.1 安装模块
@@ -300,12 +326,11 @@ npm install style-loader css-loader -D
 在`module`配置项中增加如下配置
 
 ### 2.2.2 webpack.config.js
-```js
+```js {13}
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
   mode: 'development',
-  devtool:false,
   entry: './src/index.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -314,7 +339,7 @@ module.exports = {
   module: {
     rules: [
       { test: /\.txt$/, use: 'raw-loader' },
-+     { test: /\.css$/, use: ['style-loader','css-loader'] }
+      { test: /\.css$/, use: ['style-loader','css-loader'] }
     ]
   },
   plugins: [
@@ -339,16 +364,78 @@ src\index.css
 ```css
 @import "./bg.css";
 body{
-  color:red;
+  color: red;
 }
 ```
 
 ### 2.2.5 src\index.js
 src\index.js
 
-```js
-+import './index.css';
+```js {1}
+import './index.css';
 let title = require('./title.txt');
 document.write(title.default);
 ```
 
+## 2.5 支持图片
+
+### 2.5.1 安装
+
+- file-loader 解决CSS等文件中的引入图片路径问题。
+- url-loader 当图片小于`limit`的时候，把图片`BASE64`编码，大于`limit`参数的时候还是使用`file-loader`进行拷贝。
+
+```bash
+npm i file-loader url-loader html-loader -D
+```
+
+### 2.5.2 webpack.config.js 中配置 url-loader
+```js {17-26}
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+module.exports = {
+  mode: 'development',
+  devtool: false,
+  entry: './src/index.js',
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: '[name].js'
+  },
+  module: {
+    rules: [
+      { test: /\.txt$/, use: 'raw-loader' },
+      { test: /\.css$/, use: ['style-loader', 'css-loader'] },
+      { test: /\.less$/, use: ['style-loader','css-loader', 'less-loader'] },
+      { test: /\.scss$/, use: ['style-loader','css-loader', 'sass-loader'] },
+      { test: /\.(jpg|png|bmp|gif|svg)$/, 
+        use: [{
+          loader: 'url-loader', 
+          options: {
+            esModule: false,
+            name: '[hash:10].[ext]',
+            limit: 8*1024,
+          }
+        }]
+      }
+    ]
+  },
+  plugins: [
+    new HtmlWebpackPlugin({ template: './src/index.html' })
+  ]
+};
+```
+
+### 2.5.3 src/index.js 添加图片引用代码
+
+src/index.js
+```js {7-10}
+import './index.css';
+import './less.less';
+import './sass.scss';
+let title = require('./title.txt');
+document.write(title.default);
+
+let logo = require('./assets/logo.png');
+let img = new Image();
+img.src = logo.default;
+document.body.appendChild(img);
+```
