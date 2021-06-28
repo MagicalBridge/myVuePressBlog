@@ -377,6 +377,14 @@ let title = require('./title.txt');
 document.write(title.default);
 ```
 
+## 2.4 CSS兼容性的处理
+
+- 为了浏览器的兼容性，有时候我们必须加入-webkit、-ms、 -o、 -moz这些前缀。
+- Trident内核：主要代表为IE浏览器, 前缀为-ms
+- Gecko内核：主要代表为Firefox, 前缀为-moz
+- Presto内核：主要代表为Opera, 前缀为-o
+- Webkit内核：产要代表为Chrome和Safari, 前缀为-webkit
+
 ## 2.5 支持图片
 
 ### 2.5.1 安装
