@@ -112,9 +112,22 @@ module.exports = {
           }
         ],
       },
+      // {
+      //   text: "通俗写作",
+      //   link: "/writing/",
+      // },
       {
-        text: "通俗写作",
-        link: "/writing/",
+        text: "前端三剑客",
+        items:[
+          {
+            text: "javascript",
+            link: "/threemusketeers/javascript/",
+          },
+          {
+            text: "HTML",
+            link: "/threemusketeers/html/",
+          }
+        ],
       },
       {
         text: "前端面试之道",

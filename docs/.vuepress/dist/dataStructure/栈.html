@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>栈 | 褚鹏飞的博客</title>
+    <meta name="generator" content="VuePress 1.8.2">
+    
+    <meta name="description" content="终于等到你">
+    
+    <link rel="preload" href="/assets/css/0.styles.e4d8b86b.css" as="style"><link rel="preload" href="/assets/js/app.294fc7b7.js" as="script"><link rel="preload" href="/assets/js/2.27e36046.js" as="script"><link rel="preload" href="/assets/js/22.de2e944c.js" as="script"><link rel="prefetch" href="/assets/js/10.e4f491b0.js"><link rel="prefetch" href="/assets/js/11.86ee782f.js"><link rel="prefetch" href="/assets/js/12.fee219e7.js"><link rel="prefetch" href="/assets/js/13.80e67973.js"><link rel="prefetch" href="/assets/js/14.42c67cf5.js"><link rel="prefetch" href="/assets/js/15.a3755d24.js"><link rel="prefetch" href="/assets/js/16.f1622ad1.js"><link rel="prefetch" href="/assets/js/17.9915ab1f.js"><link rel="prefetch" href="/assets/js/18.9b4ca281.js"><link rel="prefetch" href="/assets/js/19.08945da5.js"><link rel="prefetch" href="/assets/js/20.0ca81b25.js"><link rel="prefetch" href="/assets/js/21.88c68494.js"><link rel="prefetch" href="/assets/js/23.72e30411.js"><link rel="prefetch" href="/assets/js/24.02d40688.js"><link rel="prefetch" href="/assets/js/25.7b416521.js"><link rel="prefetch" href="/assets/js/26.c62dc535.js"><link rel="prefetch" href="/assets/js/27.056451b4.js"><link rel="prefetch" href="/assets/js/28.c37b6c0b.js"><link rel="prefetch" href="/assets/js/29.32082e1d.js"><link rel="prefetch" href="/assets/js/3.40543c7f.js"><link rel="prefetch" href="/assets/js/30.706faf00.js"><link rel="prefetch" href="/assets/js/31.c3a5a6cf.js"><link rel="prefetch" href="/assets/js/32.06d22fe4.js"><link rel="prefetch" href="/assets/js/33.ff33c6f8.js"><link rel="prefetch" href="/assets/js/34.8ac4494a.js"><link rel="prefetch" href="/assets/js/35.f304d449.js"><link rel="prefetch" href="/assets/js/36.6a980b4c.js"><link rel="prefetch" href="/assets/js/37.257ca933.js"><link rel="prefetch" href="/assets/js/38.d37c20ec.js"><link rel="prefetch" href="/assets/js/39.2351d62f.js"><link rel="prefetch" href="/assets/js/4.5749a650.js"><link rel="prefetch" href="/assets/js/5.0aedf9f8.js"><link rel="prefetch" href="/assets/js/6.7028c7f8.js"><link rel="prefetch" href="/assets/js/7.30035cdd.js"><link rel="prefetch" href="/assets/js/8.5c969724.js"><link rel="prefetch" href="/assets/js/9.de9fa031.js">
+    <link rel="stylesheet" href="/assets/css/0.styles.e4d8b86b.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><!----> <span class="site-name">褚鹏飞的博客</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/algorithms/" class="nav-link">
+  算法
+</a></div><div class="nav-item"><a href="/dataStructure/" class="nav-link router-link-active">
+  数据结构
+</a></div><div class="nav-item"><a href="/network/" class="nav-link">
+  计算机网络
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="Vue" class="dropdown-title"><span class="title">Vue</span> <span class="arrow down"></span></button> <button type="button" aria-label="Vue" class="mobile-dropdown-title"><span class="title">Vue</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/vue/vue-analysis/" class="nav-link">
+  Vue2内部原理剖析
+</a></li><li class="dropdown-item"><!----> <a href="/vue/vue3-analysis/" class="nav-link">
+  Vue3内部原理剖析
+</a></li><li class="dropdown-item"><!----> <a href="/vue/vue-component/" class="nav-link">
+  Vue组件探索
+</a></li><li class="dropdown-item"><!----> <a href="/vue/vuex/" class="nav-link">
+  Vuex源码解析
+</a></li><li class="dropdown-item"><!----> <a href="/vue/vue-router/" class="nav-link">
+  Vue-Router源码解析
+</a></li></ul></div></div><div class="nav-item"><a href="/react/" class="nav-link">
+  React
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="webpack" class="dropdown-title"><span class="title">webpack</span> <span class="arrow down"></span></button> <button type="button" aria-label="webpack" class="mobile-dropdown-title"><span class="title">webpack</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/webpack/webpack-base.html" class="nav-link">
+  webpack基础
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="Node.js" class="dropdown-title"><span class="title">Node.js</span> <span class="arrow down"></span></button> <button type="button" aria-label="Node.js" class="mobile-dropdown-title"><span class="title">Node.js</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/node/node-base/" class="nav-link">
+  Node基础
+</a></li><li class="dropdown-item"><!----> <a href="/node/express/" class="nav-link">
+  Express
+</a></li><li class="dropdown-item"><!----> <a href="/node/koa/" class="nav-link">
+  Koa
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="数据库" class="dropdown-title"><span class="title">数据库</span> <span class="arrow down"></span></button> <button type="button" aria-label="数据库" class="mobile-dropdown-title"><span class="title">数据库</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/database/mysql/" class="nav-link">
+  mySql
+</a></li><li class="dropdown-item"><!----> <a href="/database/mongodb/" class="nav-link">
+  mongodb
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="nginx" class="dropdown-title"><span class="title">nginx</span> <span class="arrow down"></span></button> <button type="button" aria-label="nginx" class="mobile-dropdown-title"><span class="title">nginx</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/nginx/nginx-base/" class="nav-link">
+  nginx
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="算法题解" class="dropdown-title"><span class="title">算法题解</span> <span class="arrow down"></span></button> <button type="button" aria-label="算法题解" class="mobile-dropdown-title"><span class="title">算法题解</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/leetCode/leetCode/" class="nav-link">
+  leetCode算题解
+</a></li><li class="dropdown-item"><!----> <a href="/leetCode/valuableBook/" class="nav-link">
+  面试题
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="前端三剑客" class="dropdown-title"><span class="title">前端三剑客</span> <span class="arrow down"></span></button> <button type="button" aria-label="前端三剑客" class="mobile-dropdown-title"><span class="title">前端三剑客</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/threemusketeers/javascript/" class="nav-link">
+  javascript
+</a></li><li class="dropdown-item"><!----> <a href="/threemusketeers/html/" class="nav-link">
+  HTML
+</a></li></ul></div></div><div class="nav-item"><a href="/interview/" class="nav-link">
+  前端面试之道
+</a></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="/algorithms/" class="nav-link">
+  算法
+</a></div><div class="nav-item"><a href="/dataStructure/" class="nav-link router-link-active">
+  数据结构
+</a></div><div class="nav-item"><a href="/network/" class="nav-link">
+  计算机网络
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="Vue" class="dropdown-title"><span class="title">Vue</span> <span class="arrow down"></span></button> <button type="button" aria-label="Vue" class="mobile-dropdown-title"><span class="title">Vue</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/vue/vue-analysis/" class="nav-link">
+  Vue2内部原理剖析
+</a></li><li class="dropdown-item"><!----> <a href="/vue/vue3-analysis/" class="nav-link">
+  Vue3内部原理剖析
+</a></li><li class="dropdown-item"><!----> <a href="/vue/vue-component/" class="nav-link">
+  Vue组件探索
+</a></li><li class="dropdown-item"><!----> <a href="/vue/vuex/" class="nav-link">
+  Vuex源码解析
+</a></li><li class="dropdown-item"><!----> <a href="/vue/vue-router/" class="nav-link">
+  Vue-Router源码解析
+</a></li></ul></div></div><div class="nav-item"><a href="/react/" class="nav-link">
+  React
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="webpack" class="dropdown-title"><span class="title">webpack</span> <span class="arrow down"></span></button> <button type="button" aria-label="webpack" class="mobile-dropdown-title"><span class="title">webpack</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/webpack/webpack-base.html" class="nav-link">
+  webpack基础
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="Node.js" class="dropdown-title"><span class="title">Node.js</span> <span class="arrow down"></span></button> <button type="button" aria-label="Node.js" class="mobile-dropdown-title"><span class="title">Node.js</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/node/node-base/" class="nav-link">
+  Node基础
+</a></li><li class="dropdown-item"><!----> <a href="/node/express/" class="nav-link">
+  Express
+</a></li><li class="dropdown-item"><!----> <a href="/node/koa/" class="nav-link">
+  Koa
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="数据库" class="dropdown-title"><span class="title">数据库</span> <span class="arrow down"></span></button> <button type="button" aria-label="数据库" class="mobile-dropdown-title"><span class="title">数据库</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/database/mysql/" class="nav-link">
+  mySql
+</a></li><li class="dropdown-item"><!----> <a href="/database/mongodb/" class="nav-link">
+  mongodb
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="nginx" class="dropdown-title"><span class="title">nginx</span> <span class="arrow down"></span></button> <button type="button" aria-label="nginx" class="mobile-dropdown-title"><span class="title">nginx</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/nginx/nginx-base/" class="nav-link">
+  nginx
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="算法题解" class="dropdown-title"><span class="title">算法题解</span> <span class="arrow down"></span></button> <button type="button" aria-label="算法题解" class="mobile-dropdown-title"><span class="title">算法题解</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/leetCode/leetCode/" class="nav-link">
+  leetCode算题解
+</a></li><li class="dropdown-item"><!----> <a href="/leetCode/valuableBook/" class="nav-link">
+  面试题
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="前端三剑客" class="dropdown-title"><span class="title">前端三剑客</span> <span class="arrow down"></span></button> <button type="button" aria-label="前端三剑客" class="mobile-dropdown-title"><span class="title">前端三剑客</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/threemusketeers/javascript/" class="nav-link">
+  javascript
+</a></li><li class="dropdown-item"><!----> <a href="/threemusketeers/html/" class="nav-link">
+  HTML
+</a></li></ul></div></div><div class="nav-item"><a href="/interview/" class="nav-link">
+  前端面试之道
+</a></div> <!----></nav>  <ul class="sidebar-links"><li><section class="sidebar-group depth-0"><p class="sidebar-heading open"><span>栈</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/dataStructure/%E6%A0%88.html#栈-后入先出的数据结构" class="sidebar-link">栈：后入先出的数据结构</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/dataStructure/%E6%A0%88.html#创建一个基于数组的栈" class="sidebar-link">创建一个基于数组的栈</a></li><li class="sidebar-sub-header"><a href="/dataStructure/%E6%A0%88.html#向栈添加元素" class="sidebar-link">向栈添加元素</a></li></ul></li></ul></section></li></ul> </aside> <main class="page"> <div class="theme-default-content content__default"><h1 id="栈"><a href="#栈" class="header-anchor">#</a> 栈</h1> <h2 id="栈-后入先出的数据结构"><a href="#栈-后入先出的数据结构" class="header-anchor">#</a> 栈：后入先出的数据结构</h2> <p>栈是一种遵从后进先出（LIFO）原则的有序集合。<strong>新添加或者待删除</strong>的元素都保存在栈的同一端，称作栈顶，另一端就叫栈底。在栈里，新的元素都靠近栈顶，旧元素都接近栈底。</p> <p>在现实生活中，一摞书或者餐厅里面叠放的盘子都是栈的应用场景。</p> <p>栈也被用在编程语言的编译器和内存中保存变量、方法调用等，也被用于浏览器历史记录（浏览器的返回按钮）。</p> <h3 id="创建一个基于数组的栈"><a href="#创建一个基于数组的栈" class="header-anchor">#</a> 创建一个基于数组的栈</h3> <p>创建一个类来表示栈</p> <div class="language-js line-numbers-mode"><div class="highlight-lines"><br><br><div class="highlighted"> </div><br><br><br></div><pre class="language-js"><code><span class="token keyword">class</span> <span class="token class-name">Stack</span> <span class="token punctuation">{</span>
+  <span class="token function">constructor</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>items <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br></div></div><p>我们需要一种数据结构来保存栈里的元素, 我们选择数组, 数组允许我们在任何位置添加或者删除元素。由于栈遵循LIFO原则，需要对元素的插入和删除功能进行限制，我们需要声明一些方法。</p> <ul><li>push(element): 添加一个（或者几个）新元素到栈顶。</li> <li>pop(): 移除栈顶的元素，同时返回被移除的元素。</li> <li>peek(): 返回栈顶的元素，不对栈做任何修改（该方法不会移除栈顶的元素，仅仅返回它）。</li> <li>isEmpty(): 如果栈里面没有任何元素返回true，否则返回false。</li> <li>clear(): 移除栈里面的所有元素</li> <li>size(): 返回栈里面的元素个数，该方法和数组的length属性很类似。</li></ul> <h3 id="向栈添加元素"><a href="#向栈添加元素" class="header-anchor">#</a> 向栈添加元素</h3> <p>我们要实现的第一个方法是push，该方法负责往栈里面添加新的元素，有一点很重要：该方法只添加元素到栈顶，也就是栈的末尾，push方法可以如下这样写。</p> <div class="language-js line-numbers-mode"><pre class="language-js"><code><span class="token function">push</span><span class="token punctuation">(</span><span class="token parameter">element</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span>items<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>element<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br></div></div></div> <footer class="page-edit"><!----> <!----></footer> <!----> </main></div><div class="global-ui"></div></div>
+    <script src="/assets/js/app.294fc7b7.js" defer></script><script src="/assets/js/2.27e36046.js" defer></script><script src="/assets/js/22.de2e944c.js" defer></script>
+  </body>
+</html>
