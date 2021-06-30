@@ -35,7 +35,7 @@ sidebar: auto
 yum  -y install gcc gcc-c++ autoconf pcre pcre-devel make automake openssl openssl-devel
 ```
 
-| 软件包       |    描述     |
+|     软件包   |    描述     |
 | ----------- | ----------- |
 | gcc    | gcc是指整个gcc的这一套工具集合，它分为gcc前端和gcc后端（我个人理解为gcc外壳和gcc引擎），gcc前端对应各种特定语言（如c++/go等）的处理（对c++/go等特定语言进行对应的语法检查, 将c++/go等语言的代码转化为c代码等），gcc后端对应把前端的c代码转为跟你的电脑硬件相关的汇编或机器码|
 | gcc-c++ | 而就软件程序包而言，gcc.rpm就是那个gcc后端，而gcc-c++.rpm就是针对c++这个特定语言的gcc前端|
