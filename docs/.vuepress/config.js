@@ -109,6 +109,10 @@ module.exports = {
           {
             text: "面试题",
             link: "/leetCode/valuableBook/",
+          },
+          {
+            text: "剑指offer",
+            link: "/leetCode/offer/",
           }
         ],
       },
