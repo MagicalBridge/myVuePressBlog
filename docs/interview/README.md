@@ -152,3 +152,20 @@ a()()() // window
 
 
 ## JavaScript基础知识面试题(二)
+
+### 闭包
+
+闭包的定义很简单：函数A内部有一个函数B，函数B可以访问函数A中的变量，那么函数B就是闭包。
+
+```js
+function A() {
+  let a = 1
+  window.B = function() {
+    console.log(a)
+  }
+}
+A();
+B();
+```
+
+很多人对于闭包的解释
