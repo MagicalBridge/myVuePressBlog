@@ -78,8 +78,20 @@ module.exports = {
         ],
       },
       {
-        text: "数据库",
+        text: "服务器工具",
         items: [
+          {
+            text: "nginx",
+            link: "/nginx/nginx-base/",
+          },
+          {
+            text: "docker",
+            link: "/docker/",
+          },
+          {
+            text: "kubernetes",
+            link: "/k8s/",
+          },
           {
             text: "mySql",
             link: "/database/mysql/",
@@ -87,15 +99,6 @@ module.exports = {
           {
             text: "mongodb",
             link: "/database/mongodb/",
-          }
-        ],
-      },
-      {
-        text: "nginx",
-        items: [
-          {
-            text: "nginx",
-            link: "/nginx/nginx-base/",
           }
         ],
       },
