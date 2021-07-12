@@ -12,7 +12,24 @@ module.exports = {
     nav: [
       {
         text: "算法",
-        link: "/algorithms/",
+        items: [
+          {
+            text: "常用算法",
+            link: "/algorithms/",
+          },
+          {
+            text: "leetCode算题解",
+            link: "/leetCode/leetCode/",
+          },
+          {
+            text: "面试题",
+            link: "/leetCode/valuableBook/",
+          },
+          {
+            text: "剑指offer",
+            link: "/leetCode/offer/",
+          }
+        ],
       },
       {
         text: "数据结构",
@@ -78,8 +95,16 @@ module.exports = {
         ],
       },
       {
-        text: "服务器工具",
+        text: "服务端",
         items: [
+          {
+            text: "linux",
+            link: "/linux/",
+          },
+          {
+            text: "git工具",
+            link: "/git/",
+          },
           {
             text: "nginx",
             link: "/nginx/nginx-base/",
@@ -102,23 +127,6 @@ module.exports = {
           }
         ],
       },
-      {
-        text: "算法题解",
-        items: [
-          {
-            text: "leetCode算题解",
-            link: "/leetCode/leetCode/",
-          },
-          {
-            text: "面试题",
-            link: "/leetCode/valuableBook/",
-          },
-          {
-            text: "剑指offer",
-            link: "/leetCode/offer/",
-          }
-        ],
-      },
       // {
       //   text: "通俗写作",
       //   link: "/writing/",
@@ -136,10 +144,10 @@ module.exports = {
           }
         ],
       },
-      {
-        text: "前端面试之道",
-        link: "/interview/",
-      },
+      // {
+      //   text: "前端面试之道",
+      //   link: "/interview/",
+      // },
     ],
     sidebar: [],
   },

@@ -85,3 +85,20 @@ docker --help
 # 列出本地主机上的所有镜像
 docker images
 ```
+![镜像](../images/docker/06.png)
+
+各个选项说明:
+- REPOSITORY: 表示镜像仓库
+- TAG: 镜像标签
+- IMAGE ID: 镜像id
+- CREATED: 镜像创建时间
+- SIZE: 镜像大小
+
+::: tip
+同一个仓库可以有多个TAG，代表这个仓库源的不同个版本，我们使用`REPOSITORY:TAG` 来定义不同的镜像。如果你不指定一个镜像的版本标签，将默认是使用最新的版本。
+:::
+
+
+
+
+
