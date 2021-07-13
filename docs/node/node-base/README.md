@@ -57,3 +57,8 @@ node.js 中最主要的内容，就是实现了⼀套 CommonJS的模块化规范
 - readline: 读取 stdin 的⼀⾏内容，可以读取、增加、删除我们命令⾏中的内容
 - os: 操作系统层⾯的⼀些 api，例如告诉你当前系统类型及⼀些参数
 - vm: ⼀个专⻔处理沙箱的虚拟机模块，底层主要来调⽤ v8 相关 api 进⾏代码解析
+
+
+
+## 文章列表
+[child_process模块](../docs/child_process.md)
