@@ -447,3 +447,64 @@ let img = new Image();
 img.src = logo.default;
 document.body.appendChild(img);
 ```
+
+## 2.6 webpack打包多页应用
+
+### 2.6.1 [应用场景](https://zhuanlan.zhihu.com/p/109527475)
+首先我们需要明白一个问题，为什么需要多页面打包，毕竟我们已经习惯了vue、react全家桶这种单页应用的开发模式。
+
+但是很多时候我们开发的活动页需要打包，就是需要多页面打包场景。
+
+```js
+https://www.demo.com/activity/activity1.html 
+https://www.demo.com/activity/activity2.html 
+https://www.demo.com/activity/activity3.html
+```
+
+上面三个页面都是互相不相干的活动页，页面之间并没有共享的数据。然而每个页面都使用了react框架，并且都使用了通用的弹框组件，这种场景下，这个时候就应该使用多页面打包的方案了。
+
+### 2.6.2 配置多个entry
+首先我们约定：`src/pages` 目录下，每个文件夹为单独的一个页面，每个页面至少有两个文件配置
+
+```js
+src/pages
+├── page1
+│   ├── index.js
+│   ├── index.html
+└── page2
+    ├── other.js
+    └── index.html
+```
+
+多页应用需要配置多个entry, 同时，因为多页的index.html模板各不相同，所以需要配置多个 HtmlWebpackPlugin
+
+::: tip
+注意：HtmlWebpackPlugin一定要配chunks，否则所有页面的js都会被注入到当前html里
+:::
+```js{6,7,17,22}
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const path = require('path')
+module.exports = {
+  mode: "development",
+  entry: {
+    page1: "./src/pages/page1/index.js", // 页面1
+    page2: "./src/pages/page2/index.js", // 页面2
+  },
+  output: {
+    filename: "js/[name]/[name]-bundle.js",
+    path: path.resolve(__dirname, "dist") 
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: './src/pages/page1/index.html',
+      filename: "page1.html",
+      chunks: ['page1'],
+    }),
+    new HtmlWebpackPlugin({
+      template: './src/pages/page2/index.html',
+      filename: "page2.html",
+      chunks: ['page2']
+    })
+  ]
+}
+```
