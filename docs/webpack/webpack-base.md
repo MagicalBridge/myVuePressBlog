@@ -143,6 +143,54 @@ module.exports = {
   ]
 };
 ```
+### 1.5.3 [clean-webpack-plugin](https://www.npmjs.com/package/clean-webpack-plugin)
+在webpack中,打包的文件通常是通过hash生成的，如果文件改动，那么打包的文件会越来越多，如果想要清除之前的文件，可以使用 clean-webpack-plugin。
+
+这个插件默认会清除 output.path 输出的目录。
+```js
+const path = require('path');
+// 引入 html-webpack-plugin 插件
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+// 引入 clean 插件
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+
+module.exports = {
+  entry: './src/index.js',
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'main.js'
+  },
+  module: {
+    rules: [
+      { 
+        test: /\.txt$/, 
+        use: 'raw-loader' 
+      }
+    ]
+  },
+  // 新增加插件配置项
+  plugins: [
+    new CleanWebpackPlugin(),
+    new HtmlWebpackPlugin({template: './src/index.html'})
+  ]
+};
+```
+
+关于常用的参数配置: **cleanOnceBeforeBuildPatterns**
+
+这个参数配置要删除那些文件，和不要删除那些文件，不要删除的文件前面加个逻辑运算符非 !，*号可以通过占位符来处理，表示什么开头，什么结尾啥的
+
+```js
+new CleanWebpackPlugin({
+  cleanOnceBeforeBuildPatterns: [
+    'main*.*', 
+    '!vendor', 
+    '!vendor.manifest.json'
+  ]
+}),
+```
+
+
 
 ## 1.6模式(mode)
 - 日常开发中一般会用到两套环境
