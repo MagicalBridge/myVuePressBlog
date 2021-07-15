@@ -22,6 +22,18 @@ npm install  webpack webpack-cli --save-dev
 ```
 :::
 
+webpack-cli 是使用webpack的命令行工具，在4.x版本之后不再作为webpack的依赖了，我们使用的时候需要单独安装这个工具。
+
+我们优先选择使用本地开发依赖安装的webpack，即上述的这种方式，这么做的好处是：
+
+- 1、可以为项目指定依赖的webpack版本，不同项目可以使用不同版本的webpack
+- 2、clone代码后可以快速使用npm 或者 yarn 安装依赖的webpack
+- 3、协作的多人可以确保项目使用版本相同的webpack，避免使用全局安装的不同版本webpack而出现问题。
+
+
+webpack的配置其实是一个Node的脚本，这个脚本对外暴露一个配置对象，webpack通过这个对象来读取相关的一些配置。因为是node脚本，所以灵活度非常高，可以使用node上的任何模块，如上面提到的`path`模块。当然第三方模块也可以。
+
+
 ## 1.2 入口(entry)
 入口起点(entry point)，webpack应该使用哪个模块，来作为构建其内部依赖图(dependency graph)的开始，webpack会找出有哪些模块和库是入口起点（直接和间接）依赖的。
 
@@ -37,11 +49,17 @@ document.write(title.default);
 
 ### 1.2.2 创建 webpack.config.js 文件
 要想对webpack做更加详细的订制化配置，我们需要创建一个配置文件,并将其命名为 `webpack.config.js`
-```js {3}
-const path = require('path');
+```js {2,7-9}
 module.exports = {
   entry: './src/index.js',
 };
+
+// 上述配置等同于
+module.exports = {
+  entry: {
+    main: './src/index.js'
+  }
+}
 ```
 
 ## 1.3 输出(output)
@@ -68,11 +86,15 @@ module.exports = {
 ```
 
 ## 1.4 loader
-webpack 只能理解 `JavaScrit` 和 `JSON` 文件
+webpack 只能理解 `JavaScrit` 和 `JSON` 文件。
 
-`loader`让`webpack`能够去处理其他类型的文件，并将它们转换为有效模块，以供应用程序使用，以及被添加到依赖中。
+但是在项目开发的过程中会遇到各式各样的文件，例如css代码，图片，模板代码等。webpack中提供了一种处理多种文件格式的机制，这便是`loader`。
+
+我们可以把loader看成一个转换器，负责把某种文件格式的内容转换成 `webpack` 可以支持打包的模块, 以供应用程序使用。
 
 我们继续在 `webpack.config.js` 中添加 `loader` 配置。
+
+当我们需要使用不同的 loader 来解析处理不同类型的文件时，我们可以在 module.rules 字段下来配置相关的规则。
 
 **webpack.config.js**
 
@@ -98,7 +120,11 @@ module.exports = {
 
 ## 1.5 插件(plugin)
 
-`loader`用于转换某些类型的模块，而插件则可以用于执行范围更广的任务。包括：打包优化，资源管理，注入环境变量。
+在webpack的构建流程中，plugin用于处理更多其他的一些构建任务，可以这么理解，模块代码转换的工作由loader来处理，除此之外的其他工作都可以交给plugin来完成。通过添加我们需要的plugin，可以满足更多构建中的特殊需求。包括：打包优化，资源管理，注入环境变量。
+
+例如，使用 `copy-webpack-plugin` 来复制其他不需要 loader 处理的文件，只需在配置中通过 `plugins` 字段添加新的 `plugin` 即可。
+
+插件通常为第三方的 npm package，都需要安装后才能使。
 
 ### 1.5.1 src/index.html
 
