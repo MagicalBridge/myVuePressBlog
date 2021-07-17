@@ -75,6 +75,10 @@ module.exports = {
             text: "webpack基础",
             link: "/webpack/webpack-base",
           },
+          {
+            text: "webpack进阶",
+            link: "/webpack/webpack-advance",
+          },
         ],
       },
       {

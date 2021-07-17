@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>实际场景用到的api | 褚鹏飞的博客</title>
+    <meta name="generator" content="VuePress 1.8.2">
+    
+    <meta name="description" content="终于等到你">
+    
+    <link rel="preload" href="/assets/css/0.styles.e4d8b86b.css" as="style"><link rel="preload" href="/assets/js/app.8c418980.js" as="script"><link rel="preload" href="/assets/js/2.7fa00125.js" as="script"><link rel="preload" href="/assets/js/59.e1ff6826.js" as="script"><link rel="prefetch" href="/assets/js/10.7be6e3fd.js"><link rel="prefetch" href="/assets/js/11.72d2feff.js"><link rel="prefetch" href="/assets/js/12.fb8875a6.js"><link rel="prefetch" href="/assets/js/13.8a799823.js"><link rel="prefetch" href="/assets/js/14.c04d6a6f.js"><link rel="prefetch" href="/assets/js/15.9599390f.js"><link rel="prefetch" href="/assets/js/16.9dde4893.js"><link rel="prefetch" href="/assets/js/17.5d98a80f.js"><link rel="prefetch" href="/assets/js/18.79e377b2.js"><link rel="prefetch" href="/assets/js/19.2b17bb45.js"><link rel="prefetch" href="/assets/js/20.f6fb6894.js"><link rel="prefetch" href="/assets/js/21.05cc56b9.js"><link rel="prefetch" href="/assets/js/22.4186e9a6.js"><link rel="prefetch" href="/assets/js/23.b1b4e492.js"><link rel="prefetch" href="/assets/js/24.4deedeb9.js"><link rel="prefetch" href="/assets/js/25.54a8da48.js"><link rel="prefetch" href="/assets/js/26.3a97aa5c.js"><link rel="prefetch" href="/assets/js/27.eaad09e5.js"><link rel="prefetch" href="/assets/js/28.6bc20059.js"><link rel="prefetch" href="/assets/js/29.1ee71bae.js"><link rel="prefetch" href="/assets/js/3.4774d8e0.js"><link rel="prefetch" href="/assets/js/30.212b33c2.js"><link rel="prefetch" href="/assets/js/31.c4bf44e1.js"><link rel="prefetch" href="/assets/js/32.1ab1dcde.js"><link rel="prefetch" href="/assets/js/33.88756122.js"><link rel="prefetch" href="/assets/js/34.5b5ce087.js"><link rel="prefetch" href="/assets/js/35.f5fb03bc.js"><link rel="prefetch" href="/assets/js/36.8fe82690.js"><link rel="prefetch" href="/assets/js/37.9e336514.js"><link rel="prefetch" href="/assets/js/38.487e59bc.js"><link rel="prefetch" href="/assets/js/39.dd64f03d.js"><link rel="prefetch" href="/assets/js/4.78d5c2d4.js"><link rel="prefetch" href="/assets/js/40.95211b48.js"><link rel="prefetch" href="/assets/js/41.92ff37a7.js"><link rel="prefetch" href="/assets/js/42.e7c0d940.js"><link rel="prefetch" href="/assets/js/43.5702503e.js"><link rel="prefetch" href="/assets/js/44.ca2cb592.js"><link rel="prefetch" href="/assets/js/45.bff89faa.js"><link rel="prefetch" href="/assets/js/46.2994c671.js"><link rel="prefetch" href="/assets/js/47.5500199e.js"><link rel="prefetch" href="/assets/js/48.69349641.js"><link rel="prefetch" href="/assets/js/49.bda4a080.js"><link rel="prefetch" href="/assets/js/5.8c5db72e.js"><link rel="prefetch" href="/assets/js/50.6ad7e2f2.js"><link rel="prefetch" href="/assets/js/51.1178835e.js"><link rel="prefetch" href="/assets/js/52.8a4ed17a.js"><link rel="prefetch" href="/assets/js/53.19514bc1.js"><link rel="prefetch" href="/assets/js/54.60105318.js"><link rel="prefetch" href="/assets/js/55.9459294e.js"><link rel="prefetch" href="/assets/js/56.e826f560.js"><link rel="prefetch" href="/assets/js/57.2c888e99.js"><link rel="prefetch" href="/assets/js/58.f1b3448c.js"><link rel="prefetch" href="/assets/js/6.0e0d81d1.js"><link rel="prefetch" href="/assets/js/60.cc8a420c.js"><link rel="prefetch" href="/assets/js/61.cef947dc.js"><link rel="prefetch" href="/assets/js/62.8328be17.js"><link rel="prefetch" href="/assets/js/63.7ac02bea.js"><link rel="prefetch" href="/assets/js/7.c6cb8727.js"><link rel="prefetch" href="/assets/js/8.a0179725.js"><link rel="prefetch" href="/assets/js/9.58457e85.js">
+    <link rel="stylesheet" href="/assets/css/0.styles.e4d8b86b.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><!----> <span class="site-name">褚鹏飞的博客</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="算法" class="dropdown-title"><span class="title">算法</span> <span class="arrow down"></span></button> <button type="button" aria-label="算法" class="mobile-dropdown-title"><span class="title">算法</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/algorithms/" class="nav-link">
+  常用算法
+</a></li><li class="dropdown-item"><!----> <a href="/leetCode/leetCode/" class="nav-link">
+  leetCode算题解
+</a></li><li class="dropdown-item"><!----> <a href="/leetCode/valuableBook/" class="nav-link">
+  面试题
+</a></li><li class="dropdown-item"><!----> <a href="/leetCode/offer/" class="nav-link">
+  剑指offer
+</a></li></ul></div></div><div class="nav-item"><a href="/dataStructure/" class="nav-link">
+  数据结构
+</a></div><div class="nav-item"><a href="/network/" class="nav-link">
+  计算机网络
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="Vue" class="dropdown-title"><span class="title">Vue</span> <span class="arrow down"></span></button> <button type="button" aria-label="Vue" class="mobile-dropdown-title"><span class="title">Vue</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/vue/vue-analysis/" class="nav-link">
+  Vue2内部原理剖析
+</a></li><li class="dropdown-item"><!----> <a href="/vue/vue3-analysis/" class="nav-link">
+  Vue3内部原理剖析
+</a></li><li class="dropdown-item"><!----> <a href="/vue/vue-component/" class="nav-link">
+  Vue组件探索
+</a></li><li class="dropdown-item"><!----> <a href="/vue/vuex/" class="nav-link">
+  Vuex源码解析
+</a></li><li class="dropdown-item"><!----> <a href="/vue/vue-router/" class="nav-link">
+  Vue-Router源码解析
+</a></li></ul></div></div><div class="nav-item"><a href="/react/" class="nav-link">
+  React
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="webpack" class="dropdown-title"><span class="title">webpack</span> <span class="arrow down"></span></button> <button type="button" aria-label="webpack" class="mobile-dropdown-title"><span class="title">webpack</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/webpack/webpack-base.html" class="nav-link">
+  webpack基础
+</a></li><li class="dropdown-item"><!----> <a href="/webpack/webpack-advance.html" class="nav-link">
+  webpack进阶
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="Node.js" class="dropdown-title"><span class="title">Node.js</span> <span class="arrow down"></span></button> <button type="button" aria-label="Node.js" class="mobile-dropdown-title"><span class="title">Node.js</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/node/node-base/" class="nav-link">
+  Node基础
+</a></li><li class="dropdown-item"><!----> <a href="/node/express/" class="nav-link">
+  Express
+</a></li><li class="dropdown-item"><!----> <a href="/node/koa/" class="nav-link">
+  Koa
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="服务端" class="dropdown-title"><span class="title">服务端</span> <span class="arrow down"></span></button> <button type="button" aria-label="服务端" class="mobile-dropdown-title"><span class="title">服务端</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/linux/" class="nav-link">
+  linux
+</a></li><li class="dropdown-item"><!----> <a href="/git/" class="nav-link">
+  git工具
+</a></li><li class="dropdown-item"><!----> <a href="/nginx/nginx-base/" class="nav-link">
+  nginx
+</a></li><li class="dropdown-item"><!----> <a href="/docker/" class="nav-link">
+  docker
+</a></li><li class="dropdown-item"><!----> <a href="/k8s/" class="nav-link">
+  kubernetes
+</a></li><li class="dropdown-item"><!----> <a href="/database/mysql/" class="nav-link">
+  mySql
+</a></li><li class="dropdown-item"><!----> <a href="/database/mongodb/" class="nav-link">
+  mongodb
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="前端三剑客" class="dropdown-title"><span class="title">前端三剑客</span> <span class="arrow down"></span></button> <button type="button" aria-label="前端三剑客" class="mobile-dropdown-title"><span class="title">前端三剑客</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/threemusketeers/javascript/" class="nav-link router-link-active">
+  javascript
+</a></li><li class="dropdown-item"><!----> <a href="/threemusketeers/html/" class="nav-link">
+  HTML
+</a></li></ul></div></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="算法" class="dropdown-title"><span class="title">算法</span> <span class="arrow down"></span></button> <button type="button" aria-label="算法" class="mobile-dropdown-title"><span class="title">算法</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/algorithms/" class="nav-link">
+  常用算法
+</a></li><li class="dropdown-item"><!----> <a href="/leetCode/leetCode/" class="nav-link">
+  leetCode算题解
+</a></li><li class="dropdown-item"><!----> <a href="/leetCode/valuableBook/" class="nav-link">
+  面试题
+</a></li><li class="dropdown-item"><!----> <a href="/leetCode/offer/" class="nav-link">
+  剑指offer
+</a></li></ul></div></div><div class="nav-item"><a href="/dataStructure/" class="nav-link">
+  数据结构
+</a></div><div class="nav-item"><a href="/network/" class="nav-link">
+  计算机网络
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="Vue" class="dropdown-title"><span class="title">Vue</span> <span class="arrow down"></span></button> <button type="button" aria-label="Vue" class="mobile-dropdown-title"><span class="title">Vue</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/vue/vue-analysis/" class="nav-link">
+  Vue2内部原理剖析
+</a></li><li class="dropdown-item"><!----> <a href="/vue/vue3-analysis/" class="nav-link">
+  Vue3内部原理剖析
+</a></li><li class="dropdown-item"><!----> <a href="/vue/vue-component/" class="nav-link">
+  Vue组件探索
+</a></li><li class="dropdown-item"><!----> <a href="/vue/vuex/" class="nav-link">
+  Vuex源码解析
+</a></li><li class="dropdown-item"><!----> <a href="/vue/vue-router/" class="nav-link">
+  Vue-Router源码解析
+</a></li></ul></div></div><div class="nav-item"><a href="/react/" class="nav-link">
+  React
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="webpack" class="dropdown-title"><span class="title">webpack</span> <span class="arrow down"></span></button> <button type="button" aria-label="webpack" class="mobile-dropdown-title"><span class="title">webpack</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/webpack/webpack-base.html" class="nav-link">
+  webpack基础
+</a></li><li class="dropdown-item"><!----> <a href="/webpack/webpack-advance.html" class="nav-link">
+  webpack进阶
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="Node.js" class="dropdown-title"><span class="title">Node.js</span> <span class="arrow down"></span></button> <button type="button" aria-label="Node.js" class="mobile-dropdown-title"><span class="title">Node.js</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/node/node-base/" class="nav-link">
+  Node基础
+</a></li><li class="dropdown-item"><!----> <a href="/node/express/" class="nav-link">
+  Express
+</a></li><li class="dropdown-item"><!----> <a href="/node/koa/" class="nav-link">
+  Koa
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="服务端" class="dropdown-title"><span class="title">服务端</span> <span class="arrow down"></span></button> <button type="button" aria-label="服务端" class="mobile-dropdown-title"><span class="title">服务端</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/linux/" class="nav-link">
+  linux
+</a></li><li class="dropdown-item"><!----> <a href="/git/" class="nav-link">
+  git工具
+</a></li><li class="dropdown-item"><!----> <a href="/nginx/nginx-base/" class="nav-link">
+  nginx
+</a></li><li class="dropdown-item"><!----> <a href="/docker/" class="nav-link">
+  docker
+</a></li><li class="dropdown-item"><!----> <a href="/k8s/" class="nav-link">
+  kubernetes
+</a></li><li class="dropdown-item"><!----> <a href="/database/mysql/" class="nav-link">
+  mySql
+</a></li><li class="dropdown-item"><!----> <a href="/database/mongodb/" class="nav-link">
+  mongodb
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="前端三剑客" class="dropdown-title"><span class="title">前端三剑客</span> <span class="arrow down"></span></button> <button type="button" aria-label="前端三剑客" class="mobile-dropdown-title"><span class="title">前端三剑客</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/threemusketeers/javascript/" class="nav-link router-link-active">
+  javascript
+</a></li><li class="dropdown-item"><!----> <a href="/threemusketeers/html/" class="nav-link">
+  HTML
+</a></li></ul></div></div> <!----></nav>  <ul class="sidebar-links"><li><section class="sidebar-group depth-0"><p class="sidebar-heading open"><span>实际场景用到的api</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/threemusketeers/javascript/%E5%B7%A5%E4%BD%9C%E5%9C%BA%E6%99%AF%E7%94%A8%E5%88%B0%E7%9A%84api.html#string-prototype-trim" class="sidebar-link">String.prototype.trim()</a><ul class="sidebar-sub-headers"></ul></li></ul></section></li></ul> </aside> <main class="page"> <div class="theme-default-content content__default"><h1 id="实际场景用到的api"><a href="#实际场景用到的api" class="header-anchor">#</a> 实际场景用到的api</h1> <h2 id="string-prototype-trim"><a href="#string-prototype-trim" class="header-anchor">#</a> <a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/Trim" target="_blank" rel="noopener noreferrer">String.prototype.trim()<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></h2> <p>2021年7月16日，我在做智营销的需求的时候，在处理用户输入的 textarea 文本域的时候，为了分割数据，必须提前将用户输入的字符串的头部和尾部的空格去掉。就是使用到了这个api。</p> <p>这是个优化需求，之前是一个input，使用vue自带的 v-model.trim 能去除空格。这次就记住了。</p></div> <footer class="page-edit"><!----> <!----></footer> <!----> </main></div><div class="global-ui"></div></div>
+    <script src="/assets/js/app.8c418980.js" defer></script><script src="/assets/js/2.7fa00125.js" defer></script><script src="/assets/js/59.e1ff6826.js" defer></script>
+  </body>
+</html>
