@@ -145,6 +145,10 @@ module.exports = {
           {
             text: "HTML",
             link: "/threemusketeers/html/",
+          },
+          {
+            text: "css",
+            link: "/threemusketeers/css/",
           }
         ],
       },
