@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>说一下vue-router的原理是什么? | 褚鹏飞的博客</title>
+    <meta name="generator" content="VuePress 1.8.2">
+    
+    <meta name="description" content="终于等到你">
+    
+    <link rel="preload" href="/assets/css/0.styles.e4d8b86b.css" as="style"><link rel="preload" href="/assets/js/app.98857e90.js" as="script"><link rel="preload" href="/assets/js/2.7fa00125.js" as="script"><link rel="preload" href="/assets/js/34.760bdef0.js" as="script"><link rel="prefetch" href="/assets/js/10.e1addf5a.js"><link rel="prefetch" href="/assets/js/11.bc1ddba0.js"><link rel="prefetch" href="/assets/js/12.5611746f.js"><link rel="prefetch" href="/assets/js/13.f494ba29.js"><link rel="prefetch" href="/assets/js/14.89c4aac4.js"><link rel="prefetch" href="/assets/js/15.11b7d0db.js"><link rel="prefetch" href="/assets/js/16.279e485d.js"><link rel="prefetch" href="/assets/js/17.eae4e62c.js"><link rel="prefetch" href="/assets/js/18.d94db7f4.js"><link rel="prefetch" href="/assets/js/19.644132c4.js"><link rel="prefetch" href="/assets/js/20.aeb52bf7.js"><link rel="prefetch" href="/assets/js/21.9d3038ac.js"><link rel="prefetch" href="/assets/js/22.c5be516e.js"><link rel="prefetch" href="/assets/js/23.c952574f.js"><link rel="prefetch" href="/assets/js/24.9229275b.js"><link rel="prefetch" href="/assets/js/25.d5e45b47.js"><link rel="prefetch" href="/assets/js/26.fd028bbc.js"><link rel="prefetch" href="/assets/js/27.af2db07e.js"><link rel="prefetch" href="/assets/js/28.fc439321.js"><link rel="prefetch" href="/assets/js/29.1ee71bae.js"><link rel="prefetch" href="/assets/js/3.46b8a638.js"><link rel="prefetch" href="/assets/js/30.d560a003.js"><link rel="prefetch" href="/assets/js/31.1c2aef9c.js"><link rel="prefetch" href="/assets/js/32.7c94f744.js"><link rel="prefetch" href="/assets/js/33.10c0a464.js"><link rel="prefetch" href="/assets/js/35.f564fdaf.js"><link rel="prefetch" href="/assets/js/36.fd233a7b.js"><link rel="prefetch" href="/assets/js/37.cb63773d.js"><link rel="prefetch" href="/assets/js/38.13fffaa0.js"><link rel="prefetch" href="/assets/js/39.cceb70e9.js"><link rel="prefetch" href="/assets/js/4.21a7dd86.js"><link rel="prefetch" href="/assets/js/40.f0903fe7.js"><link rel="prefetch" href="/assets/js/41.80c6a82b.js"><link rel="prefetch" href="/assets/js/42.b22b6738.js"><link rel="prefetch" href="/assets/js/43.72db9de1.js"><link rel="prefetch" href="/assets/js/44.305a459e.js"><link rel="prefetch" href="/assets/js/45.52f9164c.js"><link rel="prefetch" href="/assets/js/46.3fc9528f.js"><link rel="prefetch" href="/assets/js/47.5a2edbca.js"><link rel="prefetch" href="/assets/js/48.98912cd9.js"><link rel="prefetch" href="/assets/js/49.9ae20576.js"><link rel="prefetch" href="/assets/js/5.37137095.js"><link rel="prefetch" href="/assets/js/50.0a951f2d.js"><link rel="prefetch" href="/assets/js/51.d791640d.js"><link rel="prefetch" href="/assets/js/52.f7676f5c.js"><link rel="prefetch" href="/assets/js/53.a2a7ccf1.js"><link rel="prefetch" href="/assets/js/54.63e34748.js"><link rel="prefetch" href="/assets/js/55.15d24d63.js"><link rel="prefetch" href="/assets/js/56.ca96b7c6.js"><link rel="prefetch" href="/assets/js/57.ddb645a5.js"><link rel="prefetch" href="/assets/js/58.4136208c.js"><link rel="prefetch" href="/assets/js/59.3710eb08.js"><link rel="prefetch" href="/assets/js/6.05a5a173.js"><link rel="prefetch" href="/assets/js/60.aa5decbc.js"><link rel="prefetch" href="/assets/js/61.2701097a.js"><link rel="prefetch" href="/assets/js/62.8922b4da.js"><link rel="prefetch" href="/assets/js/63.607e2474.js"><link rel="prefetch" href="/assets/js/64.5874de1f.js"><link rel="prefetch" href="/assets/js/65.47fd95ed.js"><link rel="prefetch" href="/assets/js/7.0ef6d720.js"><link rel="prefetch" href="/assets/js/8.a0179725.js"><link rel="prefetch" href="/assets/js/9.58457e85.js">
+    <link rel="stylesheet" href="/assets/css/0.styles.e4d8b86b.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container no-sidebar"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><!----> <span class="site-name">褚鹏飞的博客</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="算法" class="dropdown-title"><span class="title">算法</span> <span class="arrow down"></span></button> <button type="button" aria-label="算法" class="mobile-dropdown-title"><span class="title">算法</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/algorithms/" class="nav-link">
+  常用算法
+</a></li><li class="dropdown-item"><!----> <a href="/leetCode/leetCode/" class="nav-link">
+  leetCode算题解
+</a></li><li class="dropdown-item"><!----> <a href="/leetCode/valuableBook/" class="nav-link">
+  面试题
+</a></li><li class="dropdown-item"><!----> <a href="/leetCode/offer/" class="nav-link">
+  剑指offer
+</a></li></ul></div></div><div class="nav-item"><a href="/dataStructure/" class="nav-link">
+  数据结构
+</a></div><div class="nav-item"><a href="/network/" class="nav-link">
+  计算机网络
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="Vue" class="dropdown-title"><span class="title">Vue</span> <span class="arrow down"></span></button> <button type="button" aria-label="Vue" class="mobile-dropdown-title"><span class="title">Vue</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/vue/vue-analysis/" class="nav-link">
+  Vue2内部原理剖析
+</a></li><li class="dropdown-item"><!----> <a href="/vue/vue3-analysis/" class="nav-link">
+  Vue3内部原理剖析
+</a></li><li class="dropdown-item"><!----> <a href="/vue/vue-component/" class="nav-link">
+  Vue组件探索
+</a></li><li class="dropdown-item"><!----> <a href="/vue/vuex/" class="nav-link">
+  Vuex源码解析
+</a></li><li class="dropdown-item"><!----> <a href="/vue/vue-router/" class="nav-link">
+  Vue-Router源码解析
+</a></li></ul></div></div><div class="nav-item"><a href="/react/" class="nav-link">
+  React
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="webpack" class="dropdown-title"><span class="title">webpack</span> <span class="arrow down"></span></button> <button type="button" aria-label="webpack" class="mobile-dropdown-title"><span class="title">webpack</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/webpack/webpack-base.html" class="nav-link">
+  webpack基础
+</a></li><li class="dropdown-item"><!----> <a href="/webpack/webpack-advance.html" class="nav-link">
+  webpack进阶
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="Node.js" class="dropdown-title"><span class="title">Node.js</span> <span class="arrow down"></span></button> <button type="button" aria-label="Node.js" class="mobile-dropdown-title"><span class="title">Node.js</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/node/node-base/" class="nav-link">
+  Node基础
+</a></li><li class="dropdown-item"><!----> <a href="/node/express/" class="nav-link">
+  Express
+</a></li><li class="dropdown-item"><!----> <a href="/node/koa/" class="nav-link">
+  Koa
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="服务端" class="dropdown-title"><span class="title">服务端</span> <span class="arrow down"></span></button> <button type="button" aria-label="服务端" class="mobile-dropdown-title"><span class="title">服务端</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/linux/" class="nav-link">
+  linux
+</a></li><li class="dropdown-item"><!----> <a href="/git/" class="nav-link">
+  git工具
+</a></li><li class="dropdown-item"><!----> <a href="/nginx/nginx-base/" class="nav-link">
+  nginx
+</a></li><li class="dropdown-item"><!----> <a href="/docker/" class="nav-link">
+  docker
+</a></li><li class="dropdown-item"><!----> <a href="/k8s/" class="nav-link">
+  kubernetes
+</a></li><li class="dropdown-item"><!----> <a href="/database/mysql/" class="nav-link">
+  mySql
+</a></li><li class="dropdown-item"><!----> <a href="/database/mongodb/" class="nav-link">
+  mongodb
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="前端三剑客" class="dropdown-title"><span class="title">前端三剑客</span> <span class="arrow down"></span></button> <button type="button" aria-label="前端三剑客" class="mobile-dropdown-title"><span class="title">前端三剑客</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/threemusketeers/javascript/" class="nav-link">
+  javascript
+</a></li><li class="dropdown-item"><!----> <a href="/threemusketeers/html/" class="nav-link">
+  HTML
+</a></li><li class="dropdown-item"><!----> <a href="/threemusketeers/css/" class="nav-link">
+  css
+</a></li></ul></div></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="算法" class="dropdown-title"><span class="title">算法</span> <span class="arrow down"></span></button> <button type="button" aria-label="算法" class="mobile-dropdown-title"><span class="title">算法</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/algorithms/" class="nav-link">
+  常用算法
+</a></li><li class="dropdown-item"><!----> <a href="/leetCode/leetCode/" class="nav-link">
+  leetCode算题解
+</a></li><li class="dropdown-item"><!----> <a href="/leetCode/valuableBook/" class="nav-link">
+  面试题
+</a></li><li class="dropdown-item"><!----> <a href="/leetCode/offer/" class="nav-link">
+  剑指offer
+</a></li></ul></div></div><div class="nav-item"><a href="/dataStructure/" class="nav-link">
+  数据结构
+</a></div><div class="nav-item"><a href="/network/" class="nav-link">
+  计算机网络
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="Vue" class="dropdown-title"><span class="title">Vue</span> <span class="arrow down"></span></button> <button type="button" aria-label="Vue" class="mobile-dropdown-title"><span class="title">Vue</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/vue/vue-analysis/" class="nav-link">
+  Vue2内部原理剖析
+</a></li><li class="dropdown-item"><!----> <a href="/vue/vue3-analysis/" class="nav-link">
+  Vue3内部原理剖析
+</a></li><li class="dropdown-item"><!----> <a href="/vue/vue-component/" class="nav-link">
+  Vue组件探索
+</a></li><li class="dropdown-item"><!----> <a href="/vue/vuex/" class="nav-link">
+  Vuex源码解析
+</a></li><li class="dropdown-item"><!----> <a href="/vue/vue-router/" class="nav-link">
+  Vue-Router源码解析
+</a></li></ul></div></div><div class="nav-item"><a href="/react/" class="nav-link">
+  React
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="webpack" class="dropdown-title"><span class="title">webpack</span> <span class="arrow down"></span></button> <button type="button" aria-label="webpack" class="mobile-dropdown-title"><span class="title">webpack</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/webpack/webpack-base.html" class="nav-link">
+  webpack基础
+</a></li><li class="dropdown-item"><!----> <a href="/webpack/webpack-advance.html" class="nav-link">
+  webpack进阶
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="Node.js" class="dropdown-title"><span class="title">Node.js</span> <span class="arrow down"></span></button> <button type="button" aria-label="Node.js" class="mobile-dropdown-title"><span class="title">Node.js</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/node/node-base/" class="nav-link">
+  Node基础
+</a></li><li class="dropdown-item"><!----> <a href="/node/express/" class="nav-link">
+  Express
+</a></li><li class="dropdown-item"><!----> <a href="/node/koa/" class="nav-link">
+  Koa
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="服务端" class="dropdown-title"><span class="title">服务端</span> <span class="arrow down"></span></button> <button type="button" aria-label="服务端" class="mobile-dropdown-title"><span class="title">服务端</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/linux/" class="nav-link">
+  linux
+</a></li><li class="dropdown-item"><!----> <a href="/git/" class="nav-link">
+  git工具
+</a></li><li class="dropdown-item"><!----> <a href="/nginx/nginx-base/" class="nav-link">
+  nginx
+</a></li><li class="dropdown-item"><!----> <a href="/docker/" class="nav-link">
+  docker
+</a></li><li class="dropdown-item"><!----> <a href="/k8s/" class="nav-link">
+  kubernetes
+</a></li><li class="dropdown-item"><!----> <a href="/database/mysql/" class="nav-link">
+  mySql
+</a></li><li class="dropdown-item"><!----> <a href="/database/mongodb/" class="nav-link">
+  mongodb
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="前端三剑客" class="dropdown-title"><span class="title">前端三剑客</span> <span class="arrow down"></span></button> <button type="button" aria-label="前端三剑客" class="mobile-dropdown-title"><span class="title">前端三剑客</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/threemusketeers/javascript/" class="nav-link">
+  javascript
+</a></li><li class="dropdown-item"><!----> <a href="/threemusketeers/html/" class="nav-link">
+  HTML
+</a></li><li class="dropdown-item"><!----> <a href="/threemusketeers/css/" class="nav-link">
+  css
+</a></li></ul></div></div> <!----></nav>  <!----> </aside> <main class="page"> <div class="theme-default-content content__default"><h1 id="说一下vue-router的原理是什么"><a href="#说一下vue-router的原理是什么" class="header-anchor">#</a> 说一下vue-router的原理是什么?</h1> <p>vue-router 是vue的一个插件。</p> <p>核心就是更新视图但是不重新请求页面。</p> <p>vue-router实现单页面跳转，提供了三种方式： hash模式，history模式、abstract模式，根据传递的mode配置来决定采用哪一种方式。</p> <ul><li>hash: 使用url hash 值来作为路由。默认模式。</li> <li>history： 依赖HTML5 history API 和服务端配置。</li> <li>abstract: 支持所有JavaScript运行环境，如nodejs服务端</li></ul> <p>Hash模式：
+hash指的是浏览器url中 # 后面的内容 ，包含#。hash 是url中的锚点，代表的是网页中的一个位置，单单改变 #后面的部分，浏览器只会加载响应位置的内容，不会重新加载页面。</p> <ul><li>即 # 是用来指导浏览器动作的，对于服务端完全无用 http请求中不包含#</li> <li>每一次改变#后面的部分，都会在浏览器的历史记录中增加一个记录，使用后退按钮可以回到上一个位置</li></ul> <p>HashHistory中的api：
+我们可以为hash的改变添加监听事件。</p> <p>其中提供了两个方法： pushState  replacestate 这两个方法的共同的特点是：当调用他们改变浏览器的历史栈的时候，虽然当前url改变了，但是浏览器不会立即发出请求该url。</p> <p>History模式：
+底层使用的是Html5中的history api 帮助实现 url跳转无需重新加载页面。
+这种模式需要在服务端则增加一个覆盖所有情况的候选资源：如果url匹配不到任何静态资源，则应该返回一个配置好的默认页面。</p> <p>Abstract模式:
+根据平台差异可以看出，在 Weex 环境中只支持使用 abstract 模式。 不过，vue-router 自身会对环境做校验，如果发现没有浏览器的 API，vue-router 会自动强制进入 abstract 模式，所以 在使用 vue-router 时只要不写 mode 配置即可，默认会在浏览器环境中使用 hash 模式，在移动端原生环境中使用 abstract 模式。</p> <p>https://juejin.cn/post/6844903695365177352#heading-13</p> <p>https://zhuanlan.zhihu.com/p/37730038</p></div> <footer class="page-edit"><!----> <!----></footer> <!----> </main></div><div class="global-ui"></div></div>
+    <script src="/assets/js/app.98857e90.js" defer></script><script src="/assets/js/2.7fa00125.js" defer></script><script src="/assets/js/34.760bdef0.js" defer></script>
+  </body>
+</html>
