@@ -18,7 +18,6 @@ sidebar: auto
 输出：[null,null,3,-1]
 ```
 
-
 示例 2：
 ```
 输入：
@@ -47,15 +46,6 @@ sidebar: auto
 违反1的情况举例子: 1-5依次压入stackPush，stackPush的栈顶到栈底为5-1, 从stackPush压入stackPop时候，只将5和4压入了stackPop时候，此时stackPush还剩下1、2、3没有压入。此时如果用户想要进行弹出操作，那么会先将4最先弹出，与预想的队列的顺序就是不一样的。
 
 违反2的情况举例，1-5依次压入stackPush，stackPush的栈顶到栈底为5-1,  从stackPush将所有数据压入stackPop，此时stackPop 从栈顶到栈底就是5-1，此时又有6-10依次压入stackPush，stackPop不为空，stackPush不能向其压入数据，如果违反了2压入stackPop，从stackPop的栈顶到栈底就是 6-10  1-5 此时进行弹出操作，6最先被弹出，和预期结果不一致。
-
-
-
-
-
-
-
-
-
 
 ```js
 var CQueue = function() {
