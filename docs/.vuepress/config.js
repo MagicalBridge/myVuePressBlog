@@ -22,6 +22,10 @@ module.exports = {
             link: "/leetCode/leetCode/",
           },
           {
+            text: "牛客算题解",
+            link: "/leetCode/niuke/",
+          },
+          {
             text: "面试题",
             link: "/leetCode/valuableBook/",
           },
