@@ -10,13 +10,11 @@ console.log("ok")
 ```
 - Promsie可以使用new关键词调用，所以Promise底层是一个类，在现阶段我们不考虑兼容性问题。
 - 当使用Promise的时候，会传入一个executor函数，这个函数会立即执行。
-
-当前这个executor函数可以传递两个参数，这两个参数也是函数，一个是resolve 一个是 reject，可以改变promise的状态。
-
-promise中有三种状态：
-- 成功态
-- 失败态
-- 中间状态
+- 当前这个executor函数可以传递两个参数，这两个参数也是函数，一个是resolve 一个是 reject，可以改变promise的状态。
+- promise中有三种状态：
+  - 成功态
+  - 失败态
+  - 中间状态
 
 默认情况下promsie处于中间状态。使用new操作符操作promsie之后，会生成一个实例，每一个实例都拥有一个then方法，then方法接收两个函数作为参数，一个是成功回调，一个是失败回调。根据上面的描述信息，我们补充代码：
 
@@ -87,6 +85,29 @@ class Promise {
 
 module.exports = Promise
 ```
+
+我们在实际的使用场景中，一般在executor中传入的都是异步任务，类似于下面这样。
+```js
+let Promise = require('./promise')
+let promise = new Promise((resolve, reject) => {
+  setTimeout(() => {
+    resolve("executor")
+  }, 1000)
+})
+
+console.log("ok")
+
+promise.then(()=>{
+  console.log("success");
+},()=>{
+  console.log("failed");
+})
+// => 控制台打印 ok 
+```
+
+执行上述代码发现，如果我们在executor中传入的是一个异步任务，虽然调用了resolve方法，但是并没有走 then方法的成功回调，这是为什么呢？因为默认promise处于pending状态，当我们用定时器去触发resolve的时候，then方法已经执行完毕了，但是我们自己手写的这一版本promsie，并没有处于pending状态。我们现在开始实现。
+
+
 
 
 
