@@ -39,6 +39,25 @@ webpack的配置其实是一个Node的脚本，这个脚本对外暴露一个配
 
 默认值是 `./src/index.js`,但是你可以通过在 `webpack configuration`中配置 `entry` 属性，来指定一个（或者多个）不同的入口起点。
 
+entry 的配置有三种方式：
+- 传递一个字符串
+```js
+entry: './src/js/main.js',
+```
+
+- 传递数组
+```js
+entry: ['./src/js/main.js','./src/js/other.js'],
+```
+
+- 传递对象
+```js
+entry: {
+  main: './src/js/main.js',
+  other: './src/js/other.js'
+},
+```
+
 ### 1.2.1 src\index.js
 我们在`src`目录中创建`index.js`,添加代码如下。
 
@@ -88,13 +107,55 @@ module.exports = {
 ## 1.4 loader
 webpack 只能理解 `JavaScrit` 和 `JSON` 文件。
 
-但是在项目开发的过程中会遇到各式各样的文件，例如css代码，图片，模板代码等。webpack中提供了一种处理多种文件格式的机制，这便是`loader`。
+但是在项目开发的过程中会遇到各式各样的文件，例如css代码，图片，模板代码等。我们在上文已经说过，webpack 可以看多是一个模块打包机，我们编写任何文件，对于webpack来说，都是一个一个模块，有一个module字段，module下有一个rules字段，rules下面就是处理模块的规则。
+
+webpack中提供了一种处理多种文件格式的机制，这便是`loader`。
 
 我们可以把loader看成一个转换器，负责把某种文件格式的内容转换成 `webpack` 可以支持打包的模块, 以供应用程序使用。
 
 我们继续在 `webpack.config.js` 中添加 `loader` 配置。
 
 当我们需要使用不同的 loader 来解析处理不同类型的文件时，我们可以在 module.rules 字段下来配置相关的规则。
+
+### 1.4.1 chunk vs module
+
+Chunk 是webpack打包过程中，一堆module的集合，我们知道webpack打包是从一个入口文件开始，也可以说是入口模块，入口模块引用其他模块，模块再引用其他模块，webpack通过引用关系逐个打包模块，这些module就形成了一个chunk。
+
+如果我们有多个入口文件，可能会产出多条打包路径，一条路径就会形成一个Chunk。除了入口entry会产生Chunk，还有两种途径，下面会有介绍。
+
+
+### 1.4.2 产生chunk的三种途径
+- 1、entry
+- 2、异步加载模块
+- 3、代码分割 (code spliting)
+
+entry 的配置有三种方式：
+- 传递一个字符串 这种情况下只会产生一个chunk
+```js
+entry: './src/js/main.js',
+```
+
+- 传递数组 这种情况下也只会产生一个chunk  webpack会将数组里面的源代码 最终打包到一个bundle里面，原因是只生成了一个chunk
+```js
+entry: ['./src/js/main.js','./src/js/other.js'],
+```
+
+- 传递对象
+```js
+entry: {
+  main: './src/js/main.js',
+  other: './src/js/other.js'
+},
+output: {
+  // path: __dirname + "/public",
+  // filename:'bundle.js'
+  // 以上2行会报错 
+
+  path: __dirname + "/public",//打包后的文件存放的地方
+  filename: "[name].js", //打包后输出文件的文件名
+}
+```
+对象中一个字段就会产生一个Chunk，所以在output中filename直接写死名称，会报错。因为上面的配置，产生了两个Chunk，最终会生成两个Bundle，一个名称肯定不够用了。需要用[name]变量来利用entry下的字段名称，作为生成Bundle们的名称。
 
 **webpack.config.js**
 
@@ -582,3 +643,7 @@ module.exports = {
   ]
 }
 ```
+
+### webpack中的chunk
+1、chunk在webpack里面代指一个代码块。
+2、我们编写的任何文件，
