@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>webpack 打包文件分析 | 褚鹏飞的博客</title>
+    <meta name="generator" content="VuePress 1.8.2">
+    
+    <meta name="description" content="终于等到你">
+    
+    <link rel="preload" href="/assets/css/0.styles.e4d8b86b.css" as="style"><link rel="preload" href="/assets/js/app.d540ba1c.js" as="script"><link rel="preload" href="/assets/js/2.6ae9b001.js" as="script"><link rel="preload" href="/assets/js/77.36afdeef.js" as="script"><link rel="prefetch" href="/assets/js/10.3657cc51.js"><link rel="prefetch" href="/assets/js/11.4d92b98e.js"><link rel="prefetch" href="/assets/js/12.4355bb25.js"><link rel="prefetch" href="/assets/js/13.7a3e46c2.js"><link rel="prefetch" href="/assets/js/14.70a19838.js"><link rel="prefetch" href="/assets/js/15.e8d34401.js"><link rel="prefetch" href="/assets/js/16.f56ee1d5.js"><link rel="prefetch" href="/assets/js/17.6a46643a.js"><link rel="prefetch" href="/assets/js/18.34f66291.js"><link rel="prefetch" href="/assets/js/19.c8cc5ebb.js"><link rel="prefetch" href="/assets/js/20.160b8dff.js"><link rel="prefetch" href="/assets/js/21.f42ca7c6.js"><link rel="prefetch" href="/assets/js/22.0bd4af3e.js"><link rel="prefetch" href="/assets/js/23.0707c240.js"><link rel="prefetch" href="/assets/js/24.8c65da42.js"><link rel="prefetch" href="/assets/js/25.6157f2f5.js"><link rel="prefetch" href="/assets/js/26.aa4fb5f1.js"><link rel="prefetch" href="/assets/js/27.361ddec5.js"><link rel="prefetch" href="/assets/js/28.34027536.js"><link rel="prefetch" href="/assets/js/29.b704cb65.js"><link rel="prefetch" href="/assets/js/3.99acfd07.js"><link rel="prefetch" href="/assets/js/30.bd400007.js"><link rel="prefetch" href="/assets/js/31.17e59b32.js"><link rel="prefetch" href="/assets/js/32.26fec71a.js"><link rel="prefetch" href="/assets/js/33.fc9c2e42.js"><link rel="prefetch" href="/assets/js/34.9eab4307.js"><link rel="prefetch" href="/assets/js/35.8be9667b.js"><link rel="prefetch" href="/assets/js/36.843d31a6.js"><link rel="prefetch" href="/assets/js/37.918cdcf3.js"><link rel="prefetch" href="/assets/js/38.2744ef9c.js"><link rel="prefetch" href="/assets/js/39.182d8041.js"><link rel="prefetch" href="/assets/js/4.1eff70aa.js"><link rel="prefetch" href="/assets/js/40.e6b2c849.js"><link rel="prefetch" href="/assets/js/41.1b6bfaec.js"><link rel="prefetch" href="/assets/js/42.bc2405d3.js"><link rel="prefetch" href="/assets/js/43.3f44fe26.js"><link rel="prefetch" href="/assets/js/44.2b677dde.js"><link rel="prefetch" href="/assets/js/45.e2c6b30c.js"><link rel="prefetch" href="/assets/js/46.be774bff.js"><link rel="prefetch" href="/assets/js/47.a5f9cd6c.js"><link rel="prefetch" href="/assets/js/48.e904218a.js"><link rel="prefetch" href="/assets/js/49.66e7c4ed.js"><link rel="prefetch" href="/assets/js/5.546e63b8.js"><link rel="prefetch" href="/assets/js/50.e3a8dada.js"><link rel="prefetch" href="/assets/js/51.3e02a226.js"><link rel="prefetch" href="/assets/js/52.c507814b.js"><link rel="prefetch" href="/assets/js/53.e5d99169.js"><link rel="prefetch" href="/assets/js/54.30fb545d.js"><link rel="prefetch" href="/assets/js/55.ffc1c967.js"><link rel="prefetch" href="/assets/js/56.68a2acf4.js"><link rel="prefetch" href="/assets/js/57.8e6b4b0a.js"><link rel="prefetch" href="/assets/js/58.48f27fb4.js"><link rel="prefetch" href="/assets/js/59.0987db9a.js"><link rel="prefetch" href="/assets/js/6.eb974bf6.js"><link rel="prefetch" href="/assets/js/60.94e95a4b.js"><link rel="prefetch" href="/assets/js/61.0152304f.js"><link rel="prefetch" href="/assets/js/62.944791b6.js"><link rel="prefetch" href="/assets/js/63.2f478b66.js"><link rel="prefetch" href="/assets/js/64.0586e882.js"><link rel="prefetch" href="/assets/js/65.11ed1f65.js"><link rel="prefetch" href="/assets/js/66.67429170.js"><link rel="prefetch" href="/assets/js/67.22717e74.js"><link rel="prefetch" href="/assets/js/68.c26c6759.js"><link rel="prefetch" href="/assets/js/69.dd552b10.js"><link rel="prefetch" href="/assets/js/7.e4096e56.js"><link rel="prefetch" href="/assets/js/70.9504e06a.js"><link rel="prefetch" href="/assets/js/71.01d0d152.js"><link rel="prefetch" href="/assets/js/72.ae8f0f9a.js"><link rel="prefetch" href="/assets/js/73.245845e7.js"><link rel="prefetch" href="/assets/js/74.7a8e0b13.js"><link rel="prefetch" href="/assets/js/75.2d81b0fe.js"><link rel="prefetch" href="/assets/js/76.2c9acd1d.js"><link rel="prefetch" href="/assets/js/8.6192dfeb.js"><link rel="prefetch" href="/assets/js/9.003248bf.js">
+    <link rel="stylesheet" href="/assets/css/0.styles.e4d8b86b.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container no-sidebar"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><!----> <span class="site-name">褚鹏飞的博客</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="算法" class="dropdown-title"><span class="title">算法</span> <span class="arrow down"></span></button> <button type="button" aria-label="算法" class="mobile-dropdown-title"><span class="title">算法</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/algorithms/" class="nav-link">
+  常用算法
+</a></li><li class="dropdown-item"><!----> <a href="/leetCode/leetCode/" class="nav-link">
+  leetCode算题解
+</a></li><li class="dropdown-item"><!----> <a href="/leetCode/niuke/" class="nav-link">
+  牛客算题解
+</a></li><li class="dropdown-item"><!----> <a href="/leetCode/valuableBook/" class="nav-link">
+  面试题
+</a></li><li class="dropdown-item"><!----> <a href="/leetCode/offer/" class="nav-link">
+  剑指offer
+</a></li></ul></div></div><div class="nav-item"><a href="/dataStructure/" class="nav-link">
+  数据结构
+</a></div><div class="nav-item"><a href="/network/" class="nav-link">
+  计算机网络
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="Vue" class="dropdown-title"><span class="title">Vue</span> <span class="arrow down"></span></button> <button type="button" aria-label="Vue" class="mobile-dropdown-title"><span class="title">Vue</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/vue/vue-analysis/" class="nav-link">
+  Vue2内部原理剖析
+</a></li><li class="dropdown-item"><!----> <a href="/vue/vue3-analysis/" class="nav-link">
+  Vue3内部原理剖析
+</a></li><li class="dropdown-item"><!----> <a href="/vue/vue-component/" class="nav-link">
+  Vue组件探索
+</a></li><li class="dropdown-item"><!----> <a href="/vue/vuex/" class="nav-link">
+  Vuex源码解析
+</a></li><li class="dropdown-item"><!----> <a href="/vue/vue-router/" class="nav-link">
+  Vue-Router源码解析
+</a></li></ul></div></div><div class="nav-item"><a href="/react/" class="nav-link">
+  React
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="webpack" class="dropdown-title"><span class="title">webpack</span> <span class="arrow down"></span></button> <button type="button" aria-label="webpack" class="mobile-dropdown-title"><span class="title">webpack</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/webpack/webpack-base.html" class="nav-link">
+  webpack基础
+</a></li><li class="dropdown-item"><!----> <a href="/webpack/webpack-advance.html" class="nav-link">
+  webpack进阶
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="Node.js" class="dropdown-title"><span class="title">Node.js</span> <span class="arrow down"></span></button> <button type="button" aria-label="Node.js" class="mobile-dropdown-title"><span class="title">Node.js</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/node/node-base/" class="nav-link">
+  Node基础
+</a></li><li class="dropdown-item"><!----> <a href="/node/express/" class="nav-link">
+  Express
+</a></li><li class="dropdown-item"><!----> <a href="/node/koa/" class="nav-link">
+  Koa
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="服务端" class="dropdown-title"><span class="title">服务端</span> <span class="arrow down"></span></button> <button type="button" aria-label="服务端" class="mobile-dropdown-title"><span class="title">服务端</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/linux/" class="nav-link">
+  linux
+</a></li><li class="dropdown-item"><!----> <a href="/git/" class="nav-link">
+  git工具
+</a></li><li class="dropdown-item"><!----> <a href="/nginx/nginx-base/" class="nav-link">
+  nginx
+</a></li><li class="dropdown-item"><!----> <a href="/docker/" class="nav-link">
+  docker
+</a></li><li class="dropdown-item"><!----> <a href="/k8s/" class="nav-link">
+  kubernetes
+</a></li><li class="dropdown-item"><!----> <a href="/database/mysql/" class="nav-link">
+  mySql
+</a></li><li class="dropdown-item"><!----> <a href="/database/mongodb/" class="nav-link">
+  mongodb
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="前端三剑客" class="dropdown-title"><span class="title">前端三剑客</span> <span class="arrow down"></span></button> <button type="button" aria-label="前端三剑客" class="mobile-dropdown-title"><span class="title">前端三剑客</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/threemusketeers/javascript/" class="nav-link">
+  javascript
+</a></li><li class="dropdown-item"><!----> <a href="/threemusketeers/html/" class="nav-link">
+  HTML
+</a></li><li class="dropdown-item"><!----> <a href="/threemusketeers/css/" class="nav-link">
+  css
+</a></li></ul></div></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="算法" class="dropdown-title"><span class="title">算法</span> <span class="arrow down"></span></button> <button type="button" aria-label="算法" class="mobile-dropdown-title"><span class="title">算法</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/algorithms/" class="nav-link">
+  常用算法
+</a></li><li class="dropdown-item"><!----> <a href="/leetCode/leetCode/" class="nav-link">
+  leetCode算题解
+</a></li><li class="dropdown-item"><!----> <a href="/leetCode/niuke/" class="nav-link">
+  牛客算题解
+</a></li><li class="dropdown-item"><!----> <a href="/leetCode/valuableBook/" class="nav-link">
+  面试题
+</a></li><li class="dropdown-item"><!----> <a href="/leetCode/offer/" class="nav-link">
+  剑指offer
+</a></li></ul></div></div><div class="nav-item"><a href="/dataStructure/" class="nav-link">
+  数据结构
+</a></div><div class="nav-item"><a href="/network/" class="nav-link">
+  计算机网络
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="Vue" class="dropdown-title"><span class="title">Vue</span> <span class="arrow down"></span></button> <button type="button" aria-label="Vue" class="mobile-dropdown-title"><span class="title">Vue</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/vue/vue-analysis/" class="nav-link">
+  Vue2内部原理剖析
+</a></li><li class="dropdown-item"><!----> <a href="/vue/vue3-analysis/" class="nav-link">
+  Vue3内部原理剖析
+</a></li><li class="dropdown-item"><!----> <a href="/vue/vue-component/" class="nav-link">
+  Vue组件探索
+</a></li><li class="dropdown-item"><!----> <a href="/vue/vuex/" class="nav-link">
+  Vuex源码解析
+</a></li><li class="dropdown-item"><!----> <a href="/vue/vue-router/" class="nav-link">
+  Vue-Router源码解析
+</a></li></ul></div></div><div class="nav-item"><a href="/react/" class="nav-link">
+  React
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="webpack" class="dropdown-title"><span class="title">webpack</span> <span class="arrow down"></span></button> <button type="button" aria-label="webpack" class="mobile-dropdown-title"><span class="title">webpack</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/webpack/webpack-base.html" class="nav-link">
+  webpack基础
+</a></li><li class="dropdown-item"><!----> <a href="/webpack/webpack-advance.html" class="nav-link">
+  webpack进阶
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="Node.js" class="dropdown-title"><span class="title">Node.js</span> <span class="arrow down"></span></button> <button type="button" aria-label="Node.js" class="mobile-dropdown-title"><span class="title">Node.js</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/node/node-base/" class="nav-link">
+  Node基础
+</a></li><li class="dropdown-item"><!----> <a href="/node/express/" class="nav-link">
+  Express
+</a></li><li class="dropdown-item"><!----> <a href="/node/koa/" class="nav-link">
+  Koa
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="服务端" class="dropdown-title"><span class="title">服务端</span> <span class="arrow down"></span></button> <button type="button" aria-label="服务端" class="mobile-dropdown-title"><span class="title">服务端</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/linux/" class="nav-link">
+  linux
+</a></li><li class="dropdown-item"><!----> <a href="/git/" class="nav-link">
+  git工具
+</a></li><li class="dropdown-item"><!----> <a href="/nginx/nginx-base/" class="nav-link">
+  nginx
+</a></li><li class="dropdown-item"><!----> <a href="/docker/" class="nav-link">
+  docker
+</a></li><li class="dropdown-item"><!----> <a href="/k8s/" class="nav-link">
+  kubernetes
+</a></li><li class="dropdown-item"><!----> <a href="/database/mysql/" class="nav-link">
+  mySql
+</a></li><li class="dropdown-item"><!----> <a href="/database/mongodb/" class="nav-link">
+  mongodb
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="前端三剑客" class="dropdown-title"><span class="title">前端三剑客</span> <span class="arrow down"></span></button> <button type="button" aria-label="前端三剑客" class="mobile-dropdown-title"><span class="title">前端三剑客</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/threemusketeers/javascript/" class="nav-link">
+  javascript
+</a></li><li class="dropdown-item"><!----> <a href="/threemusketeers/html/" class="nav-link">
+  HTML
+</a></li><li class="dropdown-item"><!----> <a href="/threemusketeers/css/" class="nav-link">
+  css
+</a></li></ul></div></div> <!----></nav>  <!----> </aside> <main class="page"> <div class="theme-default-content content__default"><h2 id="webpack-打包文件分析"><a href="#webpack-打包文件分析" class="header-anchor">#</a> webpack 打包文件分析</h2> <h3 id="src-title-js"><a href="#src-title-js" class="header-anchor">#</a> .src/title.js</h3> <div class="language-js line-numbers-mode"><pre class="language-js"><code>module<span class="token punctuation">.</span>exports <span class="token operator">=</span> <span class="token string">'webpack'</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><h3 id="src-index-js"><a href="#src-index-js" class="header-anchor">#</a> .src/index.js</h3> <div class="language-js line-numbers-mode"><pre class="language-js"><code><span class="token keyword">const</span> title <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'./title'</span><span class="token punctuation">)</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>title<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br></div></div><h3 id="dist-main-js"><a href="#dist-main-js" class="header-anchor">#</a> ./dist/main.js</h3> <p>打包之后的结果：</p> <div class="language-js line-numbers-mode"><div class="highlight-lines"><br><div class="highlighted"> </div><div class="highlighted"> </div><div class="highlighted"> </div><div class="highlighted"> </div><div class="highlighted"> </div><br><div class="highlighted"> </div><br><br><div class="highlighted"> </div><br><br><br><br><br><br><br><br><br><br><br><br><br><div class="highlighted"> </div><br><br><br><br><br><br><br><br><div class="highlighted"> </div><div class="highlighted"> </div><div class="highlighted"> </div><div class="highlighted"> </div><br><br></div><pre class="language-js"><code><span class="token punctuation">;</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> __webpack_modules__ <span class="token operator">=</span> <span class="token punctuation">{</span>
+    <span class="token string">&quot;./src/title.js&quot;</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token parameter">module</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+      module<span class="token punctuation">.</span>exports <span class="token operator">=</span> <span class="token string">&quot;webpack&quot;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">}</span>
+  <span class="token comment">// The module cache</span>
+  <span class="token keyword">var</span> __webpack_module_cache__ <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+
+  <span class="token comment">// The require function</span>
+  <span class="token keyword">function</span> <span class="token function">__webpack_require__</span><span class="token punctuation">(</span><span class="token parameter">moduleId</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// Check if module is in cache</span>
+    <span class="token keyword">var</span> cachedModule <span class="token operator">=</span> __webpack_module_cache__<span class="token punctuation">[</span>moduleId<span class="token punctuation">]</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>cachedModule <span class="token operator">!==</span> <span class="token keyword">undefined</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">return</span> cachedModule<span class="token punctuation">.</span>exports
+    <span class="token punctuation">}</span>
+    <span class="token comment">// Create a new module (and put it into the cache)</span>
+    <span class="token keyword">var</span> module <span class="token operator">=</span> <span class="token punctuation">(</span>__webpack_module_cache__<span class="token punctuation">[</span>moduleId<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">{</span>
+      <span class="token comment">// no module.id needed</span>
+      <span class="token comment">// no module.loaded needed</span>
+      exports<span class="token operator">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+    <span class="token comment">// Execute the module function</span>
+    __webpack_modules__<span class="token punctuation">[</span>moduleId<span class="token punctuation">]</span><span class="token punctuation">(</span>module<span class="token punctuation">,</span> module<span class="token punctuation">.</span>exports<span class="token punctuation">,</span> __webpack_require__<span class="token punctuation">)</span>
+
+    <span class="token comment">// Return the exports of the module</span>
+    <span class="token keyword">return</span> module<span class="token punctuation">.</span>exports
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">var</span> __webpack_exports__ <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+  <span class="token comment">// This entry need to be wrapped in an IIFE because </span>
+  <span class="token comment">// it need to be isolated against other modules in the chunk.</span>
+  <span class="token punctuation">;</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> title <span class="token operator">=</span> <span class="token function">__webpack_require__</span><span class="token punctuation">(</span><span class="token comment">/*! ./title */</span> <span class="token string">&quot;./src/title.js&quot;</span><span class="token punctuation">)</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>title<span class="token punctuation">)</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre><div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br></div></div><ul><li><p>1、打包之后的结果是一个自执行函数。</p></li> <li><p>2、{2-6}行定义了一个 <strong>webpack_modules</strong> 对象，key 是配置引用的模块，value 是一个函数，接收一个module参数，将title.js 中的内容放进了函数体内。</p> <div class="language-js line-numbers-mode"><pre class="language-js"><code><span class="token keyword">var</span> __webpack_modules__ <span class="token operator">=</span> <span class="token punctuation">{</span>
+  <span class="token string">&quot;./src/title.js&quot;</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token parameter">module</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    module<span class="token punctuation">.</span>exports <span class="token operator">=</span> <span class="token string">&quot;webpack&quot;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br></div></div></li> <li><p>3、34-37行也是一个自执行函数，也是程序的入口，可以看到, 这里调用了webpack中自定义的一个 <strong>webpack_require</strong> 函数, 入参就是 <strong>webpack_modules</strong> 中的key。</p></li> <li><p>4、我们接着定位到 <strong>webpack_require</strong>  这个方法 入参是一个 moduleId, {8}行定义了一个缓存对象，首先在函数中判断，这个moduleId是否存在了，如果存在了就返回 cachedModule的exports 对象。创建一个对象，这个对象中的key是 exports value 是一个空的对象。</p></li> <li><p>5 开始用__webpack_modules__ 根据 传入的 moduleId 调用对象的函数。传入的三个参数。</p></li> <li><p>6 {25} 执行函数 得到 <code>module.exports = &quot;webpack&quot;</code> 最后返回的 module.exports 就是 字符串 webpack。</p></li></ul></div> <footer class="page-edit"><!----> <!----></footer> <!----> </main></div><div class="global-ui"></div></div>
+    <script src="/assets/js/app.d540ba1c.js" defer></script><script src="/assets/js/2.6ae9b001.js" defer></script><script src="/assets/js/77.36afdeef.js" defer></script>
+  </body>
+</html>
