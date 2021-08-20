@@ -47,7 +47,7 @@ post('www.test.com', "name=kevin");
 var postFromTest = post('www.test.com');
 postFromTest("name=kevin");
 ```
-curry的这种用途可以理解为：参数复用。本质上是降低通用性，提高适用性。
+curry的这种用途可以理解为：参数复用。**本质上是降低通用性，提高适用性。**
 
 可是即便如此，是不是依然感觉没有什么用呢？
 
@@ -67,3 +67,19 @@ var name = person.map(function(item) {
   return item.name
 })
 ```
+
+不过我们有curry函数:
+```js
+var prop = curry(function(key, obj) {
+  return obj[key]
+})
+var name = person.map(prop['name'])
+```
+
+我们为了获取 name 属性还要再编写一个prop函数，是不是又麻烦了一些？
+
+但是要注意，prop函数编写一次后，以后可以多次使用，实际上操作代码从原本的三行精简成了一行，而且你看代码是不是更加容易理解了？
+
+person.map(prop('name')) 就好像直白的告诉你：person 对象遍历(map)获取(prop) name 属性。
+
+是不是感觉有点意思了呢？
