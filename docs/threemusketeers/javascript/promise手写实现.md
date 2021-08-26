@@ -8,15 +8,17 @@ new Promise(()=>{
 console.log("ok")
 // 控制行输出 =>  executor ok
 ```
-- Promsie可以使用new关键词调用，所以Promise底层是一个类，在现阶段我们不考虑兼容性问题。
-- 当使用Promise的时候，会传入一个executor函数，这个函数会立即执行。
-- 当前这个executor函数可以传递两个参数，这两个参数也是函数，一个是resolve 一个是 reject，可以改变promise的状态。
+- Promsie可以使用new关键词调用，我们可以把Promise看成是一个类，在现阶段我们不考虑兼容性问题。
+- 当使用Promise的时候，会传入一个 `executor` 函数，这个函数会立即执行。
+- 这个executor函数可以传递两个参数，这两个参数也是函数，一个是resolve 另一个是reject，这两个函数的执行可以改变promise的状态。
 - promise中有三种状态：
   - 成功态
   - 失败态
   - 中间状态
 
-默认情况下promsie处于中间状态。使用new操作符操作promsie之后，会生成一个实例，每一个实例都拥有一个then方法，then方法接收两个函数作为参数，一个是成功回调，一个是失败回调。根据上面的描述信息，我们补充代码：
+- 默认情况下promsie处于中间状态。
+- 使用new操作符操作promsie之后，会生成一个实例，每一个实例都拥有一个then方法。
+- then方法接收两个函数作为参数，一个是成功回调，一个是失败回调。根据上面的描述信息，我们补充代码：
 
 ```js
 let promise = new Promise((resolve, reject) => {
@@ -24,6 +26,7 @@ let promise = new Promise((resolve, reject) => {
 })
 console.log("ok")
 
+// 每个实例都用拥有一个then方法
 promise.then(()=>{
   console.log("success");
 },()=>{
@@ -32,9 +35,11 @@ promise.then(()=>{
 // 控制行输出 =>  executor ok
 ```
 
-虽然我们在then方法中写了success 和 failed 但是既没有走成功回调，也没有走失败回调。这是因为，默认promsie处于的是等待状态。我们想要成功还是失败，需要主动调用resolve或者调用reject告诉promsie。如果调用resolve函数就是成功，如果调用reject就是失败。
+通过打印输出可以看到，虽然我们在then方法中写了success 和 failed 但是既没有走成功回调，也没有走失败回调。
 
-我们尝试手写一版 Promise。使用 commonjs 规范，自定义一个js文件，之后使用Promsie的时候就导入自己手写的这个promsie。
+这是因为默认状态下promsie处于的是等待状态。我们想要成功还是失败，需要主动调用resolve或者调用reject告诉promsie。如果调用resolve函数promise转变为成功状态，如果调用reject函数promise就转变为失败状态。
+
+我们尝试手写一版Promise，使用 commonjs 规范，自定义一个js文件，之后使用Promsie的时候就导入自己手写的这个promsie。
 
 ```js
 // promsie 有三种状态，分别是 等待  成功  失败 我们用常量来表示。
@@ -107,7 +112,7 @@ promise.then(()=>{
 
 执行上述代码发现，如果我们在executor中传入的是一个异步任务，虽然调用了resolve方法，但是并没有走实例的then方法的成功回调，这是为什么呢？因为默认promise处于pending状态，当我们用定时器去触发resolve的时候，then方法已经执行完毕了，但是我们自己手写的这一版本promsie，并没有处于pending状态。我们现在开始实现。
 
-我们可以这样处理，准备两个数组，分别用于存放**成功回调函数**和**失败回调函数**，当我们真正触发 resolve 或者reject的时候遍历数组执行其中的回调函数。
+我们可以这样处理，准备两个数组，分别用于存放**成功回调函数**和**失败回调函数**，当我们真正触发 resolve 或者 reject 的时候遍历数组执行其中的回调函数。
 
 这种实现的思路其实是发布订阅的模式。先订阅好所有的成功回调和失败回调，然后在触发resolve 和 reject 的时候执行发布。
 
@@ -269,7 +274,7 @@ readFile("./a.txt", "utf8").then((value)=>{
 let promise2 = new Promise((resolve, reject) => {
   resolve('成功')
 }).then((data) => {
-  console.log(data) // => 1
+  console.log(data) // => ‘成功’
   return 'x'
 })
 
@@ -297,9 +302,8 @@ promise2.then((data) => {
   }
 )
 ```
-如果在第一个promise的成功中, 抛出异常，会在第二个then的方法中的失败回调中得到结果。
-根据此，我们需要同步捕获错误异常。
 
+如果在第一个promise的成功回调函数中, 抛出异常，会在第二个then的方法中的失败回调中得到结果。这很显然是调用了第二个promsie的resolve或者reject方法，根据此，我们需要**同步捕获错误异常**。
 
 ```js{41,81-82}
 // promsie 有三种状态，分别是 等待  成功  失败 我们用常量来表示。
@@ -390,7 +394,7 @@ class Promise {
 module.exports = Promise
 ```
 
-在promsieA+ 规范中有说过这样的点, onFulfilled 和 onRejected 不能在当前上下文中调用，这里我就必须想办法，让这两个函数异步触发，异步触发，这里我们使用settime来实现，原因是我们没有办法模拟浏览器的微任务处理逻辑。
+在promsieA+ 规范中有说过这样的点, onFulfilled 和 onRejected 不能在当前上下文中调用，这里我就必须想办法，让这两个函数异步触发，异步触发，这里我们使用setTimeout来实现，原因是我们没有办法模拟浏览器的微任务处理逻辑。
 
 ```js
 // promsie 有三种状态，分别是 等待  成功  失败 我们用常量来表示。
@@ -436,23 +440,23 @@ class Promise {
     let promsie2 = new Promise((resolve, reject) => {
       if(this.status == PENDING) {
         this.onResolvedCallbacks.push(() => { 
-          setTimeout(()=>{
+          setTimeout(() => {
             try {
               // todo...
               let x = onFulfilled(this.value);
               resolve(x)
-            catch(e) {
+            } catch(e) {
               reject(e)
             }
           },0)
         });
         this.onRejectedCallbacks.push(() => {
-          setTimeout(()=>{
+          setTimeout(() => {
             try {
               // todo...
               let x = onRejected(this.reason);
               resolve(x)
-            catch(e) {
+            } catch(e) {
               reject(e)
             }
           },0)
@@ -460,7 +464,7 @@ class Promise {
       }
       // onFulfilled, onRejected
       if (this.status == FULFILLED) {
-        setTimeout(()=>{
+        setTimeout(() => {
           try {
             // 成功调用成功方法，并传入成功的值
             let x = onFulfilled(this.value)
