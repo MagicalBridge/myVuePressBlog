@@ -2,7 +2,7 @@
 sidebar: auto
 ---
 
-# nginx
+# nginx基础
 
 ## 1.nginx使用场景
 - 静态资源服务器
@@ -62,7 +62,7 @@ yum  -y install gcc gcc-c++ autoconf pcre pcre-devel make automake openssl opens
 - worker 进程数，一般会设置成机器的cpu核数，因为更多的worker数，只会导致进程相互竞争cpu，从而带来不必要的上下文切换
 - 使用多进程模型，不仅能够提高并发率，而且多个进程之间相互独立，一个worker进程挂了不会影响到其他的worker进程
 
-### 5.nginx的安装
+## 5.nginx的安装
 
 ### 5.1 版本的分类
 - Mainline version 开发版本
@@ -70,7 +70,12 @@ yum  -y install gcc gcc-c++ autoconf pcre pcre-devel make automake openssl opens
 - Legacy versions  历史版本
 
 ### 5.2 CentOS下使用 YUM 安装
-`vi /etc/yum.repos.d/nginx.repo `
+
+创建 `nginx.repo` 文件, 在终端中执行如下命令:
+
+```
+vi /etc/yum.repos.d/nginx.repo
+```
 
 写入下面配置
 
@@ -93,8 +98,112 @@ nginx -v //查看安装的版本
 nginx -V //查看编译时的参数
 ```
 
+## 6.目录
+
+### 6.1 安装目录
+
+查看nginx安装的配置文件和目录。
+
+```
+rpm -ql nginx
+```
+显示如下信息：
+```
+$ rpm -ql nginx
+/etc/logrotate.d/nginx
+/etc/nginx/fastcgi.conf
+/etc/nginx/fastcgi.conf.default
+/etc/nginx/fastcgi_params
+/etc/nginx/fastcgi_params.default
+/etc/nginx/koi-utf
+/etc/nginx/koi-win
+/etc/nginx/mime.types
+/etc/nginx/mime.types.default
+/etc/nginx/nginx.conf
+/etc/nginx/nginx.conf.default
+/etc/nginx/scgi_params
+/etc/nginx/scgi_params.default
+/etc/nginx/uwsgi_params
+/etc/nginx/uwsgi_params.default
+/etc/nginx/win-utf
+/usr/bin/nginx-upgrade
+/usr/lib/systemd/system/nginx.service
+/usr/lib64/nginx/modules
+/usr/sbin/nginx
+/usr/share/doc/nginx-1.20.1
+/usr/share/doc/nginx-1.20.1/CHANGES
+/usr/share/doc/nginx-1.20.1/README
+/usr/share/doc/nginx-1.20.1/README.dynamic
+/usr/share/doc/nginx-1.20.1/UPGRADE-NOTES-1.6-to-1.10
+/usr/share/licenses/nginx-1.20.1
+/usr/share/licenses/nginx-1.20.1/LICENSE
+/usr/share/man/man3/nginx.3pm.gz
+/usr/share/man/man8/nginx-upgrade.8.gz
+/usr/share/man/man8/nginx.8.gz
+/usr/share/nginx/html/404.html
+/usr/share/nginx/html/50x.html
+/usr/share/nginx/html/en-US
+/usr/share/nginx/html/icons
+/usr/share/nginx/html/icons/poweredby.png
+/usr/share/nginx/html/img
+/usr/share/nginx/html/index.html
+/usr/share/nginx/html/nginx-logo.png
+/usr/share/nginx/html/poweredby.png
+/usr/share/vim/vimfiles/ftdetect/nginx.vim
+/usr/share/vim/vimfiles/ftplugin/nginx.vim
+/usr/share/vim/vimfiles/indent/nginx.vim
+/usr/share/vim/vimfiles/syntax/nginx.vim
+/var/lib/nginx
+/var/lib/nginx/tmp
+/var/log/nginx
+/var/log/nginx/access.log
+/var/log/nginx/error.log
+```
 
 
+### 6.2 日志切割文件所在的位置
+- ngxin 日志切割文件
+```
+/etc/logrotate.d/nginx
+```
+
+### 6.3 主配置文件所在的目录
+
+| 路径      | 用途 |
+| ----------- | ----------- |
+| /etc/nginx/nginx.conf    | 核心配置文件   |
+| /etc/nginx/conf.d/default.conf | 默认http服务器配置文件|
+
+### 6.4 守护进程命令
+```
+systemctl restart nginx.service
+```
+
+### 6.5 nginx 模块目录
+- nginx安装的模块
+
+| 路径      | 用途 |
+| ----------- | ----------- |
+| /etc/nginx/modules| 最基本的共享库和内核模块|
 
 
+### 6.6 文档
+- nginx的手册和帮助文件
 
+| 路径      | 用途 |
+| ----------- | ----------- |
+| /usr/share/doc/ nginx-1.20.1| 帮助文档|
+
+### 6.7 缓存目录
+
+| 路径      | 用途 |
+| ----------- | ----------- |
+| /var/cache/nginx| nginx的缓存目录|
+
+### 6.8 可执行命令
+- nginx服务的启动管理的可执行文件
+
+| 路径      | 用途 |
+| ----------- | ----------- |
+| /usr/sbin/nginx| 可执行命令|
+| /usr/sbin/nginx-debug| 调试执行可执行命令|
