@@ -394,9 +394,9 @@ class Promise {
 module.exports = Promise
 ```
 
-在promsieA+ 规范中有说过这样的点, onFulfilled 和 onRejected 不能在当前上下文中调用，这里我就必须想办法，让这两个函数异步触发，异步触发，这里我们使用setTimeout来实现，原因是我们没有办法模拟浏览器的微任务处理逻辑。
+在promsieA+ 规范中有说过这样的点, **onFulfilled 和 onRejected 不能在当前上下文中调用，这里我就必须想办法，让这两个函数异步触发，异步触发，这里我们使用setTimeout来实现**，原因是我们没有办法模拟浏览器的微任务处理逻辑。
 
-```js
+```js{44-52,55-63}
 // promsie 有三种状态，分别是 等待  成功  失败 我们用常量来表示。
 const PENDING = "PENDING"
 const FULFILLED = "FULFILLED"
@@ -492,7 +492,433 @@ class Promise {
 
 module.exports = Promise
 ```
-下面我们开始实现对于x处理逻辑。
+在第一个promise then 方法中很可能返回的还是一个promsie, 也就是说 onFulfilled 执行完的x可能是一个Promise。类似于下面的代码：
+
+```js
+let promise2 = new Promise((resolve) => {
+  resolve(1)
+}).then((data) => {
+    // onFulfilled 函数的返回值x 可能还是个 Promsie
+    return new Promise((resolve, reject) => {
+      // x 可能是一个promise
+      setTimeout(() => {
+        resolve("ok")
+      }, 1000)
+    })
+  },(err) => {
+    return 111
+  }
+)
+promise2.then((data) => {
+    console.log(data) // ok 
+  },(err) => {
+    console.log("error", err)
+  }
+)
+```
+我们可以看到，第二个then的成功回调中拿到的是新的创建出来的promise的结果。根据上面的描述，我们需要专门创建一个处理函数来针对x的不同取值做相应的操作，这个方法是相对独立的。
+
+```js{48,59,72,83}
+// promsie 有三种状态，分别是 等待  成功  失败 我们用常量来表示。
+const PENDING = "PENDING"
+const FULFILLED = "FULFILLED"
+const REJECTED = "REJECTED"
+// Promsie 内部是一个类，我们这里使用 class 来实现
+class Promise {
+  // 构造函数的入参就是自执行函数 executor
+  constructor(executor) {
+    this.status = PENDING // promise默认的状态
+    this.value = undefined // 成功的原因
+    this.reason = undefined // 失败的原因
+    this.onResolvedCallbacks = []; // 存放成功的回调方法
+    this.onRejectedCallbacks = []; // 存放失败的回调方法
+    // 成功resolve函数
+    const resolve = (value) => {
+      // 只有在 PENDING 状态下 才能 修改状态
+      if (this.status === PENDING) {
+        this.value = value
+        this.status = FULFILLED // 修改状态
+        this.onResolveCallbacks.forEach((fn) => fn())
+      }
+    }
+    // 失败的reject函数
+    const reject = (reason) => {
+      if (this.status === PENDING) {
+        this.reason = reason
+        this.status = REJECTED // 修改状态
+        this.onRejecteCallbacks.forEach((fn) => fn())
+      }
+    }
+    try {
+      executor(resolve, reject)
+    } catch (e) {
+      // 立即执行函数执行的时候如果抛出异常，直接走reject函数。
+      reject(e)
+    }
+  }
+  then(onFulfilled, onRejected) {
+    // 每次then的时候 都会产生一个新的promsie，我们将这个新的promsie
+    // 命名为Promsie2。又因为promise接收的是一个立即执行函数，并不会影响结果。
+    let promsie2 = new Promise((resolve, reject) => {
+      if(this.status == PENDING) {
+        this.onResolvedCallbacks.push(() => { 
+          setTimeout(() => {
+            try {
+              // todo...
+              let x = onFulfilled(this.value);
+              resolvePromise(promsie2, x, resolve, reject)
+            } catch(e) {
+              reject(e)
+            }
+          },0)
+        });
+        this.onRejectedCallbacks.push(() => {
+          setTimeout(() => {
+            try {
+              // todo...
+              let x = onRejected(this.reason);
+              resolvePromise(promsie2, x, resolve, reject)
+            } catch(e) {
+              reject(e)
+            }
+          },0)
+        });
+      }
+      // onFulfilled, onRejected
+      if (this.status == FULFILLED) {
+        setTimeout(() => {
+          try {
+            // 成功调用成功方法，并传入成功的值
+            let x = onFulfilled(this.value)
+            resolvePromise(promsie2, x, resolve, reject)
+          } catch(e) {
+            reject(e)
+          }
+        },0)
+      }
+      if (this.status === REJECTED) {
+        setTimeout(() => {
+          try {
+            // 失败调用失败方法  并传入失败的原因
+            let x = onRejected(this.reason)
+            resolvePromise(promsie2, x, resolve, reject)
+          } catch(e) {
+            reject(e)
+          }
+        },0)
+      }
+    })
+    return promsie2
+  }
+}
+
+module.exports = Promise
+```
+
+下面我们开始书写 resolvePromise。
+
+应该遵循以下原则:
+- 1 如果promsie2和x是同一个promsie，应该抛出异常。
+```js {3-5}
+function resolvePromise(promsie2, x, resolve, reject) {
+  // 核心流程
+  if (promsie2 === x) {
+    return reject(new TypeError("错误"))
+  }
+}
+```
+- 2 我们还需要考虑兼容别人的Promise 这部分逻辑稍微复杂一些。首先promsie是一个对象或者函数，如果是普通值直接返回就好，还需要明确Promise中是必须拥有then方法的，在获取then方法的时候可能会抛出异常，因此这部分需要做异常捕获操作。
+```js{7-17}
+function resolvePromise(promsie2, x, resolve, reject) {
+  // 核心流程
+  if (promsie2 === x) {
+    return reject(new TypeError("错误"))
+  }
+  // 我可能写的promise 要和别人的promise兼容，考虑不是自己写的promise情况
+  if ((typeof x === "object" && x !== null) || typeof x === "function") {
+    // 有可能是promise 还必须拥有then方法，在取 then的时候，可能会抛出异常。
+    // 这里应该捕获异常
+    try {
+      let then = x.then
+    }catch(e) {
+      reject(e) // 如果捕获到了异常，将异常直接传递给 reject 函数
+    }
+  } else {
+    resolve(x) // 说明返回的是一个普通值 直接将他放到 promise2.resolve中。
+  }
+}
+```
+- 3 接下来，我们还需要判断 then 是不是一个函数，如果then 是一个函数，那么就要绑定this指向。如果不是一个函数，就是一种普通的值的处理逻辑。
+- 4 别人的promsie可能会有致命的错误，就是调取完resolve之后，还可能调取reject逻辑。所以需要设置一个锁来保证调用的结果正确。
+
+```js{12-24}
+function resolvePromise(promsie2, x, resolve, reject) {
+  // 核心流程
+  if (promsie2 === x) {
+    return reject(new TypeError("错误"))
+  }
+  // 我可能写的promise 要和别人的promise兼容，考虑不是自己写的promise情况
+  if ((typeof x === "object" && x !== null) || typeof x === "function") {
+    // 有可能是promise 还必须拥有then方法，在取 then的时候，可能会抛出异常。
+    let called = false
+    try {
+      let then = x.then
+      if (typeof then === 'function') {
+        // 这里就认为是Promise了 这里面不 用 x.then的愿因是 可能还会触发自定义的getter
+        // 如果成功就将成功的结果给promise2的resolve方法，如果失败, 就将失败的原因传递给reject方法
+        // 这里只是稍微改变了 then的this指向。
+        then.call(x, (y) => {
+          if (called) return 
+          called = true
+          resolve(y)
+        },(r) => {
+          if (called) return 
+          called = true
+          reject(r)
+        })
+      } else { // then 是一个对象 直接使用resolve 函数返回出去
+        resolve(x)
+      }
+    }catch(e) {
+      if (called) return 
+      called = true
+      reject(e) // 如果捕获到了异常，将异常直接传递给 reject 函数
+    }
+  } else {
+    resolve(x) // 说明返回的是一个普通值 直接将他放到 promise2.resolve中。
+  }
+}
+```
+- 5 还有一种嵌套调用promise的情况，这种情况需要做一个递归调用。
+
+```js{19}
+function resolvePromise(promsie2, x, resolve, reject) {
+  // 核心流程
+  if (promsie2 === x) {
+    return reject(new TypeError("错误"))
+  }
+  // 我可能写的promise 要和别人的promise兼容，考虑不是自己写的promise情况
+  if ((typeof x === "object" && x !== null) || typeof x === "function") {
+    // 有可能是promise 还必须拥有then方法，在取 then的时候，可能会抛出异常。
+    let called = false
+    try {
+      let then = x.then
+      if (typeof then === 'function') {
+        // 这里就认为是Promise了 这里面不 用 x.then的愿因是 可能还会触发自定义的getter
+        // 如果成功就将成功的结果给promise2的resolve方法，如果失败, 就将失败的原因传递给reject方法
+        // 这里只是稍微改变了 then的this指向。
+        then.call(x, (y) => {
+          if (called) return 
+          called = true
+          resolvePromise(promsie2, y, resolve, reject)
+        },(r) => {
+          if (called) return 
+          called = true
+          reject(r)
+        })
+      } else { // then 是一个对象 直接使用resolve 函数返回出去
+        resolve(x)
+      }
+    } catch(e) {
+      if (called) return 
+      called = true
+      reject(e) // 如果捕获到了异常，将异常直接传递给 reject 函数
+    }
+  } else {
+    resolve(x) // 说明返回的是一个普通值 直接将他放到 promise2.resolve中。
+  }
+}
+```
+
+onFulfilled, onRejected 在使用then的时候很可能是不传递的。此时需要针对这种情况单独做处理。做一层判断。贴出完整实现
+```js{85-86}
+const PENDING = "PENDING"
+const FULFILLED = "FULFILLED"
+const REJECTED = "REJECTED"
+
+// 利用x的值来判断是调用promise2的resolve还是reject
+function resolvePromise(promise2, x, resolve, reject) {
+  // 核心流程
+  if (promise2 === x) {
+    return reject(new TypeError("错误"))
+  }
+  // 我可能写的promise 要和别人的promise兼容，考虑不是自己写的promise情况
+  if ((typeof x === "object" && x !== null) || typeof x === "function") {
+    // 有可能是promise
+    // 别人的promise可能调用成功后 还能调用失败~~~  确保了别人promise符合规范
+    let called = false
+    try {
+      // 有可能then方法是通过defineProperty来实现的 取值时可能会发生异常
+      let then = x.then
+      if (typeof then === "function") {
+        // 这里我就认为你是promise了  x.then 这样写会触发getter可能会发生异常
+        then.call(
+          x,
+          (y) => {
+            if (called) return
+            called = true
+            resolvePromise(promise2, y, resolve, reject) // 直到解析他不是promise位置
+          },
+          (r) => {
+            // reason
+            if (called) return
+            called = true
+            reject(r)
+          }
+        )
+      } else {
+        // {}  {then:{}}
+        resolve(x) // 常量
+      }
+    } catch (e) {
+      if (called) return
+      called = true
+      reject(e)
+    }
+  } else {
+    resolve(x) // 说明返回的是一个普通值 直接将他放到promise2.resolve中
+  }
+}
+
+class Promise {
+  constructor(executor) {
+    this.status = PENDING // promise默认的状态
+    this.value = undefined // 成功的原因
+    this.reason = undefined // 失败的原因
+    this.onResolvedCallbacks = [] // 存放成功的回调方法
+    this.onRejectedCallbacks = [] // 存放失败的回调方法
+    const resolve = (value) => {
+      // 成功resolve函数
+      if (value instanceof Promise) {
+        return value.then(resolve, reject)
+      }
+      if (this.status === PENDING) {
+        this.value = value
+        this.status = FULFILLED // 修改状态
+        // 发布
+        this.onResolvedCallbacks.forEach((fn) => fn())
+      }
+    }
+    const reject = (reason) => {
+      // 失败的reject函数
+      if (this.status === PENDING) {
+        this.reason = reason
+        this.status = REJECTED // 修改状态
+        this.onRejectedCallbacks.forEach((fn) => fn())
+      }
+    }
+    try {
+      executor(resolve, reject)
+    } catch (e) {
+      reject(e)
+    }
+  }
+  // then中的参数是可选的
+  then(onFulfilled, onRejected) {
+    // onFulfilled, onRejected
+    onFulfilled = typeof onFulfilled === "function" ? onFulfilled : (v) => v
+    onRejected = typeof onRejected === "function" ? onRejected : (err) => { throw err } 
+    // 用于实现链式调用
+    let promise2 = new Promise((resolve, reject) => {
+      // 订阅模式
+      if (this.status == FULFILLED) {
+        // 成功调用成功方法
+        setTimeout(() => {
+          try {
+            let x = onFulfilled(this.value)
+            // 此x 可能是一个promise， 如果是promise需要看一下这个promise是成功还是失败 .then ,如果成功则把成功的结果 调用promise2的resolve传递进去，如果失败则同理
+
+            // 总结 x的值 决定是调用promise2的 resolve还是reject，如果是promise则取他的状态，如果是普通值则直接调用resolve
+            resolvePromise(promise2, x, resolve, reject)
+          } catch (e) {
+            reject(e)
+          }
+        }, 0)
+      }
+      if (this.status === REJECTED) {
+        // 失败调用失败方法
+        setTimeout(() => {
+          try {
+            let x = onRejected(this.reason)
+            resolvePromise(promise2, x, resolve, reject)
+          } catch (e) {
+            reject(e)
+          }
+        }, 0)
+      }
+      if (this.status == PENDING) {
+        // 代码是异步调用resolve或者reject的
+        this.onResolvedCallbacks.push(() => {
+          // 切片编程 AOP
+          setTimeout(() => {
+            try {
+              // todo...
+              let x = onFulfilled(this.value)
+              resolvePromise(promise2, x, resolve, reject)
+            } catch (e) {
+              reject(e)
+            }
+          }, 0)
+        })
+        this.onRejectedCallbacks.push(() => {
+          setTimeout(() => {
+            try {
+              // todo...
+              let x = onRejected(this.reason)
+              resolvePromise(promise2, x, resolve, reject)
+            } catch (e) {
+              reject(e)
+            }
+          }, 0)
+        })
+      }
+    })
+    return promise2
+  }
+  static resolve(value) {
+    return new Promise((resolve, reject) => {
+      resolve(value)
+    })
+  }
+  static reject(value) {
+    return new Promise((resolve, reject) => {
+      reject(value)
+    })
+  }
+  catch(errorFn) {
+    return this.then(null, errorFn)
+  }
+
+  static all = function (promises) {
+    return new Promise((resolve, reject) => {
+      let result = []
+      let times = 0
+      const processSuccess = (index, val) => {
+        result[index] = val
+        if (++times === promises.length) {
+          resolve(result)
+        }
+      }
+      for (let i = 0; i < promises.length; i++) {
+        // 并发 多个请求一起执行的
+        let p = promises[i]
+        if (p && typeof p.then === "function") {
+          p.then((data) => {
+            processSuccess(i, data)
+          }, reject) // 如果其中某一个promise失败了 直接执行失败即可
+        } else {
+          processSuccess(i, p)
+        }
+      }
+    })
+  }
+}
+module.exports = Promise
+```
+
+
+
+
 
 
 

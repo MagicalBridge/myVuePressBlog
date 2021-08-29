@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>实现 int sqrt(int x)的函数。 | 褚鹏飞的博客</title>
+    <meta name="generator" content="VuePress 1.8.2">
+    
+    <meta name="description" content="终于等到你">
+    
+    <link rel="preload" href="/assets/css/0.styles.e4d8b86b.css" as="style"><link rel="preload" href="/assets/js/app.d8980133.js" as="script"><link rel="preload" href="/assets/js/2.6ae9b001.js" as="script"><link rel="preload" href="/assets/js/52.c5dd3e02.js" as="script"><link rel="prefetch" href="/assets/js/10.194a208d.js"><link rel="prefetch" href="/assets/js/11.e56f581b.js"><link rel="prefetch" href="/assets/js/12.7aa3e300.js"><link rel="prefetch" href="/assets/js/13.9b0ff44e.js"><link rel="prefetch" href="/assets/js/14.04cacb6b.js"><link rel="prefetch" href="/assets/js/15.45630da6.js"><link rel="prefetch" href="/assets/js/16.7b5033ae.js"><link rel="prefetch" href="/assets/js/17.bdccb133.js"><link rel="prefetch" href="/assets/js/18.506f3301.js"><link rel="prefetch" href="/assets/js/19.4e20b8fa.js"><link rel="prefetch" href="/assets/js/20.69310c76.js"><link rel="prefetch" href="/assets/js/21.61fb9b14.js"><link rel="prefetch" href="/assets/js/22.577fbd59.js"><link rel="prefetch" href="/assets/js/23.4fd880eb.js"><link rel="prefetch" href="/assets/js/24.53ce4cb9.js"><link rel="prefetch" href="/assets/js/25.7dd8664b.js"><link rel="prefetch" href="/assets/js/26.dd6500ff.js"><link rel="prefetch" href="/assets/js/27.c4d5af80.js"><link rel="prefetch" href="/assets/js/28.b8ae4e0b.js"><link rel="prefetch" href="/assets/js/29.2ef176f4.js"><link rel="prefetch" href="/assets/js/3.7fd4ffaf.js"><link rel="prefetch" href="/assets/js/30.44254da7.js"><link rel="prefetch" href="/assets/js/31.885c6b29.js"><link rel="prefetch" href="/assets/js/32.26fec71a.js"><link rel="prefetch" href="/assets/js/33.30062803.js"><link rel="prefetch" href="/assets/js/34.917729a6.js"><link rel="prefetch" href="/assets/js/35.21390360.js"><link rel="prefetch" href="/assets/js/36.d61ca2fe.js"><link rel="prefetch" href="/assets/js/37.4cc1e9a1.js"><link rel="prefetch" href="/assets/js/38.33f2fe1f.js"><link rel="prefetch" href="/assets/js/39.7624b847.js"><link rel="prefetch" href="/assets/js/4.1cdfab3b.js"><link rel="prefetch" href="/assets/js/40.94a1edb5.js"><link rel="prefetch" href="/assets/js/41.ee2a52b4.js"><link rel="prefetch" href="/assets/js/42.e3d45186.js"><link rel="prefetch" href="/assets/js/43.7fadb6af.js"><link rel="prefetch" href="/assets/js/44.3d56b133.js"><link rel="prefetch" href="/assets/js/45.05cc1cc5.js"><link rel="prefetch" href="/assets/js/46.6c3fcceb.js"><link rel="prefetch" href="/assets/js/47.a02b4f08.js"><link rel="prefetch" href="/assets/js/48.6bd481fe.js"><link rel="prefetch" href="/assets/js/49.ee473958.js"><link rel="prefetch" href="/assets/js/5.735ba8b7.js"><link rel="prefetch" href="/assets/js/50.5e54d5ca.js"><link rel="prefetch" href="/assets/js/51.c8157518.js"><link rel="prefetch" href="/assets/js/53.06576660.js"><link rel="prefetch" href="/assets/js/54.25007578.js"><link rel="prefetch" href="/assets/js/55.86e98c4d.js"><link rel="prefetch" href="/assets/js/56.da0c9ae2.js"><link rel="prefetch" href="/assets/js/57.e0e70dc5.js"><link rel="prefetch" href="/assets/js/58.55455aa7.js"><link rel="prefetch" href="/assets/js/59.8a1725d8.js"><link rel="prefetch" href="/assets/js/6.0b141548.js"><link rel="prefetch" href="/assets/js/60.46428fbe.js"><link rel="prefetch" href="/assets/js/61.a6db8161.js"><link rel="prefetch" href="/assets/js/62.ba74d276.js"><link rel="prefetch" href="/assets/js/63.6adc9145.js"><link rel="prefetch" href="/assets/js/64.937cb782.js"><link rel="prefetch" href="/assets/js/65.466e7cda.js"><link rel="prefetch" href="/assets/js/66.956265fb.js"><link rel="prefetch" href="/assets/js/67.ad2e43de.js"><link rel="prefetch" href="/assets/js/68.0488bcc4.js"><link rel="prefetch" href="/assets/js/69.43097386.js"><link rel="prefetch" href="/assets/js/7.84fcaa77.js"><link rel="prefetch" href="/assets/js/70.4e6856d4.js"><link rel="prefetch" href="/assets/js/71.9954c307.js"><link rel="prefetch" href="/assets/js/72.bd7c45e4.js"><link rel="prefetch" href="/assets/js/73.b3c02bd6.js"><link rel="prefetch" href="/assets/js/74.5dd3de21.js"><link rel="prefetch" href="/assets/js/75.9de75e72.js"><link rel="prefetch" href="/assets/js/76.8c9bd3ed.js"><link rel="prefetch" href="/assets/js/77.a7dd6ea2.js"><link rel="prefetch" href="/assets/js/78.ebc9f270.js"><link rel="prefetch" href="/assets/js/79.58945969.js"><link rel="prefetch" href="/assets/js/8.6192dfeb.js"><link rel="prefetch" href="/assets/js/80.1e9fa32b.js"><link rel="prefetch" href="/assets/js/81.59c71189.js"><link rel="prefetch" href="/assets/js/82.c5ee9af4.js"><link rel="prefetch" href="/assets/js/83.20b728fa.js"><link rel="prefetch" href="/assets/js/84.0c58a5a1.js"><link rel="prefetch" href="/assets/js/85.903dc083.js"><link rel="prefetch" href="/assets/js/86.20101174.js"><link rel="prefetch" href="/assets/js/87.80a6b287.js"><link rel="prefetch" href="/assets/js/88.9122d861.js"><link rel="prefetch" href="/assets/js/89.51ee4af0.js"><link rel="prefetch" href="/assets/js/9.003248bf.js"><link rel="prefetch" href="/assets/js/90.5fc54c23.js">
+    <link rel="stylesheet" href="/assets/css/0.styles.e4d8b86b.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container no-sidebar"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><!----> <span class="site-name">褚鹏飞的博客</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="算法" class="dropdown-title"><span class="title">算法</span> <span class="arrow down"></span></button> <button type="button" aria-label="算法" class="mobile-dropdown-title"><span class="title">算法</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/algorithms/" class="nav-link">
+  常用算法
+</a></li><li class="dropdown-item"><!----> <a href="/leetCode/leetCode/" class="nav-link router-link-active">
+  leetCode算题解
+</a></li><li class="dropdown-item"><!----> <a href="/leetCode/niuke/" class="nav-link">
+  牛客算题解
+</a></li><li class="dropdown-item"><!----> <a href="/leetCode/valuableBook/" class="nav-link">
+  面试题
+</a></li><li class="dropdown-item"><!----> <a href="/leetCode/offer/" class="nav-link">
+  剑指offer
+</a></li></ul></div></div><div class="nav-item"><a href="/dataStructure/" class="nav-link">
+  数据结构
+</a></div><div class="nav-item"><a href="/network/" class="nav-link">
+  计算机网络
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="Vue" class="dropdown-title"><span class="title">Vue</span> <span class="arrow down"></span></button> <button type="button" aria-label="Vue" class="mobile-dropdown-title"><span class="title">Vue</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/vue/vue-analysis/" class="nav-link">
+  Vue2内部原理剖析
+</a></li><li class="dropdown-item"><!----> <a href="/vue/vue3-analysis/" class="nav-link">
+  Vue3内部原理剖析
+</a></li><li class="dropdown-item"><!----> <a href="/vue/vue-component/" class="nav-link">
+  Vue组件探索
+</a></li><li class="dropdown-item"><!----> <a href="/vue/vuex/" class="nav-link">
+  Vuex源码解析
+</a></li><li class="dropdown-item"><!----> <a href="/vue/vue-router/" class="nav-link">
+  Vue-Router源码解析
+</a></li></ul></div></div><div class="nav-item"><a href="/react/" class="nav-link">
+  React
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="webpack" class="dropdown-title"><span class="title">webpack</span> <span class="arrow down"></span></button> <button type="button" aria-label="webpack" class="mobile-dropdown-title"><span class="title">webpack</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/webpack/webpack-base.html" class="nav-link">
+  webpack基础
+</a></li><li class="dropdown-item"><!----> <a href="/webpack/webpack-advance.html" class="nav-link">
+  webpack进阶
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="Node.js" class="dropdown-title"><span class="title">Node.js</span> <span class="arrow down"></span></button> <button type="button" aria-label="Node.js" class="mobile-dropdown-title"><span class="title">Node.js</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/node/node-base/" class="nav-link">
+  Node基础
+</a></li><li class="dropdown-item"><!----> <a href="/node/express/" class="nav-link">
+  Express
+</a></li><li class="dropdown-item"><!----> <a href="/node/koa/" class="nav-link">
+  Koa
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="服务端" class="dropdown-title"><span class="title">服务端</span> <span class="arrow down"></span></button> <button type="button" aria-label="服务端" class="mobile-dropdown-title"><span class="title">服务端</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/linux/" class="nav-link">
+  linux
+</a></li><li class="dropdown-item"><!----> <a href="/git/" class="nav-link">
+  git工具
+</a></li><li class="dropdown-item"><!----> <a href="/nginx/nginx-base/" class="nav-link">
+  nginx
+</a></li><li class="dropdown-item"><!----> <a href="/docker/" class="nav-link">
+  docker
+</a></li><li class="dropdown-item"><!----> <a href="/k8s/" class="nav-link">
+  kubernetes
+</a></li><li class="dropdown-item"><!----> <a href="/database/mysql/" class="nav-link">
+  mySql
+</a></li><li class="dropdown-item"><!----> <a href="/database/mongodb/" class="nav-link">
+  mongodb
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="前端三剑客" class="dropdown-title"><span class="title">前端三剑客</span> <span class="arrow down"></span></button> <button type="button" aria-label="前端三剑客" class="mobile-dropdown-title"><span class="title">前端三剑客</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/threemusketeers/javascript/" class="nav-link">
+  javascript
+</a></li><li class="dropdown-item"><!----> <a href="/threemusketeers/html/" class="nav-link">
+  HTML
+</a></li><li class="dropdown-item"><!----> <a href="/threemusketeers/css/" class="nav-link">
+  css
+</a></li></ul></div></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="算法" class="dropdown-title"><span class="title">算法</span> <span class="arrow down"></span></button> <button type="button" aria-label="算法" class="mobile-dropdown-title"><span class="title">算法</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/algorithms/" class="nav-link">
+  常用算法
+</a></li><li class="dropdown-item"><!----> <a href="/leetCode/leetCode/" class="nav-link router-link-active">
+  leetCode算题解
+</a></li><li class="dropdown-item"><!----> <a href="/leetCode/niuke/" class="nav-link">
+  牛客算题解
+</a></li><li class="dropdown-item"><!----> <a href="/leetCode/valuableBook/" class="nav-link">
+  面试题
+</a></li><li class="dropdown-item"><!----> <a href="/leetCode/offer/" class="nav-link">
+  剑指offer
+</a></li></ul></div></div><div class="nav-item"><a href="/dataStructure/" class="nav-link">
+  数据结构
+</a></div><div class="nav-item"><a href="/network/" class="nav-link">
+  计算机网络
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="Vue" class="dropdown-title"><span class="title">Vue</span> <span class="arrow down"></span></button> <button type="button" aria-label="Vue" class="mobile-dropdown-title"><span class="title">Vue</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/vue/vue-analysis/" class="nav-link">
+  Vue2内部原理剖析
+</a></li><li class="dropdown-item"><!----> <a href="/vue/vue3-analysis/" class="nav-link">
+  Vue3内部原理剖析
+</a></li><li class="dropdown-item"><!----> <a href="/vue/vue-component/" class="nav-link">
+  Vue组件探索
+</a></li><li class="dropdown-item"><!----> <a href="/vue/vuex/" class="nav-link">
+  Vuex源码解析
+</a></li><li class="dropdown-item"><!----> <a href="/vue/vue-router/" class="nav-link">
+  Vue-Router源码解析
+</a></li></ul></div></div><div class="nav-item"><a href="/react/" class="nav-link">
+  React
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="webpack" class="dropdown-title"><span class="title">webpack</span> <span class="arrow down"></span></button> <button type="button" aria-label="webpack" class="mobile-dropdown-title"><span class="title">webpack</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/webpack/webpack-base.html" class="nav-link">
+  webpack基础
+</a></li><li class="dropdown-item"><!----> <a href="/webpack/webpack-advance.html" class="nav-link">
+  webpack进阶
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="Node.js" class="dropdown-title"><span class="title">Node.js</span> <span class="arrow down"></span></button> <button type="button" aria-label="Node.js" class="mobile-dropdown-title"><span class="title">Node.js</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/node/node-base/" class="nav-link">
+  Node基础
+</a></li><li class="dropdown-item"><!----> <a href="/node/express/" class="nav-link">
+  Express
+</a></li><li class="dropdown-item"><!----> <a href="/node/koa/" class="nav-link">
+  Koa
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="服务端" class="dropdown-title"><span class="title">服务端</span> <span class="arrow down"></span></button> <button type="button" aria-label="服务端" class="mobile-dropdown-title"><span class="title">服务端</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/linux/" class="nav-link">
+  linux
+</a></li><li class="dropdown-item"><!----> <a href="/git/" class="nav-link">
+  git工具
+</a></li><li class="dropdown-item"><!----> <a href="/nginx/nginx-base/" class="nav-link">
+  nginx
+</a></li><li class="dropdown-item"><!----> <a href="/docker/" class="nav-link">
+  docker
+</a></li><li class="dropdown-item"><!----> <a href="/k8s/" class="nav-link">
+  kubernetes
+</a></li><li class="dropdown-item"><!----> <a href="/database/mysql/" class="nav-link">
+  mySql
+</a></li><li class="dropdown-item"><!----> <a href="/database/mongodb/" class="nav-link">
+  mongodb
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="前端三剑客" class="dropdown-title"><span class="title">前端三剑客</span> <span class="arrow down"></span></button> <button type="button" aria-label="前端三剑客" class="mobile-dropdown-title"><span class="title">前端三剑客</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/threemusketeers/javascript/" class="nav-link">
+  javascript
+</a></li><li class="dropdown-item"><!----> <a href="/threemusketeers/html/" class="nav-link">
+  HTML
+</a></li><li class="dropdown-item"><!----> <a href="/threemusketeers/css/" class="nav-link">
+  css
+</a></li></ul></div></div> <!----></nav>  <!----> </aside> <main class="page"> <div class="theme-default-content content__default"><h2 id="实现-int-sqrt-int-x-的函数。"><a href="#实现-int-sqrt-int-x-的函数。" class="header-anchor">#</a> 实现 int sqrt(int x)的函数。</h2> <p>计算并返回x的平方根，其中x是非负整数。</p> <p>由于返回的类型是整数，结果只是保留整数部分，小数部分将被舍去。</p> <p>示例1:</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>输入: 4
+输出: 2
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br></div></div><p>示例2:</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>输入: 8
+输出: 2
+说明: 8 的平方根是 2.82842..., 
+由于返回类型是整数，小数部分将被舍去。
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br></div></div><p>解题思路:
+由于x的平方根的整数部分ans是满足 k^2 ≤ x 的最大k值，因此我们可以对k进行二分查找，从而得到答案。</p> <p>二分查找的下界为0，上界可以粗略地设定为x, 在二分查找的每一步中，我们只需要比较中间元素 mid 的平方与x的大小关系，并通过比较的结果调整上下界的范围，由于我们所有的运算都是整数运算，不会存在误差，因此在得到最终的ans之后，也就不需要再去尝试 ans+1。</p> <div class="language-js line-numbers-mode"><pre class="language-js"><code><span class="token comment">/**
+ * @param {number} x
+ * @return {number}
+ */</span>
+<span class="token keyword">var</span> <span class="token function-variable function">mySqrt</span> <span class="token operator">=</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">x</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">let</span> l <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+  <span class="token keyword">let</span> r <span class="token operator">=</span> x<span class="token punctuation">;</span>
+  ans <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
+  <span class="token keyword">while</span> <span class="token punctuation">(</span>l <span class="token operator">&lt;=</span> r<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">let</span> mid <span class="token operator">=</span> <span class="token function">parseInt</span><span class="token punctuation">(</span><span class="token punctuation">(</span>l <span class="token operator">+</span> r<span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>mid <span class="token operator">*</span> mid <span class="token operator">&lt;=</span> x<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      ans <span class="token operator">=</span> mid<span class="token punctuation">;</span>
+      l <span class="token operator">=</span> mid <span class="token operator">+</span> <span class="token number">1</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+      r <span class="token operator">=</span> mid <span class="token operator">-</span> <span class="token number">1</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">return</span> ans
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br></div></div><p>复杂度分析：</p> <ul><li>时间复杂度 O(logx) 即为二分查找需要的次数</li> <li>空间复杂度 O(1)</li></ul></div> <footer class="page-edit"><!----> <!----></footer> <!----> </main></div><div class="global-ui"></div></div>
+    <script src="/assets/js/app.d8980133.js" defer></script><script src="/assets/js/2.6ae9b001.js" defer></script><script src="/assets/js/52.c5dd3e02.js" defer></script>
+  </body>
+</html>
