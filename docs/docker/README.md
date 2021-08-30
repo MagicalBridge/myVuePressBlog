@@ -98,6 +98,16 @@ docker images
 同一个仓库可以有多个TAG，代表这个仓库源的不同个版本，我们使用`REPOSITORY:TAG` 来定义不同的镜像。如果你不指定一个镜像的版本标签，将默认是使用最新的版本。
 :::
 
+当然 docker images 后面还可以添加 options 参数：
+```
+docker images -a // 显示全部镜像，镜像是分层的
+docker images -q // 只显示镜像的 images id
+docker search xxx // 从dockerhub 中查找指定名称的镜像
+docker search -s 30 xxx // 查找指定镜像在一定star数量之上的
+docker pull xxx // 拉取指定名称的镜像 注意默认拉取的是最新的版本的镜像
+docker rmi  xxx // 删除指定镜像 如果不添加任何标签默认删除最新版本的镜像
+docker rmi -f xxx // 强制删除指定镜像
+```
 
 
 
