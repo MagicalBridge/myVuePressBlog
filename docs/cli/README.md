@@ -1,3 +1,8 @@
+---
+sidebar: auto
+---
+# 脚手架
+
 ## 脚手架的搭建学习
 
 ### 发布属于自己的第一个脚手架
@@ -106,4 +111,62 @@ lrwxr-xr-x  1 louis  staff    47B  8 30 07:52 zf-process-cli -> ../lib/node_modu
   "author": "chupengfei <chupengfeiit@gmail.com> (https://github.com/MagicalBridge)",
   "license": "ISC"
 }
+```
+
+### 分包联合调试
+
+在实际开发过程中，由于脚手架功能较多，不可能将所有的内容都写在一个包之中，需要将脚手架进行分包处理。这就是涉及到分包的联合调试，有这样的文件目录：
+
+```
+# zf-process-cli
+.
+├── core // 核心模块
+│   ├── bin
+│   │   └── index.js
+│   └── package.json
+└── lib // lib 工具模块
+    ├── package.json
+    └── src
+        └── index.js
+```
+
+lib包还没有发布到npm线上的时候，就能够进行调试，这个应该如何操作呢？
+
+第一步：在lib包中执行 `npm link` 变成全局模块。
+```shell
+# lib 目录下 
+npm link
+```
+因为lib是一个库文件，且没有配置bin入口，因此执行完之后，再执行 which lib 是找不到的。但是在node_modules 中是能够找到lib 这个文件的。
+
+第二步：进入 core 目录 执行 `npm link lib`
+```shell
+# core 目录下 
+npm link lib
+```
+这样就能在core目录下添加一个node_modules文件夹，里面存放的就是lib目录。
+```
+# zf-process-cli
+.
+├── core
+│   ├── bin
+│   │   └── index.js
+│   ├── node_modules
+│   │   └── lib -> ../../lib
+│   └── package.json
+└── lib
+    ├── package.json
+    └── src
+        └── index.js
+```
+第三步: 在core中引入 lib 模块的函数,可以使用。
+
+```js
+// core/bin/index.js
+#!/usr/bin/env node
+const lib = require("lib")
+
+console.log(lib.sum);
+
+console.log("welcome process-cli")
 ```
