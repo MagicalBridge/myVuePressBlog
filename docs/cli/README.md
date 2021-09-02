@@ -170,3 +170,25 @@ console.log(lib.sum);
 
 console.log("welcome process-cli")
 ```
+
+### 深入理解 npm link 命令
+
+经过上述两个简单的用例可以看出来，无论是单一文件发布成脚手架，还是多包状态下调试，都离不开一个命令`npm link`。
+
+- `npm link you-lib`: 将当前项目中node_modules下指定的库文件链接到 node 全局下 node_module下的库文件
+- `npm link`: 将当前项目链接到 node 全局 node_modules中作为一个库文件，并解析 bin 配置创建可执行的文件
+
+### 如何解除本地链接呢？
+解除的步骤和链接的步骤是相反的。
+
+- 第一步: 在core目录中执行`npm unlink lib` 这个步骤执行完毕后lib从core的依赖中解除。
+- 第二步: 删除node_modules依赖，删除 package.lock 文件。
+- 第三步: lib link到全局之后 执行 `npm  remove -g lib` 删除依赖包，然后删除 package.lock 文件。
+
+## 使用 lerna 初始化项目
+lerna 是一款非常优秀的包管理工具，上面我们手动创建的包可以很方便的交给工具。
+- 1 使用 npm init -y 初始化一个npm 项目。
+- 2 在本地安装 lerna 依赖、全局安装 lerna 依赖。
+- 3 执行lerna init 初始化lerna项目
+- 4 执行lerna create core 创建一个叫做core的包，这里需要注意，新建组，因为我们的子包肯定已经被注册过了。
+- 5 执行lerna create utils 创建一个工具包。
