@@ -42,7 +42,9 @@ webpack的配置其实是一个Node的脚本，这个脚本对外暴露一个配
 entry 的配置有三种方式：
 - 传递一个字符串
 ```js
-entry: './src/js/main.js',
+module.exports = {
+  entry: './src/js/main.js',
+};
 ```
 
 - 传递数组
@@ -50,7 +52,10 @@ entry: './src/js/main.js',
 entry: ['./src/js/main.js','./src/js/other.js'],
 ```
 
-- 传递对象
+- 传递对象 
+
+对象语法会比较繁琐，然而，这是应用程序中定义入口的最可扩展的方式。
+
 ```js
 entry: {
   main: './src/js/main.js',
