@@ -83,6 +83,10 @@ module.exports = {
             text: "webpack进阶",
             link: "/webpack/webpack-advance",
           },
+          {
+            text: "webpack打包分析",
+            link: "/webpack/webpack打包分析",
+          },
         ],
       },
       {

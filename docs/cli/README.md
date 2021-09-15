@@ -185,10 +185,150 @@ console.log("welcome process-cli")
 - 第二步: 删除node_modules依赖，删除 package.lock 文件。
 - 第三步: lib link到全局之后 执行 `npm  remove -g lib` 删除依赖包，然后删除 package.lock 文件。
 
-## 使用 lerna 初始化项目
-lerna 是一款非常优秀的包管理工具，上面我们手动创建的包可以很方便的交给工具。
+## 使用 lerna
+lerna 是一款基于git + npm非常优秀的多包管理工具，上面我们手动创建的包可以很方便的交给工具。
+
+它有诸多优势，能够大幅减少重复操作，提升操作的标准化，lerna 是架构优化的产物，它揭示了一个架构的真理：项目复杂度提升之后，就需要对项目进行架构优化，架构优化的主要目的往往都是以效能为核心。
+
+我们常见的优秀的开源项目 babel vue-cli 等都是基于 lerna 来管理的。
+
+
+### 脚手架项目初始化
 - 1 使用 npm init -y 初始化一个npm 项目。
-- 2 在本地安装 lerna 依赖、全局安装 lerna 依赖。
-- 3 执行lerna init 初始化lerna项目
-- 4 执行lerna create core 创建一个叫做core的包，这里需要注意，新建组，因为我们的子包肯定已经被注册过了。
-- 5 执行lerna create utils 创建一个工具包。
+- 2 在本地安装lerna、全局安装lerna,这样使用方便
+- 3 执行 `lerna init` 初始化lerna项目。
+- 4 这里需要注意，使用lerna 创建的项目会自动初始化一个git。
+- 5 创建 .gitignore 文件，用于忽略文件
+
+### 创建package
+
+```
+lerna create <name> [loc] 
+```
+这是创建包的命令 指定包名 [loc] 方括号包裹起来的内容是可以不写的，用来手动指定路径。
+
+- 1 执行lerna create core 创建一个叫做core的包，这里需要注意，新建组后在组里面创建子包，否则直接注册子包大概率已经被注册过了。如下图所示，第二行，我们创建的包是在 @zf-mock-cli 这个组下面
+```json {2}
+{
+  "name": "@zf-mock-cli/core",
+  "version": "1.0.0",
+  "description": "> TODO: description",
+  "author": "褚鹏飞 <540788769@qq.com>",
+  "homepage": "https://github.com/MagicalBridge/architect-all-in-one#readme",
+  "license": "ISC",
+  "main": "lib/core.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.npm.taobao.org/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MagicalBridge/architect-all-in-one.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "bugs": {
+    "url": "https://github.com/MagicalBridge/architect-all-in-one/issues"
+  }
+}
+```
+- 2 执行lerna create utils 创建一个工具包。工具包也放在 @zf-mock-cli 组下面。
+```json {2}
+{
+  "name": "@zf-mock-cli/utils",
+  "version": "1.0.0",
+  "description": "> TODO: description",
+  "author": "褚鹏飞 <540788769@qq.com>",
+  "homepage": "https://github.com/MagicalBridge/architect-all-in-one#readme",
+  "license": "ISC",
+  "main": "lib/utils.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.npm.taobao.org/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MagicalBridge/architect-all-in-one.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "bugs": {
+    "url": "https://github.com/MagicalBridge/architect-all-in-one/issues"
+  }
+}
+
+```
+- 3 使用lerna add 安装依赖 
+```shell
+lerna add <package> [@version] [--dev] [--exact] [--peer] 
+```
+
+注意，如果我们直接执行 lerna add xxx 默认 lerna 会将package 安装到所有的包中
+
+```shell
+➜  zf-mock-cli git:(main) ✗ lerna add mime
+lerna notice cli v4.0.0
+lerna info Adding mime in 2 packages
+lerna info Bootstrapping 2 packages
+lerna info Installing external dependencies
+lerna info Symlinking packages and binaries
+lerna success Bootstrapped 2 packages
+```
+从上面的安装信息可以看到，默认 lerna 将mime 模块安装到了 utils 和 core 两个包中。
+
+如果我们想要安装到指定目录下应该如何操作呢？只需要跟上一个具体的路径就好.
+
+```shell
+lerna add <package> packages/utis
+```
+
+具体操作效果：
+```shell
+➜  zf-mock-cli git:(main) ✗ lerna add mime packages/utils 
+lerna notice cli v4.0.0
+lerna info Adding mime in 1 package
+lerna info Bootstrapping 2 packages
+lerna info Installing external dependencies
+lerna info Symlinking packages and binaries
+lerna success Bootstrapped 2 packages
+```
+
+
+
+
+- 4 learn link 链接依赖
+
+
+
+### 脚手架的开发和测试
+- 1 lerna exec 执行 shell 脚本 
+- 2 lerna run 执行 npm 命令
+- 3 lerna clean 清空依赖
+```shell
+lerna clean 
+```
+执行上述命令之后，会删除node_module 信息，但是package.json 里面的内容不会被删除。这点需要注意
+- 4 lerna bootstrap 重新安装依赖
+
+### 脚手架发布上线
+- 1 lerna version bump version
+- 2 lerna changed 查看上一个版本以来的所有变更
+- 3 lerna diff 查看diff
+- 4 lerna publish 项目发布
+
+
+
