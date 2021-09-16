@@ -347,5 +347,123 @@ var __webpack_exports__ = {}
 __webpack_require__.r(__webpack_exports__)
 ```
 
+## 4 ESModule 加载 commonJS 场景
+
+### 4.1 ./src/title.js
+
+```js
+module.exports = {
+  title_name:"title_name",
+  age:"title_age"
+}
+```
+
+
+### 4.2 ./src/index.js
+
+```js
+import {title_name, age} from './title'
+
+console.log(title_name);
+console.log(age)
+```
+
+### 4.3 打包后的dist目录的main.js 去除注释
+
+```js
+;(() => {
+  var __webpack_modules__ = {
+    "./src/title.js": (module) => {
+      module.exports = {
+        title_name: "title_name",
+        age: "title_age",
+      }
+    },
+  }
+  var __webpack_module_cache__ = {}
+  function __webpack_require__(moduleId) {
+    var cachedModule = __webpack_module_cache__[moduleId]
+    if (cachedModule !== undefined) {
+      return cachedModule.exports
+    }
+    var module = (__webpack_module_cache__[moduleId] = {
+      exports: {},
+    })
+    __webpack_modules__[moduleId](module, module.exports, __webpack_require__)
+    return module.exports
+  }
+  ;(() => {
+    __webpack_require__.n = (module) => {
+      var getter =
+        module && module.__esModule ? () => module["default"] : () => module
+      __webpack_require__.d(getter, { a: getter })
+      return getter
+    }
+  })()
+  ;(() => {
+    __webpack_require__.d = (exports, definition) => {
+      for (var key in definition) {
+        if (
+          __webpack_require__.o(definition, key) &&
+          !__webpack_require__.o(exports, key)
+        ) {
+          Object.defineProperty(exports, key, {
+            enumerable: true,
+            get: definition[key],
+          })
+        }
+      }
+    }
+  })()
+  ;(() => {
+    __webpack_require__.o = (obj, prop) =>
+      Object.prototype.hasOwnProperty.call(obj, prop)
+  })()
+  ;(() => {
+    __webpack_require__.r = (exports) => {
+      if (typeof Symbol !== "undefined" && Symbol.toStringTag) {
+        Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" })
+      }
+      Object.defineProperty(exports, "__esModule", { value: true })
+    }
+  })()
+  var __webpack_exports__ = {}
+  ;(() => {
+    "use strict"
+    __webpack_require__.r(__webpack_exports__)
+    var _title__WEBPACK_IMPORTED_MODULE_0__ =
+      __webpack_require__("./src/title.js")
+    var _title__WEBPACK_IMPORTED_MODULE_0___default =
+      /*#__PURE__*/ __webpack_require__.n(_title__WEBPACK_IMPORTED_MODULE_0__)
+    console.log(_title__WEBPACK_IMPORTED_MODULE_0__.title_name)
+    console.log(_title__WEBPACK_IMPORTED_MODULE_0__.age)
+  })()
+})()
+```
+
+### 4.4 文件分析
+
+ESModule 加载 commonJS 其中多了一个方法的定义:
+```js
+__webpack_require__.n = (module) => {
+  var getter =
+    module && module.__esModule ? 
+    () => module["default"] : 
+    () => module
+  __webpack_require__.d(getter, { a: getter })
+  return getter
+}
+```
+
+就是判断 module 是不是一个ESModule 模块，如果是，就返回 module["default"] 否则返回 module 本身
+
+
+## 总结
+- 1 es6模块调用commonjs模块，可以直接使用commonjs模块，commonjs模块将不会被webpack的模块系统编译而是会原样输出，并且commonjs模块没有.default属性。
+- 2 es6模块调用es6模块, 被调用的es6模块不会添加{__esModule:true}，只有调用者才会添加{__esModule: true}；并且可以进行tree-shaking 操作，如果被调用的es6模块只是import进来，但是并没有被用到，那么被调用的es6模块将会被标记为/* unused harmony default export */，在压缩时此模块将会被删除 （例外：如果被调用的es6模块里有立即执行语句，那么这些语句将会被保留）。
+- 3 如果是commonjs模块引用了es6模块，那么es6模块编译后会添加{__esModule:true}。如果被调用的es6模块中恰好有export default语句，那么编译后的es6模块将会添加.default = ...，这时调用require进来的es6模块默认值，就需要例如：var b = require('./b').default console.log(b)
+- 4 如果commonjs模块调用commonjs模块，那么commonjs模块会原样输出。
+- 5 commonjs模块中不能使用import语句，会报错
+- 6 webpakc的output设置会设置模块的打包格式和保留变量，如果设置library = 'test'，那么打包后的js执行完成后所有的模块将会挂到window.test上。
 
 

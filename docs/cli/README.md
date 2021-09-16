@@ -276,8 +276,9 @@ lerna create <name> [loc]
 ```shell
 lerna add <package> [@version] [--dev] [--exact] [--peer] 
 ```
-
+::: warning
 注意，如果我们直接执行 lerna add xxx 默认 lerna 会将package 安装到所有的包中
+:::
 
 ```shell
 ➜  zf-mock-cli git:(main) ✗ lerna add mime
@@ -307,16 +308,52 @@ lerna info Symlinking packages and binaries
 lerna success Bootstrapped 2 packages
 ```
 
-
-
-
 - 4 learn link 链接依赖
 
+如果我们创建的package中有互相的依赖,  `learn link` 可以帮助我们创建软连接。我们直接在项目中直接执行 `lerna link` 是没有多少效果的。我们必须在需要链接的模块下，手动添加依赖的名称和版本，然后执行 `lerna link` 这样才有效果。
 
 
 ### 脚手架的开发和测试
 - 1 lerna exec 执行 shell 脚本 
+
+在每个包下面执行脚本命令，需要在具体的命令前加上 `--` :
+
+```shell
+# 删除所有package 里面的 node_modules 依赖
+lerna exec -- rf -rf node_modules
+
+# 执行命令之后的效果
+➜  zf-mock-cli git:(main) ✗ lerna exec -- rm -rf node_modules
+lerna notice cli v4.0.0
+lerna info Executing command in 2 packages: "rm -rf node_modules"
+lerna success exec Executed command in 2 packages: "rm -rf node_modules"
+```
+
+::: warning
+执行这个命令是在packages这个目录下面，而不是在根目录下面，这点需要特别注意。
+:::
+
+如果我们想要在指定目录下面执行脚本，需要添加 `--scope` 后缀
+
+比如，我们只想要删除 utils 下面的 node_modules 可以执行下面的命令
+
+```shell
+# 只删除 utils 下面的 node_modules
+lerna exec --scope @zf-mock-cli/util rm -rf node_modules
+
+# 执行效果
+➜  zf-mock-cli git:(main) ✗ lerna exec --scope @zf-mock-cli/utils -- rm -rf node_modules
+lerna notice cli v4.0.0
+lerna notice filter including "@zf-mock-cli/utils"
+lerna info filter [ '@zf-mock-cli/utils' ]
+lerna info Executing command in 1 package: "rm -rf node_modules"
+lerna success exec Executed command in 1 package: "rm -rf node_modules"
+```
+
 - 2 lerna run 执行 npm 命令
+
+这个命令主要是执行 npm 的script 脚本，默认行情况下，会执行所有的包下面的 package.json 下面的脚本信息。 同样这个命令也支持 --scope 选项。
+
 - 3 lerna clean 清空依赖
 ```shell
 lerna clean 

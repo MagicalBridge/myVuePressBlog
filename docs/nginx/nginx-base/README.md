@@ -175,7 +175,14 @@ $ rpm -ql nginx
 | /etc/nginx/conf.d/default.conf | 默认http服务器配置文件|
 
 ### 6.4 守护进程命令
-```
+```shell
+# 启动nginx
+systemctl start nginx.service
+
+# 停止nginx
+systemctl stop nginx.service
+
+# 重新启动nginx
 systemctl restart nginx.service
 ```
 
