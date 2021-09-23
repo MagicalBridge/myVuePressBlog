@@ -72,7 +72,7 @@ docker run hello-world
 
 从图中展示的信息可以看到，在执行run命令的时候，首先会从本地查找镜像，发现在本地没有找到，就去仓库中寻找，下载之后，基于这个镜像创建一个容器。
 
-## Docker的常用命令
+## Docker镜像常用命令
 
 帮助命令
 ```shell
@@ -99,7 +99,7 @@ docker images
 :::
 
 当然 docker images 后面还可以添加 options 参数：
-```
+```shell
 docker images -a // 显示全部镜像，镜像是分层的
 docker images -q // 只显示镜像的 images id
 docker search xxx // 从dockerhub 中查找指定名称的镜像
@@ -108,6 +108,54 @@ docker pull xxx // 拉取指定名称的镜像 注意默认拉取的是最新的
 docker rmi  xxx // 删除指定镜像 如果不添加任何标签默认删除最新版本的镜像
 docker rmi -f xxx // 强制删除指定镜像
 ```
+
+如果我想要搜索 mongo 数据库，可以执行命令：
+```shell
+docker search mongo
+```
+
+如果我想拉取 mongo和centos镜像，可以执行命令:
+
+```shell
+# 默认拉取最新版本的镜像
+docker pull mongo
+
+# 拉取centos最新版本的镜像
+docker pull centos
+
+# 拉取指定版本的镜像(后面使用冒号指定版本号)
+docker pull mongo:3.4.1
+```
+
+
+
+如果我想要删除 hello-world 这个镜像，可以执行命令：
+```shell
+docker rmi hello-world
+```
+
+## Docker容器常用命令
+
+### 新建并启动容器
+```shell
+options说明：
+--name="容器新名字"：为容器指定一个名称：
+-d: 后台运行容器，并返回容器ID, 
+```
+
+### 列出当前所有正在运行的容器
+
+### 退出容器
+
+### 启动容器
+
+### 重启容器
+
+### 停止容器
+
+### 强制停止容器
+
+### 删除已经停止的容器
 
 
 
