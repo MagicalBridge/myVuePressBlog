@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>模块化 | 褚鹏飞的博客</title>
+    <meta name="generator" content="VuePress 1.8.2">
+    
+    <meta name="description" content="终于等到你">
+    
+    <link rel="preload" href="/assets/css/0.styles.e4d8b86b.css" as="style"><link rel="preload" href="/assets/js/app.0b06e7de.js" as="script"><link rel="preload" href="/assets/js/2.ad22ce80.js" as="script"><link rel="preload" href="/assets/js/95.0075a308.js" as="script"><link rel="prefetch" href="/assets/js/10.46116c7f.js"><link rel="prefetch" href="/assets/js/100.9b1caf2b.js"><link rel="prefetch" href="/assets/js/101.f01958ed.js"><link rel="prefetch" href="/assets/js/102.5b4b7c11.js"><link rel="prefetch" href="/assets/js/103.692e4514.js"><link rel="prefetch" href="/assets/js/104.92ab6081.js"><link rel="prefetch" href="/assets/js/105.1d10859b.js"><link rel="prefetch" href="/assets/js/106.872c7286.js"><link rel="prefetch" href="/assets/js/107.6c97d94a.js"><link rel="prefetch" href="/assets/js/108.486b8dfc.js"><link rel="prefetch" href="/assets/js/109.f6ddd93d.js"><link rel="prefetch" href="/assets/js/11.0fe2df66.js"><link rel="prefetch" href="/assets/js/110.989e8f9a.js"><link rel="prefetch" href="/assets/js/111.dc35c4aa.js"><link rel="prefetch" href="/assets/js/112.c8fb68d8.js"><link rel="prefetch" href="/assets/js/113.bda328f7.js"><link rel="prefetch" href="/assets/js/114.1a517c35.js"><link rel="prefetch" href="/assets/js/12.539935fa.js"><link rel="prefetch" href="/assets/js/13.6f251047.js"><link rel="prefetch" href="/assets/js/14.b94ea3e2.js"><link rel="prefetch" href="/assets/js/15.96687c22.js"><link rel="prefetch" href="/assets/js/16.afaeb8ae.js"><link rel="prefetch" href="/assets/js/17.a5597fe4.js"><link rel="prefetch" href="/assets/js/18.6a1f251d.js"><link rel="prefetch" href="/assets/js/19.82ae7f1d.js"><link rel="prefetch" href="/assets/js/20.b5e71477.js"><link rel="prefetch" href="/assets/js/21.22df0b1b.js"><link rel="prefetch" href="/assets/js/22.379468b3.js"><link rel="prefetch" href="/assets/js/23.a2ff1194.js"><link rel="prefetch" href="/assets/js/24.98e6daaa.js"><link rel="prefetch" href="/assets/js/25.ea94ac15.js"><link rel="prefetch" href="/assets/js/26.954f1d1c.js"><link rel="prefetch" href="/assets/js/27.8ef9b59e.js"><link rel="prefetch" href="/assets/js/28.df07162e.js"><link rel="prefetch" href="/assets/js/29.8893761c.js"><link rel="prefetch" href="/assets/js/3.1d0c3d3a.js"><link rel="prefetch" href="/assets/js/30.bb8cf841.js"><link rel="prefetch" href="/assets/js/31.3836c6f9.js"><link rel="prefetch" href="/assets/js/32.012a6e37.js"><link rel="prefetch" href="/assets/js/33.c58d0281.js"><link rel="prefetch" href="/assets/js/34.5f83454c.js"><link rel="prefetch" href="/assets/js/35.d4fc8564.js"><link rel="prefetch" href="/assets/js/36.4c6c0c22.js"><link rel="prefetch" href="/assets/js/37.01a0d608.js"><link rel="prefetch" href="/assets/js/38.0c7bc1c2.js"><link rel="prefetch" href="/assets/js/39.7438cf31.js"><link rel="prefetch" href="/assets/js/4.c4c334a8.js"><link rel="prefetch" href="/assets/js/40.a6224c80.js"><link rel="prefetch" href="/assets/js/41.8380b22e.js"><link rel="prefetch" href="/assets/js/42.9f39d488.js"><link rel="prefetch" href="/assets/js/43.9bf9dcba.js"><link rel="prefetch" href="/assets/js/44.439b73f1.js"><link rel="prefetch" href="/assets/js/45.c71aa888.js"><link rel="prefetch" href="/assets/js/46.918c07fe.js"><link rel="prefetch" href="/assets/js/47.c63b750e.js"><link rel="prefetch" href="/assets/js/48.591d4389.js"><link rel="prefetch" href="/assets/js/49.3f5d64f0.js"><link rel="prefetch" href="/assets/js/5.2e9b6870.js"><link rel="prefetch" href="/assets/js/50.2f269c7a.js"><link rel="prefetch" href="/assets/js/51.5d73cc40.js"><link rel="prefetch" href="/assets/js/52.d3a4fba8.js"><link rel="prefetch" href="/assets/js/53.1d02d697.js"><link rel="prefetch" href="/assets/js/54.a99f96b4.js"><link rel="prefetch" href="/assets/js/55.0e581ff4.js"><link rel="prefetch" href="/assets/js/56.16119314.js"><link rel="prefetch" href="/assets/js/57.e33be55f.js"><link rel="prefetch" href="/assets/js/58.374fb37d.js"><link rel="prefetch" href="/assets/js/59.0648ef8a.js"><link rel="prefetch" href="/assets/js/6.ef888d7b.js"><link rel="prefetch" href="/assets/js/60.52bc9c69.js"><link rel="prefetch" href="/assets/js/61.c14c0d7d.js"><link rel="prefetch" href="/assets/js/62.7cc28184.js"><link rel="prefetch" href="/assets/js/63.ec47197d.js"><link rel="prefetch" href="/assets/js/64.3bdfaafb.js"><link rel="prefetch" href="/assets/js/65.1c13c2b3.js"><link rel="prefetch" href="/assets/js/66.b0ce7fbf.js"><link rel="prefetch" href="/assets/js/67.332a3354.js"><link rel="prefetch" href="/assets/js/68.28a938f2.js"><link rel="prefetch" href="/assets/js/69.c0193cc7.js"><link rel="prefetch" href="/assets/js/7.05b348c9.js"><link rel="prefetch" href="/assets/js/70.56006e06.js"><link rel="prefetch" href="/assets/js/71.f616accd.js"><link rel="prefetch" href="/assets/js/72.6b6ea6bf.js"><link rel="prefetch" href="/assets/js/73.a3aa9113.js"><link rel="prefetch" href="/assets/js/74.24e2b16a.js"><link rel="prefetch" href="/assets/js/75.7835fa77.js"><link rel="prefetch" href="/assets/js/76.6ab1211b.js"><link rel="prefetch" href="/assets/js/77.8694bfe9.js"><link rel="prefetch" href="/assets/js/78.2011867a.js"><link rel="prefetch" href="/assets/js/79.14a5a0d3.js"><link rel="prefetch" href="/assets/js/8.48edc0c3.js"><link rel="prefetch" href="/assets/js/80.674fec20.js"><link rel="prefetch" href="/assets/js/81.a6606643.js"><link rel="prefetch" href="/assets/js/82.7f32d30d.js"><link rel="prefetch" href="/assets/js/83.5d204472.js"><link rel="prefetch" href="/assets/js/84.e7cdce8a.js"><link rel="prefetch" href="/assets/js/85.e16eda41.js"><link rel="prefetch" href="/assets/js/86.64c5bf20.js"><link rel="prefetch" href="/assets/js/87.17586fdc.js"><link rel="prefetch" href="/assets/js/88.05f35de3.js"><link rel="prefetch" href="/assets/js/89.b84cee59.js"><link rel="prefetch" href="/assets/js/9.ae6b091f.js"><link rel="prefetch" href="/assets/js/90.8ac4e953.js"><link rel="prefetch" href="/assets/js/91.9654d387.js"><link rel="prefetch" href="/assets/js/92.3c829797.js"><link rel="prefetch" href="/assets/js/93.d9d3ff92.js"><link rel="prefetch" href="/assets/js/94.02b388bb.js"><link rel="prefetch" href="/assets/js/96.2a010254.js"><link rel="prefetch" href="/assets/js/97.2bc9e2fa.js"><link rel="prefetch" href="/assets/js/98.66935a8e.js"><link rel="prefetch" href="/assets/js/99.aa655035.js">
+    <link rel="stylesheet" href="/assets/css/0.styles.e4d8b86b.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><!----> <span class="site-name">褚鹏飞的博客</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="算法" class="dropdown-title"><span class="title">算法</span> <span class="arrow down"></span></button> <button type="button" aria-label="算法" class="mobile-dropdown-title"><span class="title">算法</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/algorithms/" class="nav-link">
+  常用算法
+</a></li><li class="dropdown-item"><!----> <a href="/leetCode/leetCode/" class="nav-link">
+  leetCode算题解
+</a></li><li class="dropdown-item"><!----> <a href="/leetCode/niuke/" class="nav-link">
+  牛客算题解
+</a></li><li class="dropdown-item"><!----> <a href="/leetCode/valuableBook/" class="nav-link">
+  面试题
+</a></li><li class="dropdown-item"><!----> <a href="/leetCode/offer/" class="nav-link">
+  剑指offer
+</a></li></ul></div></div><div class="nav-item"><a href="/dataStructure/" class="nav-link">
+  数据结构
+</a></div><div class="nav-item"><a href="/network/" class="nav-link">
+  计算机网络
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="Vue" class="dropdown-title"><span class="title">Vue</span> <span class="arrow down"></span></button> <button type="button" aria-label="Vue" class="mobile-dropdown-title"><span class="title">Vue</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/vue/vue-analysis/" class="nav-link">
+  Vue2内部原理剖析
+</a></li><li class="dropdown-item"><!----> <a href="/vue/vue3-analysis/" class="nav-link">
+  Vue3内部原理剖析
+</a></li><li class="dropdown-item"><!----> <a href="/vue/vue-component/" class="nav-link">
+  Vue组件探索
+</a></li><li class="dropdown-item"><!----> <a href="/vue/vuex/" class="nav-link">
+  Vuex源码解析
+</a></li><li class="dropdown-item"><!----> <a href="/vue/vue-router/" class="nav-link">
+  Vue-Router源码解析
+</a></li></ul></div></div><div class="nav-item"><a href="/react/" class="nav-link">
+  React
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="webpack" class="dropdown-title"><span class="title">webpack</span> <span class="arrow down"></span></button> <button type="button" aria-label="webpack" class="mobile-dropdown-title"><span class="title">webpack</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/webpack/webpack-base.html" class="nav-link">
+  webpack基础
+</a></li><li class="dropdown-item"><!----> <a href="/webpack/webpack-advance.html" class="nav-link">
+  webpack进阶
+</a></li><li class="dropdown-item"><!----> <a href="/webpack/webpack打包分析.html" class="nav-link">
+  webpack打包分析
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="Node.js" class="dropdown-title"><span class="title">Node.js</span> <span class="arrow down"></span></button> <button type="button" aria-label="Node.js" class="mobile-dropdown-title"><span class="title">Node.js</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/node/node-base/" class="nav-link">
+  Node基础
+</a></li><li class="dropdown-item"><!----> <a href="/node/express/" class="nav-link">
+  Express
+</a></li><li class="dropdown-item"><!----> <a href="/node/koa/" class="nav-link">
+  Koa
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="服务端" class="dropdown-title"><span class="title">服务端</span> <span class="arrow down"></span></button> <button type="button" aria-label="服务端" class="mobile-dropdown-title"><span class="title">服务端</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/linux/" class="nav-link">
+  linux
+</a></li><li class="dropdown-item"><!----> <a href="/git/" class="nav-link">
+  git工具
+</a></li><li class="dropdown-item"><!----> <a href="/nginx/nginx-base/" class="nav-link">
+  nginx
+</a></li><li class="dropdown-item"><!----> <a href="/docker/" class="nav-link">
+  docker
+</a></li><li class="dropdown-item"><!----> <a href="/k8s/" class="nav-link">
+  kubernetes
+</a></li><li class="dropdown-item"><!----> <a href="/database/mysql/" class="nav-link">
+  mySql
+</a></li><li class="dropdown-item"><!----> <a href="/database/mongodb/" class="nav-link">
+  mongodb
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="前端三剑客" class="dropdown-title"><span class="title">前端三剑客</span> <span class="arrow down"></span></button> <button type="button" aria-label="前端三剑客" class="mobile-dropdown-title"><span class="title">前端三剑客</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/threemusketeers/javascript/" class="nav-link">
+  javascript
+</a></li><li class="dropdown-item"><!----> <a href="/threemusketeers/html/" class="nav-link">
+  HTML
+</a></li><li class="dropdown-item"><!----> <a href="/threemusketeers/css/" class="nav-link">
+  css
+</a></li></ul></div></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="算法" class="dropdown-title"><span class="title">算法</span> <span class="arrow down"></span></button> <button type="button" aria-label="算法" class="mobile-dropdown-title"><span class="title">算法</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/algorithms/" class="nav-link">
+  常用算法
+</a></li><li class="dropdown-item"><!----> <a href="/leetCode/leetCode/" class="nav-link">
+  leetCode算题解
+</a></li><li class="dropdown-item"><!----> <a href="/leetCode/niuke/" class="nav-link">
+  牛客算题解
+</a></li><li class="dropdown-item"><!----> <a href="/leetCode/valuableBook/" class="nav-link">
+  面试题
+</a></li><li class="dropdown-item"><!----> <a href="/leetCode/offer/" class="nav-link">
+  剑指offer
+</a></li></ul></div></div><div class="nav-item"><a href="/dataStructure/" class="nav-link">
+  数据结构
+</a></div><div class="nav-item"><a href="/network/" class="nav-link">
+  计算机网络
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="Vue" class="dropdown-title"><span class="title">Vue</span> <span class="arrow down"></span></button> <button type="button" aria-label="Vue" class="mobile-dropdown-title"><span class="title">Vue</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/vue/vue-analysis/" class="nav-link">
+  Vue2内部原理剖析
+</a></li><li class="dropdown-item"><!----> <a href="/vue/vue3-analysis/" class="nav-link">
+  Vue3内部原理剖析
+</a></li><li class="dropdown-item"><!----> <a href="/vue/vue-component/" class="nav-link">
+  Vue组件探索
+</a></li><li class="dropdown-item"><!----> <a href="/vue/vuex/" class="nav-link">
+  Vuex源码解析
+</a></li><li class="dropdown-item"><!----> <a href="/vue/vue-router/" class="nav-link">
+  Vue-Router源码解析
+</a></li></ul></div></div><div class="nav-item"><a href="/react/" class="nav-link">
+  React
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="webpack" class="dropdown-title"><span class="title">webpack</span> <span class="arrow down"></span></button> <button type="button" aria-label="webpack" class="mobile-dropdown-title"><span class="title">webpack</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/webpack/webpack-base.html" class="nav-link">
+  webpack基础
+</a></li><li class="dropdown-item"><!----> <a href="/webpack/webpack-advance.html" class="nav-link">
+  webpack进阶
+</a></li><li class="dropdown-item"><!----> <a href="/webpack/webpack打包分析.html" class="nav-link">
+  webpack打包分析
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="Node.js" class="dropdown-title"><span class="title">Node.js</span> <span class="arrow down"></span></button> <button type="button" aria-label="Node.js" class="mobile-dropdown-title"><span class="title">Node.js</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/node/node-base/" class="nav-link">
+  Node基础
+</a></li><li class="dropdown-item"><!----> <a href="/node/express/" class="nav-link">
+  Express
+</a></li><li class="dropdown-item"><!----> <a href="/node/koa/" class="nav-link">
+  Koa
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="服务端" class="dropdown-title"><span class="title">服务端</span> <span class="arrow down"></span></button> <button type="button" aria-label="服务端" class="mobile-dropdown-title"><span class="title">服务端</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/linux/" class="nav-link">
+  linux
+</a></li><li class="dropdown-item"><!----> <a href="/git/" class="nav-link">
+  git工具
+</a></li><li class="dropdown-item"><!----> <a href="/nginx/nginx-base/" class="nav-link">
+  nginx
+</a></li><li class="dropdown-item"><!----> <a href="/docker/" class="nav-link">
+  docker
+</a></li><li class="dropdown-item"><!----> <a href="/k8s/" class="nav-link">
+  kubernetes
+</a></li><li class="dropdown-item"><!----> <a href="/database/mysql/" class="nav-link">
+  mySql
+</a></li><li class="dropdown-item"><!----> <a href="/database/mongodb/" class="nav-link">
+  mongodb
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="前端三剑客" class="dropdown-title"><span class="title">前端三剑客</span> <span class="arrow down"></span></button> <button type="button" aria-label="前端三剑客" class="mobile-dropdown-title"><span class="title">前端三剑客</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/threemusketeers/javascript/" class="nav-link">
+  javascript
+</a></li><li class="dropdown-item"><!----> <a href="/threemusketeers/html/" class="nav-link">
+  HTML
+</a></li><li class="dropdown-item"><!----> <a href="/threemusketeers/css/" class="nav-link">
+  css
+</a></li></ul></div></div> <!----></nav>  <ul class="sidebar-links"><li><section class="sidebar-group depth-0"><p class="sidebar-heading open"><span>模块化</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/node/module/#commonjs" class="sidebar-link">CommonJS</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/node/module/#模块" class="sidebar-link">模块</a></li></ul></li></ul></section></li></ul> </aside> <main class="page"> <div class="theme-default-content content__default"><h1 id="模块化"><a href="#模块化" class="header-anchor">#</a> 模块化</h1> <p>模块化之于程序，就如同细胞之于生命体，是具有特定功能的组成单元，不同的模块负责不同的工作，它们以某种方式联系在一起，共同保证程序的正常运转。本文将包含以下几个部分：</p> <ul><li>1 不同的模块标准以及它们之间的区别；</li> <li>2 如何编写模块</li> <li>3 模块打包的原理</li></ul> <p>随着<code>JavaScript</code>的发展，社区中产生了很多的模块标准，在认识这些标准的同事，也要了解背后的思想。例如，它为什么会有这个特性，或者为什么要这样去实现，这对于我们自己编写模块也有所帮助。</p> <h2 id="commonjs"><a href="#commonjs" class="header-anchor">#</a> CommonJS</h2> <p><code>CommonJS</code> 是由<code>JavaScript</code>社区于 2009年提出的包含模块、文件、IO、控制台在内的一系列标准。在<code>Node.js</code>js的实现中采用了<code>CommonJS</code>标准的一部分，并在其基础上进行了一些调整，我们所说的<code>CommonJS</code>模块和<code>Node.js</code>.js中的实现并不完全一样，现在一般谈到<code>CommonJS</code>其实是<code>Node.js</code>的版本，而非它的原始定义。</p> <p><code>CommonJS</code>最初只为服务器设计，直到 <code>Browserify</code> -- 一个运行在<code>Node.js</code>环境下的模块打包工具，它可以将 <code>CommonJS</code>模块打包为浏览器可以单独运行的单个文件。这意味着客户端的代码也可以遵循<code>CommonJS</code>标准来编写。</p> <p>不仅如此，借助<code>Node.js</code>的包管理器，npm开发者还可以获取他人的代码库，或者把自己的代码发布上去供他人使用，这种可以共享的传播的方式使的<code>CommonJS</code>在前端开发中逐渐流行起来。</p> <h3 id="模块"><a href="#模块" class="header-anchor">#</a> 模块</h3> <p><code>CommonJS</code> 中规定每一个文件是一个模块。将一个<code>JavaScript</code>文件直接通过script标签插入页面中与封装成<code>CommonJS</code>模块最大的不同在于，前者的顶层作用域是全局作用域，在进行变量声明时会污染全局作用域；而后者会形成一个属于模块自身的作用域，所有的变量以及函数只有自己能够访问，对外是不可见的：</p> <div class="language-js line-numbers-mode"><pre class="language-js"><code><span class="token comment">// calculator.js</span>
+<span class="token keyword">var</span> name <span class="token operator">=</span> <span class="token string">'calculater.js'</span><span class="token punctuation">;</span>
+
+<span class="token comment">// index.js</span>
+<span class="token keyword">var</span> name <span class="token operator">=</span> <span class="token string">'index.js'</span><span class="token punctuation">;</span>
+<span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'./calculater.js'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// index.js</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br></div></div><p>这里有两个文件，在index.js 中我们通过 CommonJS 的require函数加载 calculater.js运行之后控制台结果是 'index.js'，这说明 calculater.js中的变量声明并不会影响 index.js, 可见每一个模块是拥有各自作用域的。</p></div> <footer class="page-edit"><!----> <!----></footer> <!----> </main></div><div class="global-ui"></div></div>
+    <script src="/assets/js/app.0b06e7de.js" defer></script><script src="/assets/js/2.ad22ce80.js" defer></script><script src="/assets/js/95.0075a308.js" defer></script>
+  </body>
+</html>

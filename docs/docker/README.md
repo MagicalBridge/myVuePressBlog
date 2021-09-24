@@ -139,17 +139,74 @@ docker rmi hello-world
 ### 新建并启动容器
 ```shell
 options说明：
---name="容器新名字"：为容器指定一个名称：
--d: 后台运行容器，并返回容器ID, 
+--name="容器新名字"：为容器指定一个名称
+-d: 后台运行容器，并返回容器ID
+-i: 以交互模式运行容器，通常与 -t 同时使用
+-t: 为容器分配一个伪输入终端，通常与 -i 同时使用
+-P: 随机端口映射
+-p: 指定端口映射，有以下四种格式
+  ip:hostPort: containerPort
+  ip::containerPort
+  hostPort: containerPort
+  containerPort
 ```
 
-### 列出当前所有正在运行的容器
+### 列出当前所有**正在运行**的容器
+```shell
+docker ps
 
-### 退出容器
+# 显示出当前我的服务器中启动的所有的容器
+$ docker ps
+CONTAINER ID   IMAGE                     COMMAND                  CREATED        STATUS        PORTS                      NAMES
+0c1c8d14921b   mongo:3.4.1               "/entrypoint.sh mong…"   43 hours ago   Up 43 hours   0.0.0.0:27017->27017/tcp   yapi-mongodb-docker
+c9693a7fa9dd   easymock/easymock:1.6.0   "/bin/bash -c 'npm r…"   4 weeks ago    Up 3 hours    0.0.0.0:7300->7300/tcp     easy-mock_web_1
+f506572bb5c7   mongo:3.4.1               "/entrypoint.sh mong…"   4 weeks ago    Up 3 hours    27017/tcp                  easy-mock_mongodb_1
+4a7a0c8348a7   redis:4.0.6               "docker-entrypoint.s…"   4 weeks ago    Up 3 hours    6379/tcp                   easy-mock_redis_1
+```
+当然这个命令也是可以添加options的
+
+```
+-a 列出当前所有正在运行的容器 + 历史上运行过的
+-l 显示最近创建的容器
+-n 显示最近n个创建的容器
+-q 静默模式，只显示容器编号
+--no-trunc 不截断输出
+```
+docker ps -a
+
+```shell
+$ docker ps -a
+CONTAINER ID   IMAGE                     COMMAND                  CREATED             STATUS                         PORTS                      NAMES
+ea1732dfe8de   centos                    "/bin/bash"              16 minutes ago      Exited (0) 16 minutes ago                                 mycentos
+3fe4caec1b0a   nginx                     "/docker-entrypoint.…"   18 minutes ago      Exited (0) 17 minutes ago                                 my-nginx
+ebb4102ec952   nginx                     "/docker-entrypoint.…"   About an hour ago   Exited (0) About an hour ago                              nginx-server
+0c1c8d14921b   mongo:3.4.1               "/entrypoint.sh mong…"   43 hours ago        Up 43 hours                    0.0.0.0:27017->27017/tcp   yapi-mongodb-docker
+c9693a7fa9dd   easymock/easymock:1.6.0   "/bin/bash -c 'npm r…"   4 weeks ago         Up 3 hours                     0.0.0.0:7300->7300/tcp     easy-mock_web_1
+f506572bb5c7   mongo:3.4.1               "/entrypoint.sh mong…"   4 weeks ago         Up 3 hours                     27017/tcp                  easy-mock_mongodb_1
+4a7a0c8348a7   redis:4.0.6               "docker-entrypoint.s…"   4 weeks ago         Up 3 hours                     6379/tcp                   easy-mock_redis_1
+0ffe03ebfdeb   hello-world               "/hello"                 2 months ago        Exited (0) 2 months ago                                   sad_jackson
+```
 
 ### 启动容器
+```shell
+# 首先启动容器 进入交互式命令
+$ docker run  -it --name mycentos centos
+[root@941b40fa94aa /]#
 
+# 退出交互式命令
+[root@941b40fa94aa /]# exit
+exit
+
+# 退出容器之后，想要查看上一个刚退出的容器，可以看到，上次启动的是 mycentos 
+$ docker ps -l
+CONTAINER ID   IMAGE     COMMAND       CREATED         STATUS                          PORTS     NAMES
+941b40fa94aa   centos    "/bin/bash"   2 minutes ago   Exited (0) About a minute ago             mycentos
+```
 ### 重启容器
+```shell
+# docker start 容器id 或者容器名称
+# 比如，我想把刚才退出的
+```
 
 ### 停止容器
 
