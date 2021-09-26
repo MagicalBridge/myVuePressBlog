@@ -174,6 +174,64 @@ $ rpm -ql nginx
 | /etc/nginx/nginx.conf    | 核心配置文件   |
 | /etc/nginx/conf.d/default.conf | 默认http服务器配置文件|
 
+
+nginx.conf  核心配置文件详解：
+
+```shell
+user nginx; # 启动nginx的用户
+worker_processes auto; # work 进程数量 一般要和cpu的核数相等 
+error_log /var/log/nginx/error.log; # 错误日志
+pid /run/nginx.pid; # 进程ID写入的文件
+
+# Load dynamic modules. See /usr/share/doc/nginx/README.dynamic.
+include /usr/share/nginx/modules/*.conf;
+
+# nginx 架构和node很像
+events {
+  worker_connections 1024; # 工作进程的最大连接数
+}
+http {
+    # 定义日志的格式
+    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                      '$status $body_bytes_sent "$http_referer" '
+                      '"$http_user_agent" "$http_x_forwarded_for"';
+
+    access_log  /var/log/nginx/access.log  main;
+
+    sendfile            on;
+    tcp_nopush          on;
+    tcp_nodelay         on;
+    keepalive_timeout   65;
+    types_hash_max_size 4096;
+
+    include             /etc/nginx/mime.types; # 包含的mime文件
+    default_type        application/octet-stream; # file.xyz 类型文件不认识时候 默认就是二进制文件
+
+    # Load modular configuration files from the /etc/nginx/conf.d directory.
+    # See http://nginx.org/en/docs/ngx_core_module.html#include
+    # for more information.
+    include /etc/nginx/conf.d/*.conf;
+
+    server {
+        listen       80;
+        listen       [::]:80;
+        server_name  _;
+        root         /usr/share/nginx/html;
+
+        # Load configuration files for the default server block.
+        include /etc/nginx/default.d/*.conf;
+
+        error_page 404 /404.html;
+        location = /404.html {
+        }
+
+        error_page 500 502 503 504 /50x.html;
+        location = /50x.html {
+        }
+    }
+}
+```
+
 ### 6.4 守护进程命令
 ```shell
 # 启动nginx
