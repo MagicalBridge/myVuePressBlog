@@ -255,6 +255,22 @@ docker rm c9693a7fa9dd
 docker inspect c9693a7fa9dd
 ```
 
+### 拷贝docker中的文件到宿主机
+docker cp 容器ID：容器内的路径 目标主机路径
+```shell
+# 将docker中nginx的配置文件拷贝到宿主机的cp目录下
+docker cp xxxxx: /ect/nginx/nginx.conf /ect/nginx/cp/
+```
 
+### 以指定端口映射启动容器
+```shell
+# -p 宿主机端口: docker容器启动的端口 
+docker run --name MyNginx -d -p 80:80  nginx
+```
+## Docker容器数据卷
 
+docker理念就是将应用与运行的环境打包形成容器运行，运行可以伴随着容器，但是我们对数据的要求希望是持久化的，容器之间希望可以共享数据
 
+docker容器产生的数据，如果不通过 docker commit 生产新的镜像，使得数据作为镜像的一部分保存下来，那么当容器删除之后，数据自然也就没有了。
+
+为了能保存数据，在docker中我们卷的概念。
