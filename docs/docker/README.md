@@ -267,6 +267,7 @@ docker cp xxxxx: /ect/nginx/nginx.conf /ect/nginx/cp/
 # -p 宿主机端口: docker容器启动的端口 
 docker run --name MyNginx -d -p 80:80  nginx
 ```
+
 ## Docker容器数据卷
 
 docker理念就是将应用与运行的环境打包形成容器运行，运行可以伴随着容器，但是我们对数据的要求希望是持久化的，容器之间希望可以共享数据
@@ -274,3 +275,36 @@ docker理念就是将应用与运行的环境打包形成容器运行，运行�
 docker容器产生的数据，如果不通过 docker commit 生产新的镜像，使得数据作为镜像的一部分保存下来，那么当容器删除之后，数据自然也就没有了。
 
 为了能保存数据，在docker中我们卷的概念。
+
+### 以nginx为例，在docker上启动nginx并配置容器数据卷
+1、首先使用docker 拉取镜像,如果不加版本号，默认是最新版本
+```shell
+$docker pull nginx
+```
+
+2、使用docker 启动nginx
+```shell
+# -d 后台运行  -p 80:80 宿主机的端口映射nginx的端口 --name 别名
+$docker run --name mynginx -d -p 80:80 nginx
+```
+
+3、重新开一个命令交互启动我们自己的nginx
+```shell
+$docker exec -it mynginx bash
+```
+
+4、我们想要修改nginx的配置文件
+```shell
+vim /etc/nginx/nginx.conf
+```
+执行上述命令发现容器内部实际上并没有安装 vim 这个工具，可以使用 apt-get 进行安装
+
+```shell
+# 更新源
+$apt-get update
+
+# 安装vim
+$apt-get install vim
+```
+
+5、当然这种方式还是有些繁琐，我们可以把宿主机上的配置文件映射到 容器nginx容器里面

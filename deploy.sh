@@ -7,7 +7,7 @@ set -e
 npm run docs:build
 
 # 推送到自己的服务器指定目录
-scp -r ./docs/.vuepress/dist root@47.103.72.18:/usr/share/nginx/html/vuepress
+scp -r ./docs/.vuepress/dist root@47.103.72.18:/usr/local/docker/my-docker-nginx/vuepress
 
 # 进入生成的文件夹
 cd docs/.vuepress/dist
