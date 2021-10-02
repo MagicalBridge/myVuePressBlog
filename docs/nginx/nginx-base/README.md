@@ -210,24 +210,26 @@ http {
     # Load modular configuration files from the /etc/nginx/conf.d directory.
     # See http://nginx.org/en/docs/ngx_core_module.html#include
     # for more information.
-    include /etc/nginx/conf.d/*.conf;
+    include /etc/nginx/conf.d/*.conf; # 其他的日志文件
 
     server {
-        listen       80;
-        listen       [::]:80;
-        server_name  _;
-        root         /usr/share/nginx/html;
+      listen       80;
+      listen       [::]:80;
+      server_name  _;
+      root         /usr/share/nginx/html;
 
-        # Load configuration files for the default server block.
-        include /etc/nginx/default.d/*.conf;
+      # Load configuration files for the default server block.
+      include /etc/nginx/default.d/*.conf;
 
-        error_page 404 /404.html;
-        location = /404.html {
-        }
+      error_page 404 /404.html; # 错误页面 
+      location = /404.html {
+        # 这个部分可以自己设置 指向自己设定的 404html
+      }
 
-        error_page 500 502 503 504 /50x.html;
-        location = /50x.html {
-        }
+      error_page 500 502 503 504 /50x.html; # 服务端的错误码
+      location = /50x.html {
+        # 这个部分配置root 指向自己设定的 50html
+      }
     }
 }
 ```
@@ -272,3 +274,45 @@ systemctl restart nginx.service
 | ----------- | ----------- |
 | /usr/sbin/nginx| 可执行命令|
 | /usr/sbin/nginx-debug| 调试执行可执行命令|
+
+## 7 nginx的中间件架构
+
+### 7.1 HTTP请求
+
+![http请求](../../images/nginx/03.png)
+
+- request：包括请求行、请求头部、请求数据
+- response: 包括状态行、消息报头、响应正文
+
+### 7.2 nginx的日志类型
+
+- error.log
+- access_log: 通过访问日志，可以知晓用户的地址，网站的哪些部分最受欢迎，用户的浏览时间，对大多数用户用的的浏览器做出针对性优化。
+
+nginx 会把每个用户访问网站的日志信息记录到指定的日志文件里，供网站管理员分析用户浏览行为等, 这个指定的日志文件就是 access_log。
+其中log_format定义了日志输出的格式，输出哪些字段。
+
+日志格式设定：
+
+```shell
+log_format main '$remote_addr - $remote_user [$time_local] "$request" '
+'$status $body_bytes_sent "$http_referer" '
+'"$http_user_agent" $http_x_forwarded_for';
+```
+
+log_format 格式变量的含义：
+```shell
+$remote_addr  #记录访问网站的客户端地址
+$remote_user  #远程客户端用户名
+$time_local  #记录访问时间与时区
+$request  #用户的http请求起始行信息
+$status  #http状态码，记录请求返回的状态码，例如：200、301、404等
+$body_bytes_sent  #服务器发送给客户端的响应body字节数
+$http_referer  #记录此次请求是从哪个连接访问过来的，可以根据该参数进行防盗链设置。
+$http_user_agent  #记录客户端访问信息，例如：浏览器、手机客户端等
+$http_x_forwarded_for  #当前端有代理服务器时，设置web节点记录客户端地址的配置，此参数生效的前提是代理服务器也要进行相关的x_forwarded_for设置
+```
+
+日志格式用一对单引号包起来，多个日志格式段用可以放在不同的行，最后用分号(;)结尾，单引号中的双引号("),空白符，中括号([)等字符原样输出，比较长的字符串通常用双引号(")包起来，看起来不容易更加清楚，$开始的变量会替换为真实的值。
+
+

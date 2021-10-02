@@ -308,3 +308,14 @@ $apt-get install vim
 ```
 
 5、当然这种方式还是有些繁琐，我们可以把宿主机上的配置文件映射到 容器nginx容器里面
+```shell
+$docker run --name mynginx -d -p 80:80 -v /usr/local/docker/my-docker-nginx/vuepress:/usr/share/nginx/html/vuepress  -v /usr/local/docker/my-docker-nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf nginx 
+```
+解释下上述命令的含义:
+- docker run --name mynginx : 以 mynginx为别名启动nginx
+- -d: 代表的是后台启动
+- -p 80:80 用宿主机的80端口映射 docker容器中nginx的80端口
+- -v /usr/local/docker/my-docker-nginx/vuepress:/usr/share/nginx/html/vuepress 宿主机的vuepress目录映射到 docker容器中的文件目录
+- -v /usr/local/docker/my-docker-nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf 宿主机的文件替换容器文件
+- nginx 启动的是nginx
+
