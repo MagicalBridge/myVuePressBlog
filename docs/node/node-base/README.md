@@ -63,3 +63,6 @@ node.js 中最主要的内容，就是实现了⼀套 CommonJS的模块化规范
 
 <!-- ## 文章列表 -->
 <!-- [child_process模块](../docs/child_process.md) -->
+
+## 模板引擎的实现原理
+[模板引擎实现原理](../docs/template.md)
