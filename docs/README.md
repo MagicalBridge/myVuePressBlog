@@ -12,5 +12,5 @@ features:
   details: 终身学习、思考践行
 - title: 关于你
   details: 来了就是自家人，交个朋友哈。
-footer: MIT Licensed | Copyright © 2020-present Louis Chu
+footer: MIT Licensed | Copyright © 2021-present Louis Chu
 ---

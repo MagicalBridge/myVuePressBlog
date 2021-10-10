@@ -319,3 +319,32 @@ $docker run --name mynginx -d -p 80:80 -v /usr/local/docker/my-docker-nginx/vuep
 - -v /usr/local/docker/my-docker-nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf 宿主机的文件替换容器文件
 - nginx 启动的是nginx
 
+## DockerFile 
+
+dockerFile 是用来构建docker镜像的构建文件，是由一些列命令和参数构成的脚本
+
+### 构建的三个步骤：
+- 编写dockerfile文件
+- docker build
+- docker run 
+
+### dockerfile 内容基础知识
+- 1 每条保留字指令都必须为大写字母且后面要跟随至少一个参数
+- 2 指令按照从上到下，顺序执行
+- 3 #表示注释
+- 4 每条指令都会创建一个新的镜像层，并对镜像进行提交
+
+### Docker 执行dockerfile的大致流程 
+- 1 docker 从基础镜像开始运行一个容器
+- 2 执行一条指令并对容器做出修改
+- 3 执行类似docker commit 的操作提交一个新的镜像层
+- 4 docker 再基于刚提交的镜像运行一个新容器
+- 5 执行 dockerfile 中的下一条指令直到所有的指令都执行完成
+
+从应用软件的角度看 Dockerfile、Docker镜像与docker容器分别代表软件的三个不同阶段
+- Dockerfile 是软件的原材料
+- Docker镜像是软件的交付品
+- Docker容器则可以认为是软件的运行态
+
+Dockerfile 面向开发，Docker镜像成为交付标准 ， Docker容器则涉及部署与运维，三者缺一不可。
+
