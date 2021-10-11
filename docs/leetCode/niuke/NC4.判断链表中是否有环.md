@@ -59,6 +59,5 @@ var hasCycle = function(head) {
   }
   return true
 };
-
 ```
 

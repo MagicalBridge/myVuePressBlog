@@ -65,4 +65,7 @@ node.js 中最主要的内容，就是实现了⼀套 CommonJS的模块化规范
 <!-- [child_process模块](../docs/child_process.md) -->
 
 ## 模板引擎的实现原理
-[模板引擎实现原理](../docs/template.md)
+[模板引擎实现原理](../docs/模板引擎.md)
+
+## node中的发布订阅
+[node中的发布订阅](../docs/node中的发布订阅.md)
