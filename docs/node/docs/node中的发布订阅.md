@@ -150,7 +150,7 @@ EventEmitter.prototype.emit = function(eventName,...args) {
 EventEmitter.prototype.off = function(eventName, callback) {
   if(this._events && this._events[eventName]) {
     // 过滤出来不想等的 相等的就自然解绑掉了
-    this._events[eventName].filter(fn => fn !== callback)
+    this._events[eventName] = this._events[eventName].filter(fn => fn !== callback)
   }
 }
 
@@ -215,7 +215,7 @@ EventEmitter.prototype.emit = function(eventName,...args) {
 EventEmitter.prototype.off = function(eventName, callback) {
   if(this._events && this._events[eventName]) {
     // 过滤出来不想等的 相等的就自然解绑掉了
-    this._events[eventName].filter(fn => fn !== callback && fn.l !== callback)
+    this._events[eventName] = this._events[eventName].filter(fn => fn !== callback && fn.l !== callback)
   }
 }
 
