@@ -216,3 +216,10 @@ scott老师好，我是褚鹏飞，本科学习的土木工程，16年考研失�
 - 4、云鹏的tag路由使用的是动态组件进行管理的, 并且使用的组件库提供的组件，这点其实让我有些震撼，我为什么就没有想到使用这个组件呢？都没有好好观察就忙碌的使用,这充分的说明了对于组件的不信任。不善用工具的特性。
 - 5、在梳理，conditionList 的时候 使用了map对函数进行分流，这块给了我很大的震撼
 - 6、现在自己的情绪有些不好。遇到了脚手架不能启动的问题。
+
+## 1028灵感、复盘、记录
+- 1、调试模式很容易关上，今天终于痛定思痛，将调试参数梳理出来：
+?moduleData=[{"name"%3A"cdpv2","hash"%3A"%2Fbos%2Fproducts%2Fcdpv2","parentName"%3A"saasV2Layout","container"%3A"%23saas-app-con","pName"%3A"saas-fe-console-cdpv2","debugCheckAuth"%3Afalse,"appURL"%3A"http%3A%2F%2Flocalhost%3A8088%2Findex.js"}]
+
+将上述参数加入到链接后面，就能重启开启调试模式。
+- 2、
