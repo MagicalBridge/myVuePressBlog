@@ -36,3 +36,69 @@ license: (MIT)
   "license": "MIT"
 }
 ```
+按回车键就能把 package.json 的内容写到文件系统中，如果要修改 package.json，可以直接使用编辑器编辑，或者再次运行npm init，npm 默认不会覆盖修改里面已经存在的信息。
+
+::: tip
+嫌上面的初始化方式太啰嗦？你可以使用 npm init -f（意指 --force，或者使用 --yes）告诉 npm 直接跳过参数问答环节，快速生成 package.json。
+:::
+
+初始化 package.json 时候的字段默认值是可以自己设置的，可以用下面的命令去修改默认配置：
+```shell
+npm config set init.author.email "wangshijun2010@gmail.com"
+npm config set init.author.name "wangshijun"
+npm config set init.author.url "http://github.com/wangshijun"
+npm config set init.license "MIT"
+npm config set init.version "0.1.0"
+```
+
+::: tip
+将默认配置和 -f 参数结合使用，能让你用最短的时间创建 package.json，快去自己试试吧。
+:::
+
+
+### 用npm run 执行任意命令
+
+使用 npm init 创建的 package.json 文件中包含了 script 字段：
+
+```json
+"scripts": {
+  "test": "echo \"Error: no test specified\" && exit 1"
+},
+```
+
+在终端中运行 npm run test 能看到Error: no test specified 的输出，npm run test 可以简写为 npm test，或更简单的 npm t，得到的结果是几乎相同的。npm test 顾名思义，就是运行项目测试，实际用法在实战环节会有介绍。
+
+和 test 类似，start也是npm内置支持的命令。但是需要先在 scripts 字段中声明该脚本的实际内容，如果没声明就执行 npm start，会直接报错。如下图所示：
+
+![npm start](./../../images/node/node-script/01.png)
+
+那么 npm 是如何管理和执行各种 scripts的呢？作为 npm 内置的核心功能之一，npm run 实际上是 `npm run-script` 命令的简写。当我们运行 `npm run xxx` 时，基本步骤如下：
+
+- 1、从  package.json 文件中读取 scripts 对象里面的全部配置；
+- 2、以传递给 npm run 的第一个参数为键，本例子中为 xxx, 在scripts 对象里面获取对应的值作为接下来要执行的命令，如果没有找到直接就报错。
+- 3、在系统默认的shell中执行上述命令，系统默认的shell通常bash，windows 环境下可能略有不同，稍后再讲。
+
+注意：上面这是简化的流程，更复杂的钩子机制后面章节单独介绍。
+
+举例来说，如果 package.json 文件内容如下：
+
+```json
+{
+  "name": "hello-npm-script",
+  "devDependencies": {
+    "eslint": "latest"
+  },
+  "scripts": {
+    "eslint": "eslint **.js"
+  }
+}
+```
+如果不带任何参数执行 npm run，它会列出可执行的所有命令，比如下面这样：
+```
+Available scripts in the myproject package:
+  eslint
+    eslint **.js
+```
+如果运行 npm run eslint，npm 会在 shell 中运行 eslint **.js。
+
+有没有好奇上面的 eslint 命令是从哪里来的，其实，npm 在执行指定 script 之前会把 node_modules/.bin 加到环境变量 $PATH 的前面，这意味着任何内含可执行文件的 npm 依赖都可以在 npm script 中直接调用，换句话说，你不需要在 npm script 中加上可执行文件的完整路径，比如 `./node_modules/.bin/eslint **.js`。
