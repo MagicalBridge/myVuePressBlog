@@ -102,3 +102,97 @@ Available scripts in the myproject package:
 如果运行 npm run eslint，npm 会在 shell 中运行 eslint **.js。
 
 有没有好奇上面的 eslint 命令是从哪里来的，其实，npm 在执行指定 script 之前会把 node_modules/.bin 加到环境变量 $PATH 的前面，这意味着任何内含可执行文件的 npm 依赖都可以在 npm script 中直接调用，换句话说，你不需要在 npm script 中加上可执行文件的完整路径，比如 `./node_modules/.bin/eslint **.js`。
+
+### 创建自定义的npm script
+
+我们尝试在添加 eslint 脚本，eslint 是社区中接受度较高的JavaScript风格检查工具，有大把现成的规则供选择。
+
+#### 1、准备被检查的代码
+
+要做代码检查，我们必须有代码，创建 index.js 文件，输入如下内容：
+
+```js
+const str = 'some value';
+
+function fn(){
+  console.log('some log');
+}
+```
+
+#### 2、添加eslint 依赖
+
+执行如下命令将eslint 添加为 devDependencies：
+
+```shell
+npm install eslint -D
+// 或者写成
+npm install --save-dev eslint
+```
+
+上述命令执行完毕之后，会在 `./node_module/.bin/` 目录下创建一个 `eslint.js`的执行脚本,这是eslint包提供的cli工具。
+
+
+#### 3、初始化eslint配置
+用 eslint 做检查需要配置规则集。存放规则集的文件就是配置文件，使用如下文件生成配置文件：
+```shell
+./node_modules/.bin/eslint --init
+```
+
+在命令行提示中选择 Answer questions about your style，如下图回答几个问题，答案可以根据自己的偏好：
+回车之后目录下面就有了 .eslintrc.js 配置文件：
+
+```js
+module.exports = {
+	"env": {
+		"browser": true,
+		"es2021": true
+	},
+	"extends": "eslint:recommended",
+	"parserOptions": {
+		"ecmaVersion": 13,
+		"sourceType": "module"
+	},
+	"rules": {
+		"indent": [
+			"error",
+			"tab"
+		],
+		"linebreak-style": [
+			"error",
+			"unix"
+		],
+		"quotes": [
+			"error",
+			"double"
+		],
+		"semi": [
+			"error",
+			"never"
+		]
+	}
+}
+```
+
+#### 4、添加 eslint 命令
+在 package.json的script字段中新增命令 eslint：
+```js
+{
+  "scripts": {
+    "eslint": "eslint src/*.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+}
+```
+
+#### 5、运行 eslint 命令
+执行 npm run eslint，可以看到，按照官方推荐规则代码里有 3 处不符合规范的地方：
+![eslint报错](./../../images/node/node-script/02.png)
+
+
+#### 6、eslint 完成 react、vue.js 代码的检查
+如果需要结合 eslint 检查主流前端框架 react、vue.js，下面提供两条线索，因为官方仓库的 README 就可以作为入门文档，仔细读读相信绝大多数同学都能配置好。
+
+使用 eslint-plugin-react 检查 react 代码，使用 react-plugin-react-native 检查 react-native 代码，如果你比较懒，可以直接使用 eslint-config-airbnb，里面内置了 eslint-plugin-react。
+
+推荐使用 vue.js 官方的 eslint 插件：eslint-plugin-vue 来检查 vue.js 代码，具体的配置方法官方 README 写的清晰明了，这里就不赘述了。
+
