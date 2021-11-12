@@ -63,5 +63,41 @@ sidebar: auto
 - 3、不要有心里压力，凭借自己的能力有些时候就是做不成一些事情，必须依赖于别人的帮助。
 
 ## 1111 灵感、复盘、记录
-- 1、最近买了很多吃的，我也不知道为啥会这样。可能是有些焦虑吧
-- 2、
+- 1、最近买了很多吃的，我也不知道为啥会这样。可能是有些焦虑吧。
+- 2、今天又抛出来了一个问题，详细设计应该包含哪些内容。
+```js
+(function(root, factory) {
+    console.log('没有模块环境，直接挂载在全局对象上')
+    root.umdModule = factory();
+})(this, function() {
+    return {
+        name: '我是一个umd模块'
+    }
+})
+```
+
+## 1112 灵感、复盘、记录
+- 1、一大早起来学习 模块化规范 UMD
+```js
+(function(root, factory) {
+  if (typeof module === 'object' && typeof module.exports === 'object') {
+      console.log('是commonjs模块规范，nodejs环境')
+      module.exports = factory();
+  } else if (typeof define === 'function' && define.amd) {
+      console.log('是AMD模块规范，如require.js')
+      define(factory)
+  } else if (typeof define === 'function' && define.cmd) {
+      console.log('是CMD模块规范，如sea.js')
+      define(function(require, exports, module) {
+          module.exports = factory()
+      })
+  } else {
+      console.log('没有模块环境，直接挂载在全局对象上')
+      root.umdModule = factory();
+  }
+}(this, function() {
+    return {
+        name: '我是一个umd模块'
+    }
+}))
+```
