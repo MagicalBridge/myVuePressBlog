@@ -1,5 +1,57 @@
 ## 手摸手教你手写promsie
 
+来看一个简单的基于Promsie封装的图片加载函数
+```js
+function loadImageAsync(url) {
+  return new Promise((resolve,reject) => {
+    // 创建图片对象
+    const image = new Image();
+    image.src = url;
+    image.onLoad = function() {
+      resolve(image);
+    } 
+    image.onerror = function() {
+      reject(new Error('Could not load image at ' + url));
+    }
+  })
+} 
+// 封装的函数返回一个Promsie包含then方法，结果 
+loadImageAsync("./loadImge.jpg").then(image => document.body.appendChild(image))
+```
+
+使用Promise对象实现Ajax操作的例子
+
+```js
+const getJSON = function(url) {
+  const promsie = new Promsie((resolve, reject) => {
+    const handle = function() {
+      if (this.readyState !== 4) {
+        return;
+      }
+      if (this.status === 200) {
+        resolve(this.response)
+      } else {
+        reject(new Error(this.statusText)
+      }
+    }
+    const client = new XMLHttpRequest()
+    client.open("GET",url)
+    client.onreadystatechange = handler;
+    client.responseType = "json";
+    client.setRequestHeader("Accept", "application/json");
+    client.send();
+  })
+  return promsie
+}
+
+getJSON("/posts.json").then(function(json){
+  console.log('Contents: ' + json);
+},function(error) {
+  console.error('出错了', error);
+})
+```
+
+
 来看一下promise的简单示例。
 ```js
 new Promise(()=>{
