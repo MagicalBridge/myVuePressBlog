@@ -58,6 +58,13 @@ yum install docker-ce -y
 
 接着执行一下 `docker -v` ，这条命令可以用来查看 Docker 安装的版本信息。当然也可以帮助我们查看 docker 安装状态。如果正常展示版本信息，代表 Docker 已经安装成功。
 
+docker安装完毕之后，需要重启docker，不然可能会遇到无法使用的情况。
+
+```
+Cannot connect to the Docker daemon at unix:/var/run/docker.sock. Is the docker daemon running?
+```
+
+
 ```shell
 docker -v
 ```
@@ -109,7 +116,7 @@ docker rmi  xxx // 删除指定镜像 如果不添加任何标签默认删除最
 docker rmi -f xxx // 强制删除指定镜像
 ```
 
-如果我想要搜索 mongo 数据库，可以执行命令：
+如果我想要搜索 mongo 数据库，可以执行命令：
 ```shell
 docker search mongo
 ```

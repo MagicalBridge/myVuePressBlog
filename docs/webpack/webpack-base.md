@@ -109,6 +109,9 @@ module.exports = {
 };
 ```
 
+### publicPath详解
+[publicPath详解](./webpack-publicPath.md)
+
 ## 1.4 loader
 webpack 只能理解 `JavaScrit` 和 `JSON` 文件。
 
