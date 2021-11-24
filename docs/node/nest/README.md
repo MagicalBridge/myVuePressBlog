@@ -32,6 +32,10 @@ nest -v # 查看当前 nest/cli的版本
 nest new xxx # xxx 代表项目名称
 ```
 
+### Nest默认启动的端口是3000端口
+
+浏览器输入： localhost:3000 访问启动的项目。
+
 
 
 
