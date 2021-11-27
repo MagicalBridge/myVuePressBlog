@@ -70,6 +70,27 @@ docker -v
 ```
 ![验证版本](./../images/docker/03.png)
 
+## 安装docker-compose
+[官方网站地址](https://docs.docker.com/compose/install/)
+运行此命令以下载 Docker Compose 的当前稳定版本：
+
+```shell
+sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+```
+
+如果你想安装的版本不是1.29.2，直接替换这个版本号即可。
+
+对二进制文件应用可执行权限
+```shell
+sudo chmod +x /usr/local/bin/docker-compose
+```
+
+### 安装完毕之后测试版本
+```shell
+docker-compose --version
+```
+
+
 ## Docker安装 hello-world镜像
 
 ```shell
