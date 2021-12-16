@@ -292,8 +292,11 @@ docker cp xxxxx: /ect/nginx/nginx.conf /ect/nginx/cp/
 
 ### 以指定端口映射启动容器
 ```shell
-# -p 宿主机端口: docker容器启动的端口 
+# -p 宿主机端口:docker容器启动的端口 -d 指的是后台启动  --name 设置别名
 docker run --name MyNginx -d -p 80:80  nginx
+
+# 启动redis 指定版本的redis 使用的是冒号
+docker run --name myredis -d -p 6379:6379 redis:4.0.6
 ```
 
 ## Docker容器数据卷
@@ -374,5 +377,5 @@ dockerFile 是用来构建docker镜像的构建文件，是由一些列命令和
 - Docker镜像是软件的交付品
 - Docker容器则可以认为是软件的运行态
 
-Dockerfile 面向开发，Docker镜像成为交付标准 ， Docker容器则涉及部署与运维，三者缺一不可。
+Dockerfile 面向开发，Docker镜像成为交付标准, Docker容器则涉及部署与运维，三者缺一不可。
 
