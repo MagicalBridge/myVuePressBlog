@@ -379,3 +379,12 @@ dockerFile 是用来构建docker镜像的构建文件，是由一些列命令和
 
 Dockerfile 面向开发，Docker镜像成为交付标准, Docker容器则涉及部署与运维，三者缺一不可。
 
+## Docker Compose
+
+### Compose 简介
+Compose 是用于定义和运行多容器 Docker 应用程序的工具。通过 Compose，您可以使用 YML 文件来配置应用程序需要的所有服务。然后，使用一个命令，就可以从 YML 文件配置中创建并启动所有服务。
+
+### Compose 使用的三个步骤
+- 使用Dockerfile 定义应用程序的运行环境
+- 使用 docker-compose.yml 定义构成应用程序的服务，这样它们可以在隔离环境中一起运行
+- 最后，执行 docker-compose up 命令来启动并运行整个程序。

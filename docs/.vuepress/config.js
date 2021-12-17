@@ -136,6 +136,9 @@ module.exports = {
           {
             text: "mongodb",
             link: "/database/mongodb/",
+          },{
+            text: "redis",
+            link: "/redis/"
           }
         ],
       },
