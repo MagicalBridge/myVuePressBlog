@@ -25,7 +25,7 @@
  * @param {number[]} nums
  * @return {number[]}
  */
-var exchange = function() {
+var exchange = function(nums) {
   let start = 0;
   let end = nums.length - 1;
   while(start < end) {
@@ -43,3 +43,31 @@ var exchange = function() {
 }
 ```
 
+这道题目在牛客网上的问法有些许的差异，要求的交换位置之后，数组中元素的相对位置不应该发生变化，针对这种问法，最直观的解法还是使用两个数组分别存储奇数和偶数，遍历完成之后，将两个数组合并起来。
+```js
+/**
+ * @param {number[]} nums
+ * @return {number[]}
+ */
+var exchange = function(nums) {
+  if (nums.length === 0) {
+    return nums
+  }
+  // 创建两个数组：奇数数组和偶数数组
+  let odd = [];
+  let even = [];
+  // 遍历数组，奇数元素和偶数元素，分别存放
+  for (let i = 0; i < nums.length; i++ ) {
+    if (nums[i] % 2 === 1) { // 奇数
+      odd.push(nums[i])
+    } else {
+      even.push(nums[i])
+    }
+  }
+  return odd.concat(even)
+}
+```
+
+## 1218复习：
+- 今天在重新复习这道题目的时候，突然明白了开头的两个while循环的作用：就是让left走到为偶数的位置，right走到为奇数的位置，因为题目要求的是奇数在前面，偶数在后面，走到不符合的位置后，调整位置。
+- 对着牛客题目的问法，将这道题目重新梳理了一下。
