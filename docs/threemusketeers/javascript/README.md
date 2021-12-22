@@ -14,6 +14,7 @@ sidebar: auto
 
 ## Promise
 ### [手摸手带你实现一版Promsie](./promise手写实现.md)
+### [Promsie.all和Promise.race](./Promsie.all和Promise.race.md)
 
 ## 前端路由
 ### [深度剖析:前端路由原理](./深度剖析:前端路由原理.md)
