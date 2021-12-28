@@ -87,6 +87,10 @@ module.exports = {
             text: "webpack打包分析",
             link: "/webpack/webpack打包分析",
           },
+          {
+            text:"webpack-抽象语法树",
+            link:"/webpack/webpack-抽象语法树"
+          }
         ],
       },
       {
