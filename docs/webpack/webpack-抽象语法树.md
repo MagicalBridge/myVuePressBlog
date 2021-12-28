@@ -111,3 +111,47 @@ function newAst() {
 }
 ```
 
+通过上面的小例子，是不是感觉似曾相识，如果你有这种感觉就对了，这个就特别类似于我们在平时工作中使用的babel。
+
+## 什么是babel?
+
+简单来说，babel 能够转译`ECMAScript 2015+ `的代码，使它在旧的浏览器或者环境中也能够运行。
+就像上面的小例子一样，babel的工作过程也可以分为三个部分：
+
+- Parse(解析) 将源代码转换成抽象语法树，树上有很多的节点
+- Transform(转换) 对抽象语法树进行转换
+- Generate(代码生成) 将上一步经过转换过的抽象语法树生成新的代码
+
+我们可以用一张图展示这三个步骤：
+![ast-compiler-flow](./../images/webpack/ast-compiler-flow.jpeg)
+
+## 介绍几个babel的常用包
+
+我们在日常开发中，但凡观察下package.json中的依赖，就肯定有这个这几个包：
+
+- @babel/core: Babel 的编译器，核心 API 都在这里面，比如常见的 transform、parse,并实现了插件功能。需要注意的是，这个包本身并不知道你想转换哪些内容，比如你是否想转换箭头函数，你是否想转换装饰器？这些能力需要安装特定的插件配合这个包使用。
+- @babel/traverse: 用于对 AST 的遍历，维护了整棵树的状态，并且负责替换、移除和添加节点.
+- @babel/generate: 可以把AST生成源码，同时生成sourcemap
+- @babel/types 用于 AST 节点的 Lodash 式工具库, 它包含了构造、验证以及变换 AST 节点的方法，对编写处理 AST 逻辑非常有用。
+
+## 使用babel利用ast的原理转换ES6代码
+
+既然已经知道了 babel的工作原理，我们不妨使用babel提供的工具来写一个小例子，加深理解，就拿 箭头函数为例，我们想利用babel 将箭头函数转换为普通函数。
+
+安装依赖
+```bash
+npm install @babel/core babel-types babel-plugin-transform-es2015-arrow-functions -D
+```
+
+上面的安装命令中的`babel-plugin-transform-es2015-arrow-functions`就是babel的一个插件，这个插件的作用就是当源代码中匹配到箭头函数的时候，使用这个插件来转换，可以这么理解，babel/core 中提供了插件的机制，可以在解析到箭头函数的时候，调用这箭头函数插件来处理这种特定的语法格式。
+
+```js
+
+```
+
+
+
+
+
+
+
