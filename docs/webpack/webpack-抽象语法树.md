@@ -143,11 +143,54 @@ function newAst() {
 npm install @babel/core babel-types babel-plugin-transform-es2015-arrow-functions -D
 ```
 
+:::tip
+在书写本篇文章时，安装的依赖版本如下：
+```
+"@babel/core": "^7.16.5",
+"babel-plugin-transform-es2015-arrow-functions": "^6.22.0",
+"babel-types": "^6.26.0"
+```
+:::
+
 上面的安装命令中的`babel-plugin-transform-es2015-arrow-functions`就是babel的一个插件，这个插件的作用就是当源代码中匹配到箭头函数的时候，使用这个插件来转换，可以这么理解，babel/core 中提供了插件的机制，可以在解析到箭头函数的时候，调用这箭头函数插件来处理这种特定的语法格式。
 
-```js
+事实上，插件就是一个钩子函数，在遍历语法树的过程中，可以捕获某些特定类型的节点并进行转换，每一个ES6的语法都会对应这样一个插件，每个插件都会捕获自己的语法节点，转换对应的ES6的语法。
 
+我们平时在开发的过程中为了方便，会将所有的插件打成一个包，@babel/preset-env 这其实是一个插件集合。
+
+
+```js
+// 这是babel的核心包
+let babelCore = require("@babel/core")
+// 箭头函数插件
+let arrowFunctionsPlugin = require("babel-plugin-transform-es2015-arrow-functions") 
+// 源代码是一个箭头函数
+let sourceCode = `
+  const sum = (a,b) => {
+    console.log(this)
+    return a + b
+  }
+`;
+
+// 调用 babel的转化能力
+let targetCode = babelCore.transform(sourceCode,{
+  // 使用的是箭头函数转换插件
+  plugins:[arrowFunctionsPlugin]
+})
+
+console.log(targetCode.code)
 ```
+查看控制台，可以看到打印出来转换后的代码:
+
+```js
+var _this = this;
+
+const sum = function (a, b) {
+  console.log(_this);
+  return a + b;
+};
+```
+至此，我们已经使用原生的babel工具完成了箭头函数的转换。
 
 
 
