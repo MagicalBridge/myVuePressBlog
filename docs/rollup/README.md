@@ -29,3 +29,20 @@ var query = 'Rollup';
 // 调用 ajax 函数
 ajax('https://api.example.com?search=' + query).then(handleResponse);
 ```
+
+## 使用rollup
+
+首先确保你的电脑安装了node环境，我们使用npm就可以安装rollup。首先创建一个npm的开发环境。
+
+终端中执行下述命令：
+```bash
+# 新建一个文件夹
+mkdir rollup-learn
+
+# 初始化 package.json
+npm init -y
+
+# 安装rollup 依赖
+npm install rollup -S
+```
+
