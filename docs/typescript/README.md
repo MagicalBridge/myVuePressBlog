@@ -9,3 +9,5 @@ sidebar: auto
 [TypeScript 变量声明](./chapter2/declare.md)
 
 [TypeScript 接口](./chapter2/interface.md)
+
+[TypeScript 类](./chapter2/class.md)
