@@ -11,3 +11,5 @@ sidebar: auto
 [TypeScript 接口](./chapter2/interface.md)
 
 [TypeScript 类](./chapter2/class.md)
+
+[TypeScript 函数](./chapter2/function.md)
