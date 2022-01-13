@@ -4,6 +4,8 @@ sidebar: auto
 
 # 章节目录
 
+## [初识 Typescript](chapter1/README.md)
+
 ## [TypeScript 基本介绍](./introduce.md)
 
 ## [TypeScript 基础类型](./chapter2/type.md)
