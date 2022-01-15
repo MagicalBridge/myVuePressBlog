@@ -22,3 +22,5 @@ sidebar: auto
 
 ## [TypeScript 类型推断](./chapter2/inference.md)
 
+## [初始化项目](./chapter3/init.md)
+
