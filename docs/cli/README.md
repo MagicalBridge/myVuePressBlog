@@ -17,6 +17,40 @@ sidebar: auto
 vue create vue-test-app
 ```
 
+上面这条命令由3个部分组成:
+- 主命令：vue
+- command：create
+- command 的 params：vue-test-app
+
+它表示创建一个vue项目，项目的名称 为 vue-test-app，以上是一个比较简单的脚手架命令。
+
+实际场景中可能比较复杂，比如当前目录已经存在了，我们需要覆盖当前目录下文件，强制进行安装vue项目。
+
+![脚手架运行原理](./../images/cli/02.png)
+
+- 当我们在终端中输入vue后，会在环境变量中找到vue指令，which vue(在mac中，可以输入which vue 查看某些命令是否存在)。
+我在本机中输入 which vue 输出vue这个命令的指令所在的目录。
+```bash
+which vue
+/usr/local/bin/vue
+```
+根据输出的信息，我进入了  /usr/local/bin/vue 这个目录。查看vue命令的软链 因为我是通过yarn 全局安装的vue命令。所以指向的是yarn的目录。
+
+```bash
+vue -> ../../../Users/louis/.config/yarn/global/node_modules/.bin/vue
+```
+
+让我们总结一下：
+- 终端中输入 vue create vue-test-app
+- 终端中解析出vue 命令
+- 终端在环境变量中 找到vue命令
+- 终端根据vue命令链接到实际文件vue.js
+- 终端利用node执行vue.js
+- vue.js解析 command / options
+- vue.js 执行 command
+- 执行完毕，退出执行
+
+
 ### 发布属于自己的第一个脚手架
 
 首先，首先我们需要创建一个npm的项目。在终端执行命令：
