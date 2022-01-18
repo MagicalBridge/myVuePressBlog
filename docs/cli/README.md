@@ -108,6 +108,7 @@ added 1 package, and audited 3 packages in 1s
 
 found 0 vulnerabilities
 ```
+
 第二步：如何确定脚手架本地已经链接成功？
 此时使用 `which zf-process-cli` 查看当前脚手架的可执行命令已经被连接到了全局的node_module的bin目录下。如果显示已经连接到全局的node_module的bin目录下，说明已经连接成功，此时在终端中执行 脚手架的命令，就能启动脚手架。
 
@@ -223,6 +224,40 @@ console.log("welcome process-cli")
 
 - `npm link you-lib`: 将当前项目中node_modules下指定的库文件链接到 node 全局下 node_module下的库文件
 - `npm link`: 将当前项目链接到 node 全局 node_modules中作为一个库文件，并解析 bin 配置创建可执行的文件
+
+### 总结一下脚手架本地link标准流程
+- 因为本地的脚手架还没有发布上线，但是想要实现和发布后的脚手架的使用效果，首先在本地执行
+``` shell 
+cd your-cli-dir
+npm link
+```
+执行上述操作之后，就可以像使用vue脚手架那样使用这个自己的脚手架了，而且更改了代码还能实时更新。
+
+- 由于分包处理的原因，有时候脚手架需要链接本地的lib库
+```bash
+cd your-lib-dir
+npm link # 将本地的lib库链接为全局的库
+
+cd your-cli-dir
+npm link your-lib # 进入脚手架目录，link lib库
+```
+
+### 总结一下如何解除本地链接
+- 首先进入本地的lib库 解除本地链接
+```bash
+cd your-lib-dir
+npm unlink
+```
+
+- 进入cli目录 解除链接
+```bash
+cd your-cli-dir
+# link 存在
+npm unlink your-lib 
+# link 不存在
+rm -rf node_modules
+npm install
+```
 
 ### 如何解除本地链接呢？
 解除的步骤和链接的步骤是相反的。

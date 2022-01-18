@@ -24,3 +24,5 @@ sidebar: auto
 
 ## [初始化项目](./chapter3/init.md)
 
+## [编写基础的请求代码](./chapter3/base.md)
+
