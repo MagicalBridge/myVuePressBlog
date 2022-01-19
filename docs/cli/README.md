@@ -276,7 +276,7 @@ lerna 是一款基于git + npm非常优秀的多包管理工具，上面我们�
 
 ### 脚手架项目初始化
 - 1 使用 npm init -y 初始化一个npm 项目。
-- 2 在本地安装lerna、全局安装lerna,这样使用方便
+- 2 在本地全局安装lerna,这样方便使用。
 - 3 执行 `lerna init` 初始化lerna项目。
 - 4 这里需要注意，使用lerna 创建的项目会自动初始化一个git。
 - 5 创建 .gitignore 文件，用于忽略文件
