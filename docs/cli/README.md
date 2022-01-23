@@ -451,7 +451,7 @@ lerna success exec Executed command in 1 package: "rm -rf node_modules"
 ```shell
 lerna clean 
 ```
-执行上述命令之后，会删除node_module 信息，但是package.json 里面的内容不会被删除。这点需要注意
+执行上述命令之后，会删除node_module 信息，但是package.json 里面的内容不会被删除。这点需要注意
 - 4 lerna bootstrap 重新安装依赖
 
 ### 脚手架发布上线
@@ -459,6 +459,18 @@ lerna clean
 - 2 lerna changed 查看上一个版本以来的所有变更
 - 3 lerna diff 查看diff
 - 4 lerna publish 项目发布
+
+
+## 核心开发
+
+### 模块拆分
+
+首先根据功能点拆分成几个模块：
+- 核心模块
+- 命令模块
+- 模型模块
+- 工具模块
+
 
 
 
