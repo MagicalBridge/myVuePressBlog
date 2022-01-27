@@ -5,7 +5,18 @@ sidebar: auto
 # Docker
 
 ## 容器技术介绍
-我们说的容器 container是指一项技术，而Docker只是一个容器技术的实现，或者说让容器技术普及开来的最成功的的实现。
+我们说的容器 container是指一项技术，而Docker只是一个容器技术的实现，或者说让容器技术普及开来的最成功的的实现。简单来说，容器技术是一种打包技术，它拥有以下三个特点：
+- 标准化
+- 轻量化
+- 易移植
+
+### 容器技术的标准化
+- 容器会加速你的软件开发
+- 容器会加速程序的编译和构建
+- 容器会加速测试
+- 容器会加速故障修复
+
+[参考文档](https://dockertips.readthedocs.io/en/latest/)
 
 ## 什么是Docker
 Docker 是一个开源的应用容器引擎。开发者可以将自己的应用打包在自己的镜像里面，然后迁移到其他平台的 Docker 中。镜像中可以存放你自己自定义的运行环境，文件，代码，设置等等内容，再也不用担心环境造成的运行问题。镜像共享运行机器的系统内核。
@@ -19,10 +30,11 @@ Docker 是一个开源的应用容器引擎。开发者可以将自己的应用�
 ## Docker三要素
 - **镜像 (image)**:
 
-Docker镜像就是一个**只读**的模板，镜像可以用来创建docker容器，一个镜像可以创建很多容器。**镜像其实是一种轻量级、可执行的独立软件包，用来打包软件运行环境和基于运行环境开发的软件，**它包含运行某个软件所需要的所有内容，包括代码、运行时、库、环境和配置文件。
+Docker镜像就是一个**只读**的模板，镜像可以用来创建docker容器，一个镜像可以创建很多容器。镜像其实是一种轻量级、可执行的独立软件包，用来打包软件运行环境和基于运行环境开发的软件，它包含运行某个软件所需要的所有内容，包括代码、依赖、库、环境和配置文件, 可以理解为一个模板，镜像具有分层的概念
+
 - **容器（Container）**  
  
-Docker利用容器（Container）独立运行的一个或者一组应用，容器是用镜像创建爱你的运行实例。它可以被启动、开始、停止、删除。每个容器都是相互隔离的、保证平台的安全。可以把容器看成是一个简单的Linux环境（包括root用户权限、进程空间、用户空间和网络空间等）和运行在其中的应用程序。容器的定义几乎和镜像一模一样，也是一堆层的统一视角，唯一区别在于容器的最上面那一层是可读可写的。
+Docker利用容器（Container）独立运行的一个或者一组应用，容器是用镜像创建爱你的**运行实例**。它可以被启动、开始、停止、删除。每个容器都是相互隔离的、保证平台的安全。可以把容器看成是一个简单的Linux环境（包括root用户权限、进程空间、用户空间和网络空间等）和运行在其中的应用程序。容器的定义几乎和镜像一模一样，也是一堆层的统一视角，唯一区别在于容器的最上面那一层是**可读可写**的。
 
 - **仓库**
 
@@ -60,6 +72,44 @@ yum install docker-ce -y
 ![docker安装完毕](./../images/docker/02.png)
 
 接着执行一下 `docker -v` ，这条命令可以用来查看 Docker 安装的版本信息。当然也可以帮助我们查看 docker 安装状态。如果正常展示版本信息，代表 Docker 已经安装成功。
+
+如果我们在终端中输入：
+```
+docker version
+```
+
+会显示以下信息,下面的信息显示的docker在安装过程中安装了 客户端和服务端。
+
+```
+Client: Docker Engine - Community
+ Version:           20.10.10
+ API version:       1.41
+ Go version:        go1.16.9
+ Git commit:        b485636
+ Built:             Mon Oct 25 07:42:56 2021
+ OS/Arch:           linux/amd64
+ Context:           default
+ Experimental:      true
+
+Server: Docker Engine - Community
+ Engine:
+  Version:          20.10.10
+  API version:      1.41 (minimum version 1.12)
+  Go version:       go1.16.9
+  Git commit:       e2f740d
+  Built:            Mon Oct 25 07:41:17 2021
+  OS/Arch:          linux/amd64
+  Experimental:     false
+ containerd:
+  Version:          1.4.11
+  GitCommit:        5b46e404f6b9f661a205e28d59c982d3634148f8
+ runc:
+  Version:          1.0.2
+  GitCommit:        v1.0.2-0-g52b36a2
+ docker-init:
+  Version:          0.19.0
+  GitCommit:        de40ad0
+```
 
 docker安装完毕之后，需要重启docker，不然可能会遇到无法使用的情况。
 
@@ -166,6 +216,8 @@ docker rmi hello-world
 ```
 
 ## Docker容器常用命令
+
+一般执行容器命令的时候 使用 `docker container xxx` 这种形式， 当然我们可以使用简写，将中间的 container 省略掉。
 
 ### 新建并启动容器
 ```shell
