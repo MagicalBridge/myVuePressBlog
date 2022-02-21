@@ -592,6 +592,34 @@ console.log("hello cdp-wpm-cli")
 ```
 
 ## 核心开发
+在学习lerna源码的时候，学习到了一个比较有意思的模块 `import-local`。
+
+简单来说，使用 `import-local` 可以让全局安装的包使用你自己项目中自己的版本。意思是假设你在电脑中全局安装了webpack4，但是项目中使用的是webpack5，当你在项目中使用webpack命令的时候，他会优先使用webpack5版本，当然这个前提是你的node_modules已经安装了webpack。
+
+import-local常常在cli工具中使用，可以方便cli工具开发（可以参考lerna）。使用方式如下：
+
+```js
+const importlocal = require("import-local")
+
+if (importlocal(__filename)) {
+  require("npmlog").info("cli", "using local version of lerna");
+} else {
+  require(".")(process.argv.slice(2));
+}
+```
+
+看上面的代码，传入当前文件的执行路径，满足条件执行对应的逻辑即可。
+
+import-local 执行时候通过传入 `__filename` 作为运行参数执行, `__filename`在node中为当前模块的文件名。这是当前模块文件的已经解析符号链接的**绝对路径**。
+
+例如 从 `/Users/mjr` 运行 `node example.js` 
+
+```js
+console.log(__filename);
+// 打印: /Users/mjr/example.js
+```
+[参考文章](https://juejin.cn/post/7015813508814077989)
+
 
 ## 模块拆分
 
