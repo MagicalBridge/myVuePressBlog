@@ -634,11 +634,120 @@ console.log(__filename);
 首先在脚手架的 目录中创建这几个文件夹：
 commands、core、models、utils
 
+并且lerna.json文件中需要做对应的修改。
+
+```json
+{
+  "packages": [
+    "core/*",
+    "commands/*",
+    "models/*",
+    "utils/*"
+  ],
+  "version": "0.0.6"
+}
+```
+
+我们删除了原来的packages文件夹, 将里面的core和utils文件夹分别放入 core目录和utils目录。
+
+因为core模块中安装了 utils模块，且路径换了，所以，修改core的package.json文件：
+
+```json
+...
+ "dependencies": {
+    "@cdp-wpm/utils": "file:../../utils/utils"
+  },
+...
+```
+
+删除原本两个包中安装的node_modules,重新执行 npm install 完成模块的安装。
+
+修改 core/core 为 core/cli, 删除link之后，重新link。
+
+安装 import-local 模块，模仿 lerna 脚手架的入口文件配置。
+
 ### core 模块拆分
 核心模块 整体分为 3 个阶段
 - 准备阶段
 - 命令注册
 - 命令执行
+
+
+### 开发检查版本号的功能
+
+在node中，使用require函数天生可以加载.js、.json、.node 结尾的文件。因此在实现 加载版本号功能的时候，使用了下面的代码
+
+```js
+const pkg = require("../package.json")
+console.log(pkg.version)
+```
+
+这其中还包含一些技术细节:
+
+对于node来说:
+- 如果解析js结尾的文件的时候，要求我们必须输出一个 module.exports 
+- 如果解析.json 文件，会直接调用 JSON.parse 方法，解析成一个对象
+- 如果是 .node 结尾的文件，会调用C++方法。当成一个模块
+
+如果是其他的后缀，会默认使用js引擎去解析，如果解析不了就报错，解析成功就能成功执行。
+
+### 封装 npmlog 方法
+
+我们需要一个专门的包来打印日志，同样的需要使用lerna进行封装，并且在utils目录下创建
+
+```shell
+lerna create @cdp-wpm/log
+```
+
+使用上述命令创建的包会创建在 core 目录下，我们还需要修改 main 对应的入口文件。
+
+因为我们需要基于npm-log封装，所以我们需要安装依赖：
+
+```
+lerna add npmlog utils/log
+```
+
+安装成功后，会在log中看到依赖，但是其他部分并不会看到依赖。
+
+开发log的代码，打印 info 级别的日志。
+
+在core模块中引用的时候，我们使用的依然是file协议，所以不要忘记重新在core文件夹中执行npm install 安装依赖。
+
+对于npmlog 这个方法包来说, 我们可以自定义方法，使用的和info级别的日志一样，需要借助一个 addLevel 方法。
+
+```js
+log.addLevel("success", 2000, {fg:"green",bold:true})
+```
+
+日志的级别是有比较严格的限制的，（第二个参数显示的数字其实就是代表级别的高低）所以我们需要根据当前环境变量来控制日志的级别。
+
+```js
+const log = require("npmlog")
+log.level = process.env.LOG_LEVEL ? process.env.LOG_LEVEL : "info"
+log.heading = "cdp-wpm"
+log.headingStyle = { fg: "yellow", bg: "black" }
+log.addLevel("success", 2000, { fg: "green" })
+```
+
+### 封装检查node版本的方法
+
+之所以需要检查node的版本，主要是为了防止因为安装了高版本的node导致某些方法不兼容。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
