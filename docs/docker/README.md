@@ -215,6 +215,23 @@ docker pull mongo:3.4.1
 docker rmi hello-world
 ```
 
+当然我们还可以通过id删除镜像，分为两个步骤：
+```shell
+# 列出所有的镜像
+$ docker images
+REPOSITORY            TAG       IMAGE ID       CREATED         SIZE
+busybox               latest    16ea53ea7c65   5 months ago    1.24MB
+nginx                 latest    ad4c705f24d3   5 months ago    133MB
+outlinewiki/outline   latest    c2b92b5cd802   5 months ago    471MB
+hello-world           latest    d1165f221234   11 months ago   13.3kB
+easymock/easymock     1.6.0     193a7b904d4f   2 years ago     699MB
+redis                 4.0.6     1e70071f4af4   4 years ago     107MB
+mongo                 3.4.1     0dffc7177b06   5 years ago     402MB
+
+# 执行 rmi 命令
+$ docker rmi c2b92b5cd802 
+```
+
 ## Docker容器常用命令
 
 一般执行容器命令的时候 使用 `docker container xxx` 这种形式， 当然我们可以使用简写，将中间的 container 省略掉。
