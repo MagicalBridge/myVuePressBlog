@@ -816,6 +816,44 @@ require("dotenv").config()
 
 ### 检查是否为最新版本
 
+这个检查是否全局更新的功能逻辑梳理：
+- 获取最近的版本号和模块名
+- 调用npm api 获取所有的版本号使用通用的apihttps://registry.npmjs.org/@cdp-wpm/core
+- 提取所有的版本号，比对哪些版本号是大于当前版本号的
+- 给出最新的版本号，提示用户更新到该版本
+
+封装调用npm的方法，单独起一个包
+```shell
+lerna create @cdp-wpm/get-npm-info ./utils/get-npm-info
+```
+
+这里发现lerna的一个bug, 就是它会默认安装到lerna.json配置文件的第一个目录下，比如说我的配置是
+
+```json
+{
+  "packages": [
+    "core/*",
+    "utils/*",
+    "commands/*",
+    "models/*"
+  ],
+  "version": "0.0.12"
+}
+```
+
+那么就会默认安装在core目录下，为此，我还修改了这个配置顺序
+
+get-npm-info 作为一个单独的npm包来使用。单独发布到npm上面。
+
+因为我们要发起一个请求，所以需要在utils中安装axios这个仓库。
+
+为了拼接url我们还可以安装一个npm包 `url-join` 节省我们的工作量 
+
+从npm官方中拉取版本号的信息，拉取信息之后主要比对当前的版本号和最新的版本号之间的差距。
+
+## 注册命令逻辑
+[注册命令](./注册命令.md)
+
 
 
 
