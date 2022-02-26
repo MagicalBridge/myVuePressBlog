@@ -759,6 +759,76 @@ process.geteuid() 这个方法 能够打印 我们目前的用户权限。
 
 这里需要注意的是 path-exists 应该安装4.0版本，否则更加新的版本是ESModule。在现有的脚手架项目中并不是很好使用。
 
+### 处理一些参数问题
+对于脚手架来说，可能需要根据输入的参数 是否带有 --debug 来按照不同的标准打印日志。这就需要我们处理参数问题。
+
+需要封装一个 checkInputArgs的 方法用于处理这种场景。
+
+解析参数，我们使用一个仓库 `minimist` 来帮助我们解析入参。
+
+[minimist](https://www.npmjs.com/package/minimist)
+
+安装好了之后，在命令行输入命令 控制台打印
+
+```shell
+➜  cli git:(master) ✗ cdp-wpm --debug --help
+cdp-wpm info cli 0.0.11
+{ _: [], debug: true, help: true }
+```
+
+```js
+function checkArgs() {
+  if (args.debug) {
+    process.env.LOG_LEVEL = "verbose"
+  } else {
+    process.env.LOG_LEVEL = "info"
+  }
+  // 在确定好了 log——level 之后重新给他赋值
+  log.level = process.env.LOG_LEVEL
+}
+```
+
+上面的函数中，在函数最后修改了 log 的 level的级别，在最后打印的时候 也是生效的。
+
+### 检查环境变量
+
+环境变量非常有用，一些用户的信息可以存在配置文件中。不用写在代码中。
+
+这里需要使用到一个 npm 库 dotenv 非常好用。
+
+这个仓库的使用也是比较简单，拥有一个 config 方法，调用方式类似于这样：
+
+```js
+require("dotenv").config()
+```
+
+默认情况下, 是获取当前目录下的 `.env` 文件, 如果想要获取用户主目录下面.
+
+最终想要实现的效果是： { home: '/Users/louis', cliHome: '/Users/louis/.cdp-wpm' }
+
+在mac中 使用 cd ~ 命令就能够快速进入用户主目录。
+
+这里面还学习到了一个 vim 操作的小技巧，
+- 如何删除一行: 使用dd
+- 如果撤销操作: 使用u
+- 如何快速复制一行: 使用yy
+- 如何将复制的一行黏贴出来: 使用p 
+
+### 检查是否为最新版本
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
