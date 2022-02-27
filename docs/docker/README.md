@@ -161,6 +161,45 @@ docker run hello-world
 docker --help
 ```
 
+在终端输入`docker image` 就能够列出 docker 关于镜像的所有操作方法：
+```shell
+$ docker image
+
+Usage:  docker image COMMAND
+
+Manage images
+
+Commands:
+  build       Build an image from a Dockerfile
+  history     Show the history of an image
+  import      Import the contents from a tarball to create a filesystem image
+  inspect     Display detailed information on one or more images
+  load        Load an image from a tar archive or STDIN
+  ls          List images
+  prune       Remove unused images
+  pull        Pull an image or a repository from a registry
+  push        Push an image or a repository to a registry
+  rm          Remove one or more images
+  save        Save one or more images to a tar archive (streamed to STDOUT by default)
+  tag         Create a tag TARGET_IMAGE that refers to SOURCE_IMAGE
+
+Run 'docker image COMMAND --help' for more information on a command.
+```
+按照提示，进一步，如果想要查看某一个镜像的命令，可以继续操作, 例如：
+```shell
+$ docker image pull --help
+
+Usage:  docker image pull [OPTIONS] NAME[:TAG|@DIGEST]
+
+Pull an image or a repository from a registry
+
+Options:
+  -a, --all-tags                Download all tagged images in the repository
+      --disable-content-trust   Skip image verification (default true)
+      --platform string         Set platform if server is multi-platform capable
+  -q, --quiet                   Suppress verbose output
+```
+
 列出本地主机上的所有镜像
 ```shell
 # 列出本地主机上的所有镜像
@@ -188,6 +227,7 @@ docker search -s 30 xxx // 查找指定镜像在一定star数量之上的
 docker pull xxx // 拉取指定名称的镜像 注意默认拉取的是最新的版本的镜像
 docker rmi  xxx // 删除指定镜像 如果不添加任何标签默认删除最新版本的镜像
 docker rmi -f xxx // 强制删除指定镜像
+docker inspect 镜像id // 查看指定镜像的详细信息
 ```
 
 如果我想要搜索 mongo 数据库，可以执行命令：
@@ -206,6 +246,9 @@ docker pull centos
 
 # 拉取指定版本的镜像(后面使用冒号指定版本号)
 docker pull mongo:3.4.1
+
+# 查看 id 0dffc7177b06 详细信息
+docker inspect  0dffc7177b06
 ```
 
 
@@ -423,33 +466,7 @@ $docker run --name mynginx -d -p 80:80 -v /usr/local/docker/my-docker-nginx/vuep
 - nginx 启动的是nginx
 
 ## DockerFile 
-
-dockerFile 是用来构建docker镜像的构建文件，是由一些列命令和参数构成的脚本
-
-### 构建的三个步骤：
-- 编写dockerfile文件
-- docker build
-- docker run 
-
-### dockerfile 内容基础知识
-- 1 每条保留字指令都必须为大写字母且后面要跟随至少一个参数
-- 2 指令按照从上到下，顺序执行
-- 3 #表示注释
-- 4 每条指令都会创建一个新的镜像层，并对镜像进行提交
-
-### Docker 执行dockerfile的大致流程 
-- 1 docker 从基础镜像开始运行一个容器
-- 2 执行一条指令并对容器做出修改
-- 3 执行类似docker commit 的操作提交一个新的镜像层
-- 4 docker 再基于刚提交的镜像运行一个新容器
-- 5 执行 dockerfile 中的下一条指令直到所有的指令都执行完成
-
-从应用软件的角度看 Dockerfile、Docker镜像与docker容器分别代表软件的三个不同阶段
-- Dockerfile 是软件的原材料
-- Docker镜像是软件的交付品
-- Docker容器则可以认为是软件的运行态
-
-Dockerfile 面向开发，Docker镜像成为交付标准, Docker容器则涉及部署与运维，三者缺一不可。
+### [dockerFile](./dockerfiles.md)
 
 ## Docker Compose
 
