@@ -196,6 +196,8 @@ module.exports = {
 
 插件通常为第三方的 npm package，都需要安装后才能使。
 
+[编写plugin](./webpack-plugin.md)
+
 ### 1.5.1 src/index.html
 
 **src/index.html**
