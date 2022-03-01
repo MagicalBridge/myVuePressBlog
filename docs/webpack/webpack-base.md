@@ -94,6 +94,7 @@ module.exports = {
 
 我们继续在 `webpack.config.js` 中添加 `output` 配置。
 
+虽然可以有多个entry，但是只能有一个output配置。
 
 **webpack.config.js**
 
@@ -285,8 +286,6 @@ new CleanWebpackPlugin({
 }),
 ```
 
-
-
 ## 1.6模式(mode)
 - 日常开发中一般会用到两套环境
 - 一套是开发时候使用，构建结果用于本地开发测试，不进行代码压缩，会打印debug信息，包含sourceMap文件。
@@ -424,6 +423,53 @@ webpack.config.js
 ```js
 console.log('process.env.NODE_ENV',process.env.NODE_ENV);// development
 ```
+
+## 1.7 target 
+[参考链接](https://webpack.docschina.org/concepts/targets/)
+
+由于js既可以编写服务端代码也可以编写浏览器代码，所以webpack提供了多种部署target.
+
+webpack.config.js
+```js
+module.exports = {
+  target: 'node', // web
+};
+```
+
+在上述示例中，target 设置为 node，webpack 将在类 Node.js 环境编译代码。(使用 Node.js 的 require 加载 chunk，**而不加载任何内置模块，如 fs 或 path**)。
+
+target 在webpack 的默认配置中是`"browserslist"`,如果没有找到browserslist配置，则默认为"web"。
+
+可以设置多个target，虽然不支持数组，但是可以在配置文件中，配置多个对象
+
+webpack.config.js
+
+```js
+const path = require('path');
+const serverConfig = {
+  target: 'node',
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'lib.node.js',
+  },
+  //…
+};
+
+const clientConfig = {
+  target: 'web', // <=== 默认为 'web'，可省略
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'lib.js',
+  },
+  //…
+};
+
+module.exports = [serverConfig, clientConfig];
+```
+
+
+
+
 
 # 2.开发环境配置
 
