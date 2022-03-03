@@ -212,6 +212,16 @@ console.log(users)
 ```
 
 #### 分页查询
+在书写wpm服务的时候，列表接口使用的就是分页查询的逻辑。
+
+分页查询中，比较重要的是三个字段：
+- total：当前条件下的总条数
+- pageSize: 一页显示多少条
+- pageNumber: 显示第几页
+
+一般的设计思路是，如果不传递pageSize和pageNumber会有默认的内容传递。
+
+
 
 
 
