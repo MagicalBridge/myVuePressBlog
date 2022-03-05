@@ -1,0 +1,16 @@
+version: '3.1'
+services:
+  mongodb:
+    images: mongo:3.4.1
+    container_name: "my-docker-mongodb"
+    restart: always
+    ports:
+      - 27017:27017
+    environment:
+      - MONGO_DATA_DIR=/data/db
+      - MONGO_LOG_DIR=/data/logs
+    command: mongod --auth
+    volumes:
+      - ./mongodb_data:/data/db
+      - ./mongodb_logs:/data/logs
+      - ./mongodb_conf:/etc/mongo

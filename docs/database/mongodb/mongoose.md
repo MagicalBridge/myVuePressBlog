@@ -222,6 +222,35 @@ console.log(users)
 一般的设计思路是，如果不传递pageSize和pageNumber会有默认的内容传递。
 
 
+#### findOneAndUpdate方法的使用
+我在做wpm需求的时候，有一个场景是，在注册包的阶段，立即生成一条操作记录，默认状态是unknow
+
+当我在更新之后，需要使用这个命令对这条数据做更新操作。
+
+- 基本用法：
+```
+Model.findOneAndUpdate(filter, update, [options])
+```
+- filter: document 类型，更新的选择标准，与find方法中一样。
+- update: 针对某些字段的操作，这里需要注意 原生中需要指定 $set 这种操作
+
+那我做的项目为例子：
+```js
+// 更新记录
+await this.wpmOperateRecordRepository.findOneAndUpdate({
+  username,
+  packageName,
+  packageVersion
+},{
+  $set:{
+    archiveStatus: OperatestatusEnum.SUCCESS
+  }
+});
+```
+
+
+
+
 
 
 
