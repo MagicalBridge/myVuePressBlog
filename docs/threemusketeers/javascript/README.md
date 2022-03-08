@@ -5,7 +5,9 @@ sidebar: auto
 # JavaScript
 
 ## js高级
-### [高阶函数](./高阶函数.md)
+[01-高阶函数](./01-高阶函数.md)
+
+[02-函数柯里化](./02-函数柯里化.md)
 ### [防抖的实现](./防抖的实现.md)
 ### [JavaScript深入之原型和原型链](./JavaScript深入之原型和原型链.md)
 ### [JavaScript深入之call和apply的模拟实现](./JavaScript深入之call和apply的模拟实现.md)
