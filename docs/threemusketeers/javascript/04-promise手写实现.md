@@ -1,4 +1,10 @@
-## 手摸手教你手写promsie
+---
+sidebar: auto
+---
+
+# 手写promsie
+
+## 基于Promsie封装的图片加载函数
 
 来看一个简单的基于Promsie封装的图片加载函数
 ```js
@@ -8,6 +14,7 @@ function loadImageAsync(url) {
     const image = new Image();
     image.src = url;
     image.onLoad = function() {
+      // 返回image对象
       resolve(image);
     } 
     image.onerror = function() {
@@ -19,7 +26,7 @@ function loadImageAsync(url) {
 loadImageAsync("./loadImge.jpg").then(image => document.body.appendChild(image))
 ```
 
-使用Promise对象实现Ajax操作的例子
+## 基于Promise对象实现Ajax操作的例子
 
 ```js
 const getJSON = function(url) {
@@ -66,7 +73,7 @@ console.log("ok")
 - promise中有三种状态：
   - 成功态
   - 失败态
-  - 中间状态
+  - 中间状态：pending
 
 - 默认情况下promsie处于中间状态。
 - 使用new操作符操作promsie之后，会生成一个实例，每一个实例都拥有一个then方法。
@@ -89,9 +96,9 @@ promise.then(()=>{
 
 通过打印输出可以看到，虽然我们在then方法中写了success 和 failed 但是既没有走成功回调，也没有走失败回调。
 
-这是因为默认状态下promsie处于的是等待状态。我们想要成功还是失败，需要主动调用resolve或者调用reject告诉promsie。如果调用resolve函数promise转变为成功状态，如果调用reject函数promise就转变为失败状态。
+这是因为默认状态下`promsie`处于的是等待状态。我们想要成功还是失败，需要主动调用`resolve`或者调用reject告诉promsie。如果调用resolve函数promise转变为成功状态，如果调用reject函数promise就转变为失败状态。
 
-我们尝试手写一版Promise，使用 commonjs 规范，自定义一个js文件，之后使用Promsie的时候就导入自己手写的这个promsie。
+我们尝试手写一版Promise，使用 commonjs 规范，自定义一个js文件，之后使用Promsie的时候就导入自己手写的这个 promsie 类。
 
 ```js
 // promsie 有三种状态，分别是 等待  成功  失败 我们用常量来表示。
@@ -162,11 +169,13 @@ promise.then(()=>{
 // => 控制台打印 ok 
 ```
 
-执行上述代码发现，如果我们在executor中传入的是一个异步任务，虽然调用了resolve方法，但是并没有走实例的then方法的成功回调，这是为什么呢？因为默认promise处于pending状态，当我们用定时器去触发resolve的时候，then方法已经执行完毕了，但是我们自己手写的这一版本promsie，并没有处于pending状态。我们现在开始实现。
+执行上述代码发现，如果我们在executor函数中传入的是一个异步任务，虽然调用了resolve方法，但是并没有走实例的then方法的成功回调，这是为什么呢？
+
+因为默认promise处于pending状态，当我们用定时器去触发resolve的时候，then方法已经执行完毕了，但是我们自己手写的这一版本promsie，并没有处理pending状态。我们现在开始实现。
 
 我们可以这样处理，准备两个数组，分别用于存放**成功回调函数**和**失败回调函数**，当我们真正触发 resolve 或者 reject 的时候遍历数组执行其中的回调函数。
 
-这种实现的思路其实是发布订阅的模式。先订阅好所有的成功回调和失败回调，然后在触发resolve 和 reject 的时候执行发布。
+这种实现的思路其实是发布订阅的模式。先订阅好所有的成功回调和失败回调，然后在触发 `resolve` 和 `reject` 的时候执行发布。
 
 ```js{12,13,20,28,39-48}
 // promsie 有三种状态，分别是 等待  成功  失败 我们用常量来表示。
@@ -275,9 +284,12 @@ function readFile(filePath, encoding) {
 
 promise中给我们提供的then方法能够解决这种不断嵌套的问题。
 
-接下来我们来好好梳理下这个then方法；
 
-- promsie的链式调用，当调用then方法后，还会返回一个新的promise，新的promsie有自己的状态，如果我们用过jquery这个库的时候会知道，也会有链式调用的场景，但是返回的是this。这里为什么不能返回自身呢？原因就在于，promise的状态一旦改变之后，就不能再改回去了，否则状态就乱了，因此，需要返回一个新的promsie。
+## 梳理then方法；
+
+promsie的链式调用，当调用then方法后，还会返回一个新的promise，新的promsie有自己的状态，如果我们用过jquery这个库的时候会知道，也会有链式调用的场景，但是返回的是this。这里为什么不能返回自身呢？原因就在于，promise的状态一旦改变之后，就不能再改回去了，否则状态就乱了，因此，需要返回一个新的promsie。
+
+
 - 情况1：then中的方法返回值是一个普通值（不是promise）的情况，会作为**外层下一次then的成功结果**。
 ```js
 readFile("./a.txt", "utf8").then((value)=>{
@@ -337,6 +349,7 @@ promise2.then((data) => {
   }
 )
 ```
+
 上面我们已经知道，每调用then方法一次，都会产生一个新的promsie，并且第一次then的时候，无论是成功和是失败，都会有隐含的返回值，如果不指定就是返回undefined，那这个返回值，是能够成为外面then的入参继续传递下去。
 
 ```js
