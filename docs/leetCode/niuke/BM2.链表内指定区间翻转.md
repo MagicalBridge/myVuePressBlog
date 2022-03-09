@@ -87,3 +87,8 @@ module.exports = {
   reverseBetween : reverseBetween
 };
 ```
+这道题目关键的点在于构造四个指针，通过指针，保存变量的引用，然后反转区间内部的链表，最后再把链表接起来。这种解题方法比较好理解。
+
+
+
+
