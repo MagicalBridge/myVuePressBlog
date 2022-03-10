@@ -85,6 +85,8 @@ Promise.race 一般的使用场景用于处理超时。
 
 比如：点击按钮发送请求，当服务端的接口超过一定时间，假设是3秒钟，没有返回结果的时候，我们就提示用户请求超时。
 
+**race方法如果其中一个完成了，其他的还是会执行，只不过是不采用他的结果而已。**
+
 ```vue
 <template>
   <div class="box">
@@ -261,6 +263,7 @@ Promise.race([
 我们手动实现一版
 ```js
 Promise.race = function(promises) {
+  // Promise.race的返回值也是一个Promsie
   return new Promise((resolve, reject) => {
     // 使用for循环遍历
     for (let i = 0; i < promises.length; i++) {
