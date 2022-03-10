@@ -15,8 +15,9 @@ sidebar: auto
 ### [JavaScript深入之new的模拟实现](./JavaScript深入之new的模拟实现.md)
 
 ## Promise
-### [手摸手带你实现一版Promsie](./04-promise手写实现.md)
-### [Promsie.all和Promise.race](./Promsie.all和Promise.race.md)
+[手摸手带你实现一版Promsie](./04-promise手写实现.md)
+
+[Promsie.all和Promise.race](./05-Promsie.all和Promise.race.md)
 
 ## 前端路由
 ### [深度剖析:前端路由原理](./深度剖析:前端路由原理.md)

@@ -796,6 +796,7 @@ function resolvePromise(promsie2, x, resolve, reject) {
 ```
 
 onFulfilled, onRejected 在使用then的时候很可能是不传递的。此时需要针对这种情况单独做处理。做一层判断。贴出完整实现
+
 ```js{85-86}
 const PENDING = "PENDING"
 const FULFILLED = "FULFILLED"
