@@ -9,7 +9,9 @@ sidebar: auto
 
 [02-函数柯里化](./02-函数柯里化.md)
 
-[07-事件循环.md](./07-事件循环.md)
+[07-事件循环](./07-事件循环.md)
+
+[08-手写实现promisify](./08-手写实现promisify.md)
 ### [防抖的实现](./防抖的实现.md)
 ### [JavaScript深入之原型和原型链](./JavaScript深入之原型和原型链.md)
 ### [JavaScript深入之call和apply的模拟实现](./JavaScript深入之call和apply的模拟实现.md)
