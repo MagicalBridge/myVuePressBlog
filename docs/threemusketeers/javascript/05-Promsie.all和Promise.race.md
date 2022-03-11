@@ -79,7 +79,9 @@ export default {
 
 ## Promise.race方法
 
-通俗来说，Promise.race是赛跑机制，只认第一名，只会采用第一个先执行的结果作为返回值，而会忽略其他值。
+通俗来说，Promise.race是赛跑机制，只认第一名，只会采用第一个先执行的结果作为返回值，而会忽略其他值。具体来说，如果拥有若干个promsie，p1,p2,p3...在调用。
+
+let p = Promise.race([p1,p2,p3,....]) 的时候，返回的p也是一个promsie
 
 Promise.race 一般的使用场景用于处理超时。
 
