@@ -281,3 +281,6 @@ Promise.race = function(promises) {
   })
 }
 ```
+race返回的是一个 promise, promise的状态只能改变一次，即resolve和reject都只能执行一次，我们把返回的promise里的resolve和reject方法放在了 promises 每一个promise的成功或者失败回调里面，当其中任意一个成功或失败后就会调用我们传进去的resolve和reject，一旦调用了，就不会再次调用。
+
+
