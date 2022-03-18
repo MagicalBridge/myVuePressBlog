@@ -21,7 +21,7 @@ node.js 是⼀个 JS 的服务端运⾏环境，简单的来说，他是在 JS �
 nvm 的全称就是 node version manager，意思就是能够管理 node 版本的⼀个⼯具，它提供了⼀种直接通过shell 执⾏的⽅式来进⾏安装。简单来说，就是通过将多个 node 版本安装在指定路径，然后通过 nvm 命令切换时，就会切换我们环境变量中 node命令指定的实际执⾏的软件路径。
 
 ```bash
-curl -o-https://raw.githubusercontent.com/nvmsh/nvm/v0.35.3/install.sh | bash
+curl -o- https://raw.githubusercontent.com/nvmsh/nvm/v0.35.3/install.sh | bash
 ```
 安装成功之后，我们就能在当前的操作系统中使⽤多个node.js 版本。
 
@@ -34,7 +34,7 @@ npx 是 npm@5 之后新增的⼀个命令，它使得我们可以在不安装模
 # 此时全局安装了 create-react-app
 npm i -g create-react-app
 create-react-app some-repo
-# 此时⽆论是项⽬中还是全局都没有安装 createreact-app (但实际上是安装了的，但表现确实像没有安装)
+# 此时⽆论是项⽬中还是全局都没有安装 create react-app (但实际上是安装了的，但表现确实像没有安装)
 npx create-react-app some-repo
 ```
 
@@ -46,6 +46,11 @@ node.js 的主要依赖⼦模块有以下内容：
 - http-parser/llhttp: 底层处理 http 请求，处理报⽂，解析请求包等内容
 - openssl: 处理加密算法，各种框架运⽤⼴泛
 - zlib: 处理压缩等内容
+
+## node中的模块
+- 内置模块，node中自带的直接可以使用的模块
+- 第三方模块，这种模块的用法和内置模块一样
+- 文件模块，自己写的模块
 
 ## node.js 常⻅内置模块
 node.js 中最主要的内容，就是实现了⼀套 CommonJS的模块化规范，以及内置了⼀些常⻅的模块。
@@ -65,6 +70,20 @@ node.js 中最主要的内容，就是实现了⼀套 CommonJS的模块化规范
 举个简单的例子，我们都有文件上传的业务场景需求，我们一般会有一个注册上传的任务，这个本身是同步的，返回一个id标识当前的这个任务，但是上传操作是异步的，上传之后，有时候需要寻轮去查询上传的结果。
 
 ## node中的process
+process 代表node中的进程：
+- platform: 代表当前的操作系统： win32(windows)  darwin(macos)
+  在wpm-plugin代码中 云鹏就使用了这个来判断是否是 win平台。
+- chdir: 一般使用不到
+- cwd: 当前的工作目录 current working directory 这个值是可以改变的。
+  应用场, 举个例子, 我们在运行的webpack时候在哪个目录运行，其实就是会调用 cwd 这个命令去查找 webpack.config.js 
+- env: 在执行命令的时候，传入的环境
+- argv: 在执行代码时候传入的参数
+
+## commonjs规范的内容
+- 每一个文件就是一个模块，
+- 如果想使用别人就使用require语法
+- 如果想要给别人用，就使用module.exports导出
+- 简单来说，我使用require引入一个文件，就是将内容读取过来，然后包装一个函数，并且这个函数是立即执行的。并且会把这个内容赋值给module.exports，最后将这个  module.exports return出去。
 
 ## 模块化规范
 [模块化规范](../module/README.md)
