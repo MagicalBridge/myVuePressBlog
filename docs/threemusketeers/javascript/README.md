@@ -4,8 +4,14 @@ sidebar: auto
 
 # JavaScript
 
-## 优秀文章
+## 数组API
 [自从学会了Array.reduce(),再也离不开它](https://juejin.cn/post/6844904025310117901)
+
+## 混合应用
+[JSBridge的原理](https://https://juejin.cn/post/6844903585268891662#heading-14)
+
+## 模块化规范
+[「万字进阶」深入浅出 Commonjs 和 Es Module](https://juejin.cn/post/6994224541312483336)
 
 ## js高级
 [01-高阶函数](./01-高阶函数.md)
