@@ -39,7 +39,7 @@
   * @return ListNode类
   */
 function reverseBetween( head ,  m ,  n ) {
-  // 设置虚拟头节点
+  // 设置虚拟头节点 之所以设置虚拟头结点就是为了不对 head节点的翻转做单独处理
   let dummyNode = new ListNode(-1)
   // 将虚拟头节点和链表相连
   dummyNode.next = head
@@ -56,7 +56,7 @@ function reverseBetween( head ,  m ,  n ) {
     rightNode = rightNode.next
   }
 
-  // 截取出来一个子链表
+  // 保存位置，翻转之后就找不到了
   let leftNode = pre.next
   let cur = rightNode.next
 
@@ -83,11 +83,19 @@ function reverseLinkList(head) {
     cur = cur_next
   }
 }
+
 module.exports = {
   reverseBetween : reverseBetween
 };
 ```
-这道题目关键的点在于构造四个指针，通过指针，保存变量的引用，然后反转区间内部的链表，最后再把链表接起来。这种解题方法比较好理解。
+这道题目关键的点在于构造指针，通过指针，保存变量的引用，然后反转区间内部的链表，最后再把链表接起来。这种解题方法比较好理解。
+出现的变量：
+- dummy
+- pre
+- leftNode
+- rightNode
+- cur 
+然后就是和链表之间的相互链接。
 
 
 
