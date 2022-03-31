@@ -2,7 +2,9 @@
 sidebar: auto
 ---
 
-# Promise.abort 方法
+# Promise.abort 和 Promise.catch方法
+
+## Promise.abort
 
 我们在日常开发中，可能会遇到一些超时问题，比如图片加载，就是不采用它的结果了，意思是即使之后再成功了也没什么作用了。
 
@@ -59,8 +61,28 @@ promise1.then((res) => {
   console.log(res)
 })
 
-如果要取消
+// 如果要取消
 promise1.abort("取消执行")
+```
+
+## Promise.catch
+
+首先来说，`catch`方法返回一个Promsie，这个场景比较常见，就是调用完catch之后，还可以继续调用then方法，所以本质上catch其实是 `Promise.prototype.then()`的一个变种。
+
+它的行为与调用`Promise.prototype.then(undefined, onRejected)` 相同。
+
+再来说说catch的用法，catch方法接收一个参数，该参数是一个函数，拥有一个参数reason，参数的含义是 Promsie失败的原因。
+
+```js
+p.catch(function(reason) {})
+```
+
+我们来看一个例子：
+```js
+const p = new Promise((resolve, reject) => {
+  reject(new Error("error"))
+})
+
 ```
 
 

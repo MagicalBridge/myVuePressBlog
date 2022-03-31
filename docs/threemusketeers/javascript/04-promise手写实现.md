@@ -98,10 +98,12 @@ promise.then(()=>{
 
 这是因为默认状态下`promsie`处于的是等待状态。我们想要成功还是失败，需要主动调用`resolve`或者调用reject告诉promsie。如果调用resolve函数promise转变为成功状态，如果调用reject函数promise就转变为失败状态。
 
-我们尝试手写一版Promise，使用 commonjs 规范，自定义一个js文件，之后使用Promsie的时候就导入自己手写的这个 promsie 类。
+## 第一版代码
+
+我们尝试手写一版Promise，使用 commonjs 规范，之后使用Promsie的时候就导入自己手写的这个 Promise 类。
 
 ```js
-// promsie 有三种状态，分别是 等待  成功  失败 我们用常量来表示。
+// promsie 有三种状态，分别是 等待、成功、失败 我们用常量来表示。
 const PENDING = "PENDING"
 const FULFILLED = "FULFILLED"
 const REJECTED = "REJECTED"
@@ -110,7 +112,7 @@ class Promise {
   // 构造函数的入参就是自执行函数 executor
   constructor(executor) {
     this.status = PENDING // promise默认的状态
-    this.value = undefined // 成功的原因
+    this.value = undefined // 成功的值
     this.reason = undefined // 失败的原因
     // 成功resolve函数
     const resolve = (value) => {
@@ -122,18 +124,20 @@ class Promise {
     }
     // 失败的reject函数
     const reject = (reason) => {
+      // 只有在 PENDING 状态下 才能 修改状态
       if (this.status === PENDING) {
         this.reason = reason
         this.status = REJECTED // 修改状态
       }
     }
+    // 这里使用try catch包裹是因为立即执行函数执行的时候如果抛出异常，直接走reject函数。
     try {
       executor(resolve, reject)
     } catch (e) {
-      // 立即执行函数执行的时候如果抛出异常，直接走reject函数。
       reject(e)
     }
   }
+  // then方法的两个回调函数，都是使用者传递的
   then(onFulfilled, onRejected) {
     // onFulfilled, onRejected
     if (this.status == FULFILLED) {
@@ -150,8 +154,9 @@ class Promise {
 module.exports = Promise
 ```
 
-我们在实际的使用场景中，一般在executor中传入的都是异步任务，类似于下面这样。
-```js{3-5}
+我们在实际的使用场景中，一般在executor函数中传入的都是异步任务，类似于下面这样。
+```js{4-6}
+// 使用自己的promsie
 let Promise = require('./promise')
 let promise = new Promise((resolve, reject) => {
   setTimeout(() => {
@@ -171,11 +176,14 @@ promise.then(()=>{
 
 执行上述代码发现，如果我们在executor函数中传入的是一个异步任务，虽然调用了resolve方法，但是并没有走实例的then方法的成功回调，这是为什么呢？
 
-因为默认promise处于pending状态，当我们用定时器去触发resolve的时候，then方法已经执行完毕了，但是我们自己手写的这一版本promsie，并没有处理pending状态。我们现在开始实现。
+因为默认promise处于pending状态，当我们用定时器延时去触发resolve的时候，下面的then方法已经执行完毕了，但是我们自己手写的这一版本promsie中并没有处理pending状态。
+
+## 处理pending状态
 
 我们可以这样处理，准备两个数组，分别用于存放**成功回调函数**和**失败回调函数**，当我们真正触发 resolve 或者 reject 的时候遍历数组执行其中的回调函数。
 
 这种实现的思路其实是发布订阅的模式。先订阅好所有的成功回调和失败回调，然后在触发 `resolve` 和 `reject` 的时候执行发布。
+
 
 ```js{12,13,20,28,39-48}
 // promsie 有三种状态，分别是 等待  成功  失败 我们用常量来表示。
@@ -241,25 +249,27 @@ class Promise {
 module.exports = Promise
 ```
 
+## promsie 到底帮助我们解决了什么问题
+
 promsie 到底在我们的日常开发中解决了什么问题？
 - 解决了回调地域的问题。
 - 解决了同步并发的问题。
 
-假设我们有一个场景：存在两个文件  a.txt、b.txt。
+假设我们有一个场景：存在两个文件  `a.txt`、`b.txt`。
 
-a.txt 中的内容是一个字符串'b.txt', b.txt 中的内容是 'b'，我们希望先从 a.txt 中读取文件内容，然后再操作输出 b.txt的内容。
-我们在不使用promsie的时候可能会写出如下的代码:
+`a.txt`中的内容是一个字符串'b.txt', `b.txt`中的内容是 'b'，我们希望先从 `a.txt` 中读取文件内容，然后再操作输出`b.txt`的内容。我们在不使用promsie的时候可能会写出如下的代码:
 
 ```js
 fs.readFile('./a.txt','utf8',function (err, data) {
   if(err) return console.log(err)
   fs.readFile('./b.txt','utf8',(err,data) => {
     if(err) return console.log(err)
-    console.log(data);
+    console.log(data); // => 输出b
   })
 })
 ```
-这种写法有什么问题呢？就是不断地在上一个函数的回调中写逻辑，并且每一层都要写错误捕获逻辑。这样层级多了之后，代码就会变得难以维护。
+
+这种写法会有回调嵌套的问题，就是不断地在上一个函数的回调中写逻辑，并且每一层都要写错误捕获逻辑。这样层级多了之后，代码就会变得难以维护。
 
 基于此我们可以尝试使用`promise`封装一个方法。
 
@@ -279,18 +289,24 @@ function readFile(filePath, encoding) {
 }
 ```
 
-如上述代码所示，我们封装了一个 readFile 方法，返回了一个 promise 实例，在自执行函数中调用原生的操作文件的方法，在文件读取结束之后，将结果通过resove 或者 reject 返回出来。
+如上述代码所示，我们封装了一个 `readFile` 方法，返回了一个 promise 实例，在自执行函数中调用原生的操作文件的方法，在文件读取结束之后，将结果通过resove 或者 reject 返回出来。
 
 
 promise中给我们提供的then方法能够解决这种不断嵌套的问题。
 
 
-## 梳理then方法；
+## then方法
 
-promsie的链式调用，当调用then方法后，还会返回一个新的promise，新的promsie有自己的状态，如果我们用过jquery这个库的时候会知道，也会有链式调用的场景，但是返回的是this。这里为什么不能返回自身呢？原因就在于，promise的状态一旦改变之后，就不能再改回去了，否则状态就乱了，因此，需要返回一个新的promsie。
+promsie的链式调用是个很有意思的现象，当promise实例调用then方法后，还会返回一个新的promise，新的promsie拥有有自己的状态，如果我们用过jquery这个库的时候会知道，也会有链式调用的场景，但是返回的是this。
 
+那我们不禁有一个疑问，promsie为什么不能返回自身呢？原因就在于，promise的状态一旦改变之后，就不能再改回去了，否则状态就乱了，因此，需要返回一个新的promsie。
 
-- 情况1：then中的方法返回值是一个普通值（不是promise）的情况，会作为**外层下一次then的成功结果**。
+### 情况1：then中的方法返回值是一个普通值
+
+所谓的普通值，代表不是`promise`实例的场景，比如基本类型的数字或者字符串。这种情况下，返回值会作为**外层下一次then的成功结果**。
+
+还是拿刚才我们基于promsie封装的函数readFile来说
+
 ```js
 readFile("./a.txt", "utf8").then((value)=>{
   reutrn 1
@@ -302,7 +318,10 @@ readFile("./a.txt", "utf8").then((value)=>{
   console.log('f',err)
 })
 ```
-- 情况2：then方法执行出错，比如 throw new Error("失败") 无论上一次是成功还是失败，只要返回的是普通值，都会执行下一次的then的成功。
+
+### 情况2：then方法执行出错
+
+比如 `throw new Error("失败")` 无论上一次是成功还是失败，只要返回的是普通值，都会执行下一次的then的成功。
 
 ```js
 readFile("./a.txt", "utf8").then((value)=>{
@@ -316,7 +335,11 @@ readFile("./a.txt", "utf8").then((value)=>{
 })
 ```
 
-- 情况3：如果then中方法返回的是一个promsie对象，此时会根据promsie的结果来处理是走成功还是失败。
+上面的这个例子中,虽然在第一个then中抛出异常，但是没有显示的返回数据，其实就是返回`undefined`, 会作为普通值传递给下一个then。
+
+### 情况3：then中方法返回的是一个promsie对象
+
+此时会根据promsie的结果来处理是走成功还是失败。
 
 ```js{2}
 readFile("./a.txt", "utf8").then((value)=>{
@@ -329,9 +352,23 @@ readFile("./a.txt", "utf8").then((value)=>{
   console.log('f',err)
 })
 ```
-在第{2}行, readFile('b.txt') 这个函数的执行结结果是返回一个b,就可以在下一个then的成功回调中拿到这个值。反之如果。readFile('b.txt') 返回的是一个失败的结果，那么就会走到第二个then的失败回调。
 
-- 总结一下: 如果返回一个普通值（除了promsie）就会传递给下一个then的成功，如果返回一个失败的promsie或者抛出异常，会走下一个then的失败。
+在第{2}行代码中, readFile('b.txt') 这个函数的执行结结果是返回一个b,就可以在下一个then的成功回调中拿到这个值。反之，如果`readFile('b.txt')`返回的是一个失败的结果，那么就会走到第二个then的失败回调。
+
+```js{2}
+readFile("./a.txt", "utf8").then((value)=>{
+  return readFile('b1.txt') // b1.txt 并不存在
+},(err) => {
+  console.log('fail',err) 
+}).then((data) => {
+  console.log('s',data)  
+},(err)=>{
+  console.log('f',err) // => 走到这里
+})
+```
+
+### 总结一下: 
+then方法如果返回一个普通值（除了promsie）就会传递给下一个then的成功。如果返回一个失败的promsie或者抛出异常，会走下一个then的失败。
 
 
 ```js
@@ -350,8 +387,9 @@ promise2.then((data) => {
 )
 ```
 
-上面我们已经知道，每调用then方法一次，都会产生一个新的promsie，并且第一次then的时候，无论是成功和是失败，都会有隐含的返回值，如果不指定就是返回undefined，那这个返回值，是能够成为外面then的入参继续传递下去。
+从上面代码我们已经知道，每调用then方法一次，都会产生一个新的promsie，并且第一次then的时候，无论是成功和是失败，都会有隐含的返回值，如果不指定就是返回undefined，那这个返回值，是能够成为外面then的入参继续传递下去。
 
+那如果在第一个then方法的成功回调中抛出异常，函数该如何执行呢？
 ```js
 let promise2 = new Promise((resolve, reject) => {
   resolve('成功')
@@ -370,7 +408,9 @@ promise2.then((data) => {
 
 如果在第一个promise的成功回调函数中, 抛出异常，会在第二个then的方法中的失败回调中得到结果。这很显然是调用了第二个promsie的resolve或者reject方法，根据此，我们需要**同步捕获错误异常**。
 
-```js{41,81-82}
+## 第二版代码
+
+```js{41,82-83}
 // promsie 有三种状态，分别是 等待  成功  失败 我们用常量来表示。
 const PENDING = "PENDING"
 const FULFILLED = "FULFILLED"
@@ -414,6 +454,7 @@ class Promise {
     let promsie2 = new Promise((resolve, reject) => {
       if(this.status == PENDING) {
         this.onResolvedCallbacks.push(() => { 
+          // 这里就是用来同步捕获异常场景的
           try {
             // todo...
             let x = onFulfilled(this.value);
@@ -460,6 +501,8 @@ module.exports = Promise
 ```
 
 在promsieA+ 规范中有说过这样的点, **onFulfilled 和 onRejected 不能在当前上下文中调用，这里我就必须想办法，让这两个函数异步触发，异步触发，这里我们使用setTimeout来实现**，原因是我们没有办法模拟浏览器的微任务处理逻辑。
+
+## 第三版代码
 
 ```js{44-52,55-63}
 // promsie 有三种状态，分别是 等待  成功  失败 我们用常量来表示。
@@ -557,6 +600,8 @@ class Promise {
 
 module.exports = Promise
 ```
+
+
 在第一个promise then 方法中很可能返回的还是一个promsie, 也就是说 onFulfilled 执行完的x可能是一个Promise。类似于下面的代码：
 
 ```js
@@ -582,6 +627,8 @@ promise2.then((data) => {
 )
 ```
 我们可以看到，第二个then的成功回调中拿到的是新的创建出来的promise的结果。根据上面的描述，我们需要专门创建一个处理函数来针对x的不同取值做相应的操作，这个方法是相对独立的。
+
+## 第四版代码
 
 ```js{48,59,72,83}
 // promsie 有三种状态，分别是 等待  成功  失败 我们用常量来表示。
@@ -680,7 +727,7 @@ class Promise {
 module.exports = Promise
 ```
 
-下面我们开始书写 resolvePromise。
+### resolvePromise函数处理。
 
 应该遵循以下原则:
 - 1 如果promsie2和x是同一个promsie，应该抛出异常。
@@ -796,6 +843,9 @@ function resolvePromise(promsie2, x, resolve, reject) {
 ```
 
 onFulfilled, onRejected 在使用then的时候很可能是不传递的。此时需要针对这种情况单独做处理。做一层判断。贴出完整实现
+
+
+## 第五版代码
 
 ```js{85-86}
 const PENDING = "PENDING"
@@ -944,6 +994,8 @@ class Promise {
 }
 module.exports = Promise
 ```
+
+至此，一个手写版本的Promise就实现了。
 
 
 
