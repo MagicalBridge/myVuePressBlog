@@ -220,6 +220,10 @@ ReactDOM.render(element, document.getElementById("root"))
 
 注意到上面这些点，我们尝试自己手动实现一版`React.createElement`方法,所能实现的功能要和原生返回的数据结构相仿。
 
+要想让React项目执行，其中会有两个环节
+- 编译 把我们自己写的jsx代码通过webpack的babel编译成普通的js代码，这一步是在打包的时候做的。跟浏览器无关。
+- 运行 让编译后的js文件在浏览器中执行，这个时候会真正的调用createElement方法，返回react元素或者说虚拟dom。
+
 
 
 
