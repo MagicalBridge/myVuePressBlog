@@ -54,12 +54,16 @@ let storages = ["64g", "256g"]
 ## 编码实现
 ```js
 let names = ["iPhone X", "iPhone XS"]
-
 let colors = ["黑色", "白色"]
-
 let storages = ["64g", "256g"]
 
+// 这里使用展开运算符，将传入的三个一维数组合并成一个二维数组
 let combine = function (...chunks) {
+  // [ 
+  //   [ 'iPhone X', 'iPhone XS' ], 
+  //   [ '黑色', '白色' ], 
+  //   [ '64g', '256g' ] 
+  // ]
   let res = []
 
   let helper = function (chunkIndex, prev) {
@@ -79,10 +83,8 @@ let combine = function (...chunks) {
   // 从属性数组下标为 0 开始处理
   // 并且此时的 prev 是个空数组
   helper(0, [])
-
   return res
 }
 
 console.log(combine(names, colors, storages))
-
 ```
