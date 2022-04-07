@@ -38,8 +38,8 @@ ReactDOM.render(
 ### 4.2 什么是元素
 - JSX其实只是一种语法糖,最终会通过babeljs转译成`createElement`语法
 - React元素是构成`React`应用的最小单位
-- React元素用来描述你在屏幕上看到的内容
-- React元素事实上是普通的JS对象,ReactDOM来确保浏览器中的DOM数据和React元素保持一致。
+- React元素事实上是普通的JS对象，用来描述你在屏幕上看到的内容 
+- `ReactDOM`来确保浏览器中的`DOM`数据和`React`元素保持一致。
 
 ### 4.3 JSX表达式
 - 可以任意地在 JSX 当中使用 JavaScript 表达式，在 JSX 当中的表达式要包含在大括号里
@@ -218,11 +218,15 @@ ReactDOM.render(element, document.getElementById("root"))
 
 至于原生React渲染出来的属性：`key、ref、_owner、_store` 这些属性我们暂时还用不到，所以第一版实现的时候先不予考虑,后续如果有需要我们再加上对这些属性的处理。
 
-注意到上面这些点，我们尝试自己手动实现一版`React.createElement`方法,所能实现的功能要和原生返回的数据结构相仿。
-
 要想让React项目执行，其中会有两个环节
 - 编译 把我们自己写的jsx代码通过webpack的babel编译成普通的js代码，这一步是在打包的时候做的。跟浏览器无关。
 - 运行 让编译后的js文件在浏览器中执行，这个时候会真正的调用createElement方法，返回react元素或者说虚拟dom。
+
+注意到上面这些点，我们尝试自己手动实现一版`React.createElement`方法,所能实现的功能要和原生返回的数据结构相仿。
+
+
+
+
 
 
 
