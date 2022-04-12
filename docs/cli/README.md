@@ -269,9 +269,10 @@ npm install
 ## 使用 lerna
 lerna 是一款基于git + npm非常优秀的多包管理工具，上面我们手动创建的包可以很方便的交给工具。
 
-它有诸多优势，能够大幅减少重复操作，提升操作的标准化，lerna 是架构优化的产物，它揭示了一个架构的真理：项目复杂度提升之后，就需要对项目进行架构优化，架构优化的主要目的往往都是以效能为核心。
+它有诸多优势，能够大幅减少重复操作，提升操作的标准化，lerna 是架构优化的产物，它揭示了一个架构的真理：
+>项目复杂度提升之后，就需要对项目进行架构优化，架构优化的主要目的往往都是以效能为核心。
 
-我们常见的优秀的开源项目 babel vue-cli 等都是基于 lerna 来管理的。
+我们常见的优秀的开源项目 babel、vue-cli 等都是基于 lerna 来管理的。
 
 ### lerna 解决了什么痛点
 - 重复操作：
@@ -310,12 +311,11 @@ lerna init 操作执行之后，会在项目中生成一个 `lerna.json` 的文�
 ```
 lerna create <name> [loc] 
 ```
-这是创建包的命令 指定包名`<name>`（使用尖括号包裹的内容都是必须填写的）`[loc]` 方括号包裹起来的内容是可以不写的，用来手动指定路径。
+这是创建包的命令，指定包名`<name>`（使用尖括号包裹的内容都是必须填写的），`[loc]` 方括号包裹起来的内容是可以不写的，用来手动指定路径。
 
-- 1 执行lerna create core 创建一个叫做core的包，这里的core显示的是文件夹的名称，需要注意的是，新建组后在组里面创建子包，否则直接注册子包大概率已经被注册过了。如下图所示，第二行，我们创建的包是在 @zf-mock-cli 这个组下面。
+- 1、执行`lerna create core`创建一个叫做core的包，这里的core显示的是文件夹的名称，需要注意的是，我们需要**新建组**，新建组后在组里面创建子包，否则直接注册子包大概率已经被注册过了。如下图所示，第二行，我们创建的包是在 @zf-mock-cli 这个组下面。
 
 发布之前，需要在npm的官方网站中注册一个组信息，否则包是上传不上去的。
-
 
 ```json {2}
 {
@@ -348,7 +348,9 @@ lerna create <name> [loc]
   }
 }
 ```
-- 2 执行lerna create utils 创建一个工具包。工具包也放在 @zf-mock-cli 组下面。
+
+- 2、 执行lerna create utils 创建一个工具包。工具包也放在 @zf-mock-cli 组下面。
+
 ```json {2}
 {
   "name": "@zf-mock-cli/utils",
@@ -381,8 +383,8 @@ lerna create <name> [loc]
 }
 
 ```
-- 3 使用lerna add 安装依赖 
 
+- 3、 使用lerna add 安装依赖 
 
 ```shell
 lerna add <package> [@version] [--dev] [--exact] [--peer] 
@@ -675,7 +677,7 @@ commands、core、models、utils
 
 ### 开发检查版本号的功能
 
-在node中，使用require函数天生可以加载.js、.json、.node 结尾的文件。因此在实现 加载版本号功能的时候，使用了下面的代码
+在node中，使用`require`函数天生可以加载`.js、.json、.node`结尾的文件。因此在实现 加载版本号功能的时候，使用了下面的代码
 
 ```js
 const pkg = require("../package.json")
@@ -703,7 +705,7 @@ lerna create @cdp-wpm/log
 
 因为我们需要基于npm-log封装，所以我们需要安装依赖：
 
-```
+```shell
 lerna add npmlog utils/log
 ```
 
@@ -751,13 +753,13 @@ log.addLevel("success", 2000, { fg: "green" })
 process.geteuid() 这个方法 能够打印 我们目前的用户权限。
 
 ### 检查用户主目录
-这里需要使用到一个包：user-home 用来判断是否是用户的主目录。
+这里需要使用到一个包：`user-home` 用来判断是否是用户的主目录。
 
-还需要一个path-exist 这个包判断路径是否存在
+还需要一个`path-exist`这个包判断路径是否存在
 
-首先还是需要在core/cli 路径下执行下这两个库的安装操作
+首先还是需要在`core/cli`路径下执行下这两个库的安装操作
 
-这里需要注意的是 path-exists 应该安装4.0版本，否则更加新的版本是ESModule。在现有的脚手架项目中并不是很好使用。
+这里需要注意的是 `path-exists` 应该安装4.0版本，否则更加新的版本是`ESModule`。在现有的脚手架项目中并不是很好使用。
 
 ### 处理一些参数问题
 对于脚手架来说，可能需要根据输入的参数 是否带有 --debug 来按照不同的标准打印日志。这就需要我们处理参数问题。
@@ -843,9 +845,9 @@ lerna create @cdp-wpm/get-npm-info ./utils/get-npm-info
 
 那么就会默认安装在core目录下，为此，我还修改了这个配置顺序
 
-get-npm-info 作为一个单独的npm包来使用。单独发布到npm上面。
+`get-npm-info` 作为一个单独的npm包来使用。单独发布到npm上面。
 
-因为我们要发起一个请求，所以需要在utils中安装axios这个仓库。
+因为我们要发起一个请求，所以需要在`utils`中安装`axios`这个仓库。
 
 为了拼接url我们还可以安装一个npm包 `url-join` 节省我们的工作量 
 
