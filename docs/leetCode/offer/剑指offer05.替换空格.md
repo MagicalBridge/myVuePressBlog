@@ -37,6 +37,21 @@ var replaceSpace = function(s) {
 }
 ``` 
 
+```ts
+function replaceSpace(s: string): string {
+  let res: string = ""
+
+  for (let i = 0; i < s.length; i++) {
+    if (s.charAt(i) === " ") {
+      res += "%20"
+    } else {
+      res += s[i]
+    }
+  }
+  return res
+};
+```
+
 直接使用正则表达式求解:
 需要注意的是，如果这道题目使用正则表达式的方法求解，匹配模式不能是贪婪的，换句话说，就是不能将多个空格合并成一个空格替换，而是需要每个空格都需要进行替换。
 
