@@ -494,11 +494,15 @@ lerna success Bootstrapped 2 packages
 
 - 6 learn link 链接依赖
 
-如果我们创建的package中有互相的依赖,  `learn link` 可以帮助我们创建软连接。我们直接在项目中直接执行 `lerna link` 是没有多少效果的。我们必须在需要链接的模块下，手动添加依赖的名称和版本，然后执行 `lerna link` 这样才有效果。
+如果我们创建的package中有互相的依赖,  `learn link` 可以帮助我们创建软链接。我们直接在项目中直接执行 `lerna link` 是没有多少效果的。我们必须在需要链接的模块下，手动添加依赖的名称和版本，然后执行 `lerna link` 这样才有效果。
 
+具体的场景就是，我想要在core包中使用 utils 这个包，手动在core的package.json中添加依赖urils的名称和版本。然后手动执行 `lerna link` 就能够链接成功。 
+
+如果没有这个操作，我们使用npm提供的原生的功能，就必须进入core目录下手动执行 `npm link xxx` ,如果项目复杂，存在非常复杂的依赖，这种关系我们自己维护是非常痛苦的。
 
 ### 脚手架的开发和测试
-- 1 lerna exec 执行 shell 脚本 
+![脚手架的开发和测试](../images/cli/05.png)
+- 1、lerna exec 执行 shell 脚本 
 
 在每个包下面执行脚本命令，需要在具体的命令前加上 `--` :
 
@@ -521,7 +525,7 @@ lerna success exec Executed command in 2 packages: "rm -rf node_modules"
 
 如果我们想要在指定目录下面执行脚本，需要添加 `--scope` 后缀
 
-比如，我们只想要删除 utils 下面的 node_modules 可以执行下面的命令
+比如，我们只想要删除`utils`下面的`node_modules`可以执行下面的命令
 
 这里需要注意的是，删除需要 **指定包名称**
 
@@ -538,25 +542,26 @@ lerna info Executing command in 1 package: "rm -rf node_modules"
 lerna success exec Executed command in 1 package: "rm -rf node_modules"
 ```
 
-- 2 lerna run 执行 npm 命令
+- 2、lerna run 执行 npm 命令
 
 这个命令主要是执行 npm 的script 脚本，默认行情况下，会执行所有的包下面的 package.json 下面的脚本信息。 同样这个命令也支持 --scope 选项。
 
 这个命令的执行 也是作用在packages里面的命令 
 
-- 3 lerna clean 清空依赖
+- 3、lerna clean 清空依赖
 ```shell
 lerna clean 
 ```
 执行上述命令之后，会删除node_module 信息，但是package.json 里面的内容不会被删除。这点需要注意
-- 4 lerna bootstrap 重新安装依赖
+- 4、lerna bootstrap 重新安装依赖
 
 ### 脚手架发布上线
+![脚手架的发布上线](../images/cli/06.png)
 
 脚手架的发布上线，一般需要升级版本号，这种都属于常规操作。
 
-- 1 lerna version bump version
-- 2 lerna changed 查看上一个版本以来的所有变更
+- 1、lerna version bump version
+- 2、lerna changed 查看上一个版本以来的所有变更
 
 使用场景：我分别修改了 core 和 utils 两个包中的代码，在执行这个命令的时候打印两个包内容需要发布。
 
@@ -570,11 +575,11 @@ lerna info Assuming all packages changed
 lerna success found 2 packages ready to publish
 ```
 
-- 3 lerna diff 查看diff
+- 3、lerna diff 查看diff
 查看修改了哪些代码内容。
 
 
-- 4 lerna publish 项目发布
+- 4、lerna publish 项目发布
 发布过程中是非常坎坷的，对于组npm包而言，不仅仅是登录问题，还需要在package.json文件中添加如下字段：
 
 ```json
