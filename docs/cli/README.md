@@ -34,16 +34,22 @@ vue create vue-test-app
 which vue
 /usr/local/bin/vue
 ```
-根据输出的信息，我进入了  /usr/local/bin/vue 这个目录。查看vue命令的软链 因为我是通过yarn 全局安装的vue命令。所以指向的是yarn的目录。
+根据输出的信息，我进入 /usr/local/bin 目录。执行`ll`命令，查看vue命令的软链，因为我是通过yarn全局安装的vue脚手架。所以链接指向的是yarn的目录。
 
 ```bash
 vue -> ../../../Users/louis/.config/yarn/global/node_modules/.bin/vue
 ```
 
+进入软链接所对应的文件夹，查看vue命令最终的指向
+```bash
+lrwxr-xr-x  1 louis  staff    22B  3 30 21:12 vue -> ../@vue/cli/bin/vue.js
+```
+从上面路径可以看出，最终的vue指向 node_modules/@vue 文件夹。也就是安装的vue脚手架核心代码所在的地方
+
 让我们总结一下：
 - 终端中输入 vue create vue-test-app
-- 终端中解析出vue 命令
-- 终端在环境变量中 找到vue命令
+- 终端中解析出vue命令
+- 终端在**环境变量**中找到vue命令
 - 终端根据vue命令链接到实际文件vue.js
 - 终端利用node执行vue.js
 - vue.js解析 command / options
