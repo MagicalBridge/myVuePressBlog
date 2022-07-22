@@ -19,4 +19,5 @@ sidebar: auto
 * [Ts高手篇：22个示例深入讲解Ts最晦涩难懂的高级类型工具](https://juejin.cn/post/6994102811218673700#heading-8)
 * [初始化项目](./chapter3/init.md)
 * [编写基础的请求代码](./chapter3/base.md)
+* [项目开发规范草案](./如何写出优雅的react代码：类型规范篇.md)
 
