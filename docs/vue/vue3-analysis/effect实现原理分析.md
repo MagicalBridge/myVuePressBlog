@@ -209,6 +209,107 @@ export function effect(fn) {
 这个函数接收两个参数，第一个参数是具体的对象，第二个参数是 propKey 具体到哪一个key。一个属性可以被被多次引用，因此可以对应多个effect。因为可能存在同名的属性，所以用target作为map的key。
 
 
+## 依赖需要双向记忆
+
+上面的代码中，我们已经实现让属性记住自己的effect，做了这样的映射关系，我们接下来要实现双向记录。
+
+```js{8,63-64}
+// 借助js单线程的特性，先设置一个全局的变量
+export let activeEffect = undefined
+
+class ReactiveEffect {
+  public active: boolean = true
+  public fn
+  public parent = null
+  public deps = []
+  constructor(fn) {
+    this.fn = fn
+  }
+  run() {
+    // 执行这个函数的时候，就会到proxy上去取值，就会触发get方法。
+    // 取值的时候，要让当前的属性和对应的effect关联起来 这就是依赖收集
+    // 执行run函数的时候，将当前的这个实例赋值给这个变量, 也就放在了全局上
+    try {
+      this.parent = activeEffect
+      activeEffect = this
+      this.fn()
+    } finally {
+      // 因为我们的变量是放在全局上的，当我们函数执行完毕之后，还应该把这个值清空
+      activeEffect = this.parent
+      this.parent = null
+    }
+  }
+}
+
+// 整体的映射关系，使用 WeakMap存储
+const targetMap = new WeakMap()
+
+// 这个函数接收两个参数，第一个参数是具体的对象，第二个参数是 propKey 具体到哪一个key。
+// 一个属性可以被被多次引用，因此可以对应多个effect。因为可能存在同名的属性，所以用target
+// 作为map的key。
+// 它的数据结构课程是这样的 
+// { 
+//  target: { 
+//   name: [effect,effect], 
+//   age: [effect,effect] 
+//  } 
+// }
+export function track(target, propKey) {
+  // 如果在 effect外部使用某个属性，就不需要收集,这里做个判空处理
+  if (activeEffect) {
+    // 这里做依赖收集, 首先在weakmap中查找搜索target对象是否存在
+    let depsMap = targetMap.get(target)
+    if (!depsMap) {
+      // 如果不存在，就创建这样一个数据结构
+      targetMap.set(target, (depsMap = new Map()))
+    }
+
+    // 开始处理key相关
+    let deps = depsMap.get(propKey)
+    if (!deps) {
+      // 这里把deps 设计成一个set，因为在同一个effect中
+      // 可能会多次使用同一个属性，无需重复收集
+      depsMap.set(propKey, (deps = new Set()))
+    }
+    // 没有收集这个依赖
+    let shouldTrack = !deps.has(activeEffect)
+    if (shouldTrack) {
+      // 就把 activeEffect 放进去
+      deps.add(activeEffect)
+      // 双向记忆
+      activeEffect.deps.push(deps)
+    }
+  }
+}
+
+export function effect(fn) {
+  // 这个方法的作用是将用户传递进来的函数，变成一个响应式的effect
+  // 这个属性就会记住effect 当属性发生变化的时候，重新执行函数。
+  const _effect = new ReactiveEffect(fn)
+  // 初始化的时候这个函数会先执行一次
+  _effect.run()
+}
+```
+
+## 触发更新操作
+
+当数据改变的时候，会触视图的更新逻辑。本质上还是一个发布订阅的模式，先在effect里面订阅一个函数，当属性更新的时候，发布执行。
+```js
+// ....
+export function trigger(target, propKey, value) {
+  // 一层一层的查找
+  let depsMap = targetMap.get(target)
+  if (!depsMap) {
+    // 如果没有找到，说明没有依赖任何effect
+    return
+  }
+  const effects = depsMap.get(propKey)
+  // 获取到对应的 set 之后，遍历执行里面的run方法
+  effects && effects.forEach((effect) => { effect.run() })
+}
+// ...
+```
+
 
 
 
