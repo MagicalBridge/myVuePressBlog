@@ -840,20 +840,30 @@ function rootCheck() {
 
 还需要一个`path-exist`这个包判断路径是否存在
 
-首先还是需要在`core/cli`路径下执行下这两个库的安装操作
+首先还是需要在`core/cli`路径下执行下这两个库的安装操作。
 
-这里需要注意的是 `path-exists` 应该安装4.0版本，否则更加新的版本是`ESModule`。在现有的脚手架项目中并不是很好使用。
+这里需要注意的是 `path-exists` 应该安装4.0版本，否则更加新的版本是`ESM`, 在现有的脚手架项目中并不是很好使用。
+
+```js
+// 后续会存放一些东西在用户的主目录下。
+function checkUserHome() {
+  // console.log(userHome) // /Users/louis
+  if (!userHome || !pathExists(userHome)) {
+    throw new Error(colors.red("当前用户主目录不存在"))
+  }
+}
+```
 
 ### 处理一些参数问题
-对于脚手架来说，可能需要根据输入的参数 是否带有 --debug 来按照不同的标准打印日志。这就需要我们处理参数问题。
+对于脚手架来说，可能需要根据输入的参数是否带有`--debug`来按照不同的标准打印日志。这就需要我们处理参数问题。
 
-需要封装一个 checkInputArgs的 方法用于处理这种场景。
+需要封装一个`checkInputArgs`的方法用于处理这种场景
 
-解析参数，我们使用一个仓库 `minimist` 来帮助我们解析入参。
+为了解析参数。我们使用一个仓库 `minimist`(vue3脚手架的搭建中也有使用)来帮助我们解析入参。
 
 [minimist](https://www.npmjs.com/package/minimist)
 
-安装好了之后，在命令行输入命令 控制台打印
+安装好了之后，在命令行输入命令控制台打印：
 
 ```shell
 ➜  cli git:(master) ✗ cdp-wpm --debug --help
@@ -862,6 +872,14 @@ cdp-wpm info cli 0.0.11
 ```
 
 ```js
+function checkInputArgs() {
+  const minimist = require("minimist")
+  // 这种写法已经非常常用，只要参数部分，默认的前两个不需要
+  const args = minimist(process.argv.slice(2))
+  // 如果我们在命令后面添加了 --debug 这个命令 {debug:true} 就会写入到 args 这个参数中
+  checkArgs(args)
+}
+
 function checkArgs() {
   if (args.debug) {
     process.env.LOG_LEVEL = "verbose"
@@ -879,7 +897,7 @@ function checkArgs() {
 
 环境变量非常有用，一些用户的信息可以存在配置文件中。不用写在代码中。
 
-这里需要使用到一个 npm 库 dotenv 非常好用。
+这里需要使用到一个npm库`dotenv`非常好用。
 
 这个仓库的使用也是比较简单，拥有一个 config 方法，调用方式类似于这样：
 
@@ -887,19 +905,57 @@ function checkArgs() {
 require("dotenv").config()
 ```
 
-默认情况下, 是获取当前目录下的 `.env` 文件, 如果想要获取用户主目录下面.
+默认情况下, 是获取 下的 `.env` 文件, 如果想要获取用户主目录下面.
 
-最终想要实现的效果是： { home: '/Users/louis', cliHome: '/Users/louis/.cdp-wpm' }
+最终想要实现的效果是： `{ home: '/Users/louis', cliHome: '/Users/louis/.cdp-wpm' }`
 
 在mac中 使用 cd ~ 命令就能够快速进入用户主目录。
+```js
+// 检查环境变量
+function checkEnv() {
+  // 获取用户的主目录
+  const dotenvPath = path.resolve(userHome, ".env")
+  if (pathExists(dotenvPath)) {
+    // 使用这种方式能将配置文件中的变量放入 process.env中
+    // 执行完毕这个代码之后，process.env.CLI_HOME_PATH 就已经可以拿到了
+    // dotenv 这个库确实很好用
+    require("dotenv").config({
+      path: dotenvPath,
+    })
+  }
+  // 有时候用户本地是没有 缓存主目录的，我们可以做一些判断
+  // 如果用户本地没有缓存主目录，我们可以帮他生成一个
+  config = createDefaultConfig()
+  // 打印缓存主目录
+  // console.log(process.env.CLI_HOME_PATH) => /Users/louis/.cdp-wpm
+}
 
-这里面还学习到了一个 vim 操作的小技巧，
+// 针对没有设置缓存主目录
+function createDefaultConfig() {
+  const cliConfig = {
+    home: userHome,
+  }
+  if (process.env.CLI_HOME) {
+    cliConfig["cliHome"] = path.join(userHome, process.env.CLI_HOME)
+  } else {
+    cliConfig["cliHome"] = path.join(userHome, constant.DEFAULT_CLI_HOME)
+  }
+  // 将生成的path直接赋值给 环境变量
+  process.env.CLI_HOME_PATH = cliConfig.cliHome
+  return cliConfig
+}
+```
+
+
+这里面还学习到了一个 vim 操作的小技巧。
 - 如何删除一行: 使用dd
 - 如果撤销操作: 使用u
 - 如何快速复制一行: 使用yy
 - 如何将复制的一行黏贴出来: 使用p 
 
 ### 检查是否为最新版本
+
+当我们检查本地的脚手架已经不是最新版本的时候，要给出用户提示，是否升级新的版本。
 
 这个检查是否全局更新的功能逻辑梳理：
 - 获取最近的版本号和模块名
@@ -912,7 +968,7 @@ require("dotenv").config()
 lerna create @cdp-wpm/get-npm-info ./utils/get-npm-info
 ```
 
-这里发现lerna的一个bug, 就是它会默认安装到lerna.json配置文件的第一个目录下，比如说我的配置是
+这里发现lerna的一个bug, 就是它会默认安装到`lerna.json`配置文件的第一个目录下，比如说我的配置是
 
 ```json
 {
@@ -932,9 +988,34 @@ lerna create @cdp-wpm/get-npm-info ./utils/get-npm-info
 
 因为我们要发起一个请求，所以需要在`utils`中安装`axios`这个仓库。
 
-为了拼接url我们还可以安装一个npm包 `url-join` 节省我们的工作量 
+为了拼接url我们还可以安装一个npm包 `url-join` 节省我们的工作量。
 
 从npm官方中拉取版本号的信息，拉取信息之后主要比对当前的版本号和最新的版本号之间的差距。
+
+```js
+// 检查最新的版本号
+async function checkGlobalUpdate() {
+  // 1、获取当前的版本号和模块名称，这些信息都是可以从 package.json 文件中获取
+  const currentVersion = pkg.version
+  const npmName = pkg.name
+
+  // 2、获取npm的信息 调用npm api
+  const { getNpmSemverVersion } = require("@cdp-wpm/get-npm-info")
+
+  // 3、提取所有的版本号，比对哪些版本号是大于当前版本号
+  const lastVersion = await getNpmSemverVersion(currentVersion, npmName)
+
+  // 4、获取最新的版本号，提示用户更新到该版本
+  // 如果从线上获取的版本大于当前的版本 提示用户更新
+  if (lastVersion && semver.gt(lastVersion, currentVersion)) {
+    log.warn(
+      colors.yellow(
+        `请手动更新 ${npmName} 当前版本:${currentVersion}, 最新版本:${lastVersion}`
+      )
+    )
+  }
+}
+```
 
 ## 注册命令逻辑
 [注册命令](./注册命令.md)
