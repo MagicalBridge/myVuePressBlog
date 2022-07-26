@@ -614,6 +614,8 @@ if (importLocal(__filename)) {
 ```
 上面代码中的 `require(".")` 其实是一种简写，点是相对路径的表示，默认会加载index.js 
 
+[import-local](./import-local.md)
+
 - 3 在阅读lerna的源码的时候，会看到在依赖列表中看到了 `file:xxx` 这种形式。这种方法是非常值得借鉴的。
 
 这种方法可以应用到我们当前编写的脚手架中。
@@ -684,10 +686,9 @@ console.log(__filename);
 
 上面几个模块就是我们的拆包的策略，将功能模块拆分之后，维护起来会更加的清晰。
 
-首先在脚手架的 目录中创建这几个文件夹：
-commands、core、models、utils
+首先在脚手架的 目录中创建这几个文件夹：commands、core、models、utils
 
-并且lerna.json文件中需要做对应的修改。
+并且`lerna.json`文件中需要做对应的修改。
 
 ```json
 {
@@ -701,9 +702,9 @@ commands、core、models、utils
 }
 ```
 
-我们删除了原来的packages文件夹, 将里面的core和utils文件夹分别放入 core目录和utils目录。
+我们删除了原来的packages文件夹, 将里面的`core`和`utils`文件夹分别放入core目录和utils目录。
 
-因为core模块中安装了 utils模块，且路径换了，所以，修改core的package.json文件：
+因为core模块中安装了utils模块，且路径换了，所以，修改core的package.json文件：
 
 ```json
 ...
@@ -713,18 +714,22 @@ commands、core、models、utils
 ...
 ```
 
-删除原本两个包中安装的node_modules,重新执行 npm install 完成模块的安装。
+删除原本两个包中安装的node_modules,重新执行 `npm install` 完成模块的安装。
 
 修改 core/core 为 core/cli, 删除link之后，重新link。
 
 安装 import-local 模块，模仿 lerna 脚手架的入口文件配置。
 
 ### core 模块拆分
+
 核心模块 整体分为 3 个阶段
 - 准备阶段
 - 命令注册
 - 命令执行
 
+准备阶段的大概流程：
+
+![准备阶段](../images/cli/07.png)
 
 ### 开发检查版本号的功能
 
@@ -746,25 +751,25 @@ console.log(pkg.version)
 
 ### 封装 npmlog 方法
 
-我们需要一个专门的包来打印日志，同样的需要使用lerna进行封装，并且在utils目录下创建
+我们需要一个专门的包来打印日志，同样的需要使用lerna进行安装 ，并且在utils目录下创建
 
 ```shell
 lerna create @cdp-wpm/log
 ```
 
-使用上述命令创建的包会创建在 core 目录下，我们还需要修改 main 对应的入口文件。
+使用上述命令创建的包会创建在 core 目录下，这个应该是lerna的bug，我们还需要修改`main`对应的入口文件。
 
-因为我们需要基于npm-log封装，所以我们需要安装依赖：
+因为我们需要基于`npm-log`封装，所以我们需要安装依赖：
 
 ```shell
 lerna add npmlog utils/log
 ```
 
-安装成功后，会在log中看到依赖，但是其他部分并不会看到依赖。
+安装成功后，会在log中看到依赖，但是其他部分并不会看到依赖。这就是使用lerna开发的好处，可以指定目录安装依赖
 
 开发log的代码，打印 info 级别的日志。
 
-在core模块中引用的时候，我们使用的依然是file协议，所以不要忘记重新在core文件夹中执行npm install 安装依赖。
+在core模块中引用的时候，我们使用的依然是file协议，所以不要忘记重新在core文件夹中执行`npm install`安装log依赖。
 
 对于npmlog 这个方法包来说, 我们可以自定义方法，使用的和info级别的日志一样，需要借助一个 addLevel 方法。
 
@@ -788,20 +793,47 @@ log.addLevel("success", 2000, { fg: "green" })
 
 因为我们在代码中应该对于node版本做一个判断。
 
-这里需要用到1个关键的npm包 semver: 用于版本的判断。
+这里需要用到1个关键的npm包`semver`用于版本的判断。
 
-在node中，我们可以通过 process.version 来获取当前运行环境的 node 版本号
+在node中，我们可以通过 `process.version` 来获取当前运行环境的 node 版本号
 
-### 检查root权限
-在mac系统中，如果我们使用root权限去创建的一些目录或者文件，作为普通的权限的用户是没有办法进行修改的，这样的操作就会出现问题，因此，我们就需要对这样场景进行降级操作，使用普通用户的权限去操作。
+可以创建一个常量来限定一个最低的版本号。
 
-我们这里使用一个库 root-check
+semver.gt: 大于
+semver.gte: 大于等于
 
-我们在 core/cli 这个目录下进行安装
+```js
+// 检查node版本
+function checkNodeVersion() {
+  // 获取当前版本号 可以使用 process.version
+  let currentVersion = process.version
+  // 从常量中找到配置的最新的版本号
+  let loweastNodeVersin = constant.LOWEAST_NODE_VERSION
+  // 如果当前版本小于最小的版本警告报错
+  if (!semver.gte(currentVersion, loweastNodeVersin)) {
+    throw new Error(
+      colors.red(`cdp-wpm需要安装 v${loweastNodeVersin}以上版本的 Node.js`)
+    )
+  }
+}
+```
 
-这里需要注意一件事情, 新版本的root-check使用的是ESModule标准，不能使用动态加载。所以我安装了1.0的版本，解决了这个问题。
+### 检查root启动
+在mac系统中，如果我们使用root权限去创建的一些目录或者文件，作为普通的权限的用户是没有办法进行修改的，这样的操作就会出现问题，因此，我们就需要对这样场景进行**降级操作**，使用普通用户的权限去操作。
 
-process.geteuid() 这个方法 能够打印 我们目前的用户权限。
+使用`process.geteuid()` 这个方法 能够打印我们目前的用户权限。
+
+我们这里使用一个npm包`root-check`, 在`core/cli`这个目录下进行安装
+
+这里需要注意一件事情, 新版本的`root-check`使用的是`ESM`规范，不能使用require语法，所以我安装了1.0的版本，解决了这个问题。
+
+```js
+// root-check 这个包会检查root账户，如果检查是root账户，就会降级。
+function rootCheck() {
+  const rootCheck = require("root-check")
+  rootCheck()
+}
+```
 
 ### 检查用户主目录
 这里需要使用到一个包：`user-home` 用来判断是否是用户的主目录。
