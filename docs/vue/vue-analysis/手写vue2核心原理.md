@@ -63,3 +63,24 @@ export default {
 ```
 
 ## 二.Vue响应式原理
+
+Vue的实现是一个函数声明，为了将各个模块拆分方便, 使用的原型的写法。Vue函数接收一个 options 作为参数，options是一个对象，这个options就是用户传递进来的配置选项，这个配置选项中包含 data el watch computed methods。。。
+
+在使用vue-cli脚手架进行开发的时候，都是单组件文件 每个组件本质上都是Vue实例。
+
+导出vue构造函数
+
+```js
+import { initMixin } from './init';
+
+function Vue(options) {
+  // options 为用户传入的选项
+  this._init(options);
+}
+initMixin(Vue); // 给原型上新增_init方法
+
+export default Vue;
+```
+
+只要加载了index.js 这个文件下面的函数都会执行，并且是要首先执行的，那么所有在mixin上挂载的所有原型方法都会预先定义执行，init方法是在`new Vue`的时候执行的。
+
