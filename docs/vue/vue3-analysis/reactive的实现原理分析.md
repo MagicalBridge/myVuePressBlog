@@ -81,6 +81,8 @@ console.log(state1 === state2) // false
 
 上面代码中，我们将同一份对象使用 reactive 处理了两次，得到了两个不同的对象，但是因为原对象并没有变化，我们希望有一个缓存，被代理过得对象直接走缓存。
 
+使用WeakMap, key是我们传入进来的target，value存放的是proxy。
+
 ```js{3-4,13-16,32-33}
 import { isObject } from "@vue/shared"
 
@@ -120,8 +122,7 @@ export function reactive(target) {
 }
 ```
 
-写到这里，我们的代码依然不是很完善，我们再思考一个场景：
-
+写到这里，依然不是很完善，我们再思考一个场景：proxy 被重复传入代理如何处理
 
 ```js
 const obj = { name: 'louis', age: 25, address: { num: 180 } }
@@ -131,9 +132,9 @@ const state2 = reactive(state1)
 console.log(state1 === state2) // false 
 ```
 
-我们第一次给reactive传递一个对象obj,返回代理对象 state1，接着我们将 state1 传递给reactive，返回一个state2。
+我们第一次给reactive传递一个对象obj, 返回代理对象 state1，接着我们将 state1 传递给reactive，返回一个state2。
 
-设计的核心思想是，一个对象被代理过了，就不要再被代理一次。
+我们期望的结果是：一个对象被代理过了，就不要再被代理一次。
 
 为了解决这个问题，我们可以设置一个代理标识。
 
@@ -193,9 +194,11 @@ export function reactive(target) {
 
 ## 依赖收集的实现
 
-当我们执行get函数的时候，会取到每一个属性，我们期望当属性变化的时候，对应的effect函数能够重新执行。这就引出了一个问题，如何能让属性记住自己的effect呢，一个可能的场景是，一个属性可能被多个effect使用。
+当我们执行get函数的时候，会取到每一个属性，我们期望当属性变化的时候，对应的effect函数能够重新执行。这就引出了一个问题，如何能让属性记住自己的effect，一个可能的场景是，一个属性可能被多个effect使用。
 
 我们来实现一个函数，解决这个问题。
+
+我们在get方法的内部，调用一个依赖收集的方法，因为访问proxy的每一个key的时候都会走到这个函数。
 
 ```js{39-40}
 import { isObject } from "@vue/shared"
@@ -310,7 +313,7 @@ export function reactive(target) {
       let oldValue = target[propKey]
       if (oldValue !== value) {
         let result = Reflect.set(target, propKey, value, reactive)
-        // 这个方法在effect 中定义
+        // 触发更新在更新完数据后执行
         trigger(target, propKey, value)
         return result
       }

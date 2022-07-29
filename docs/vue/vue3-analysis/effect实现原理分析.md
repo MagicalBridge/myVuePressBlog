@@ -5,11 +5,14 @@ sidebar: auto
 # effect的实现原理
 
 ## 内部是一个响应式对象
-effect方法接收一个函数作为参数，effect中传入的函数首先会被执行一次，当函数中的属性发生变化的时候，函数会被再次执行。
+
+根据使用方法可以看出，effect方法接收一个函数作为参数，effect中传入的函数首先会被执行一次，当函数中的属性发生变化的时候，函数会被再次执行。和react中的useEffect特别类似。
 
 内部封装了一个类，每次都会通过`ReactiveEffect`这个类创建一个`_effect`对象。
 
-```js{17}
+这里用到了面向切面编程的技巧，将用户传入的函数执行放入了run方法内，这样，就可以在fn函数执行之前做一些事情。
+
+```js{8-10,17}
 class ReactiveEffect {
   // 这里有一个标识，用来告知是否响应式，默认都是true
   public active: boolean = true
@@ -35,10 +38,10 @@ export function effect(fn) {
 
 接下来我们要思考依赖收集的操作，就像我们上面描述的那样，我们希望使用的key能够记住响应式对象的实例。这样当属性变化的时候就重新执行函数，重新渲染视图，这就是依赖收集。
 
-具体的我们可以借助js单线程的特性，在全局设置一个变量，执行run方法时候，在调用用户传入的函数之前，先将响应式对象赋值给变量，在触发get取值操作的时候，就能获取到这个变量。
+具体的我们可以借助js单线程的特性，在全局设置一个变量，执行run方法时候，**在调用用户传入的函数之前**，先将响应式对象赋值给变量，在触发get取值操作的时候，就能获取到这个变量。
 
 ```js{1,13-19}
-export let avtiveEffect = undefined
+export let avtiveEffect = undefined // 全局变量
 
 class ReactiveEffect {
   public active: boolean = true
@@ -47,7 +50,7 @@ class ReactiveEffect {
     this.fn = fn
   }
   run() {
-    // 执行这个函数的时候，就会到proxy上去取值，就会触发get方法。
+    // 执行fn这个函数的时候，就会到proxy上去取值，就会触发get方法。
     // 取值的时候，要让当前的属性和对应的effect关联起来 这就是依赖收集
     // 当我执行run函数的时候，将当前的这个实例赋值给这个变量, 也就放在了全局上
     try {
@@ -128,6 +131,7 @@ export function effect(fn) {
   _effect.run()
 }
 ```
+[try finnally的用法](https://segmentfault.com/a/1190000015196493)
 
 还拿上面的例子说明，执行外层的effect时，avtiveEffect是个undefined，this.parent就是undefined
 
@@ -175,26 +179,26 @@ const targetMap = new WeakMap()
 //  } 
 // }
 export function track(target, propKey) {
-  // 如果在 effect外部使用某个属性，就不需要收集,这里做个判空处理
+  // 如果在effect外部使用某个属性，不会走run方法，activeEffect不会被赋值，就不会走依赖收集
   if (activeEffect) {
     // 这里做依赖收集, 首先在weakmap中查找搜索target对象是否存在
     let depsMap = targetMap.get(target)
     if (!depsMap) {
-      // 如果不存在，就创建这样一个数据结构
+      // 如果不存在，就创建这样一个数据结构 value 还是一个map
       targetMap.set(target, (depsMap = new Map()))
     }
 
     // 开始处理key相关
     let deps = depsMap.get(propKey)
     if (!deps) {
-      // 这里把deps 设计成一个set，因为在同一个effect中
+      // 这里把deps设计成一个set，因为在同一个effect中
       // 可能会多次使用同一个属性，无需重复收集
       depsMap.set(propKey, (deps = new Set()))
     }
     // 没有收集这个依赖
     let shouldTrack = !deps.has(activeEffect)
     if (shouldTrack) {
-      // 就把 activeEffect 放进去
+      // 就把当前activeEffect放进去
       deps.add(activeEffect)
     }
   }
@@ -216,6 +220,8 @@ export function effect(fn) {
 
 上面的代码中，我们已经实现让属性记住自己的effect，做了这样的映射关系，我们接下来要实现双向记录。
 
+双向记录是非常有必要的，因为当某一个effect不存在或者失效的时候，我们还应该通知收集它的属性把这个effect忘记。
+
 ```js{8,63-64}
 // 借助js单线程的特性，先设置一个全局的变量
 export let activeEffect = undefined
@@ -224,7 +230,7 @@ class ReactiveEffect {
   public active: boolean = true
   public fn
   public parent = null
-  public deps = []
+  public deps = [] // 实例上挂载一个deps数组
   constructor(fn) {
     this.fn = fn
   }
@@ -297,6 +303,7 @@ export function effect(fn) {
 ## 触发更新操作
 
 当数据改变的时候，会触视图的更新逻辑。本质上还是一个发布订阅的模式，先在effect里面订阅一个函数，当属性更新的时候，发布执行。
+
 ```js
 // ....
 export function trigger(target, propKey, value) {
@@ -307,11 +314,91 @@ export function trigger(target, propKey, value) {
     return
   }
   const effects = depsMap.get(propKey)
-  // 获取到对应的 set 之后，遍历执行里面的run方法
+  // 获取到对应的set之后，遍历执行里面的run方法
   effects && effects.forEach((effect) => { effect.run() })
 }
 // ...
 ```
+
+## cleanup操作。
+
+有如下代码：
+```js
+const { effect, reactive } = VueReactivity
+const state = reactive({ name: 'louis', age: 25, flag: true })
+
+effect(() => { // 副作用函数 (effect执行渲染了页面)
+  console.log('render')
+  document.body.innerHTML = state.flag ? state.name : state.age
+});
+setTimeout(() => {
+  state.flag = false;
+  setTimeout(() => {
+    console.log('修改name，原则上不更新')
+    state.name = 'zf'
+  }, 1000);
+}, 1000)
+```
+
+上面片段中涉及一个新的场景，我们希望根据 flag 属性的值决定在页面中展示name还是age。当flag属性更新之后，页面重新渲染，但是当name已经不再页面中显示的时候，它的值改变，不应该再重新渲染。这个时候就要用到清理的逻辑。
+
+其实本质的问题出在run方法里面，我们应该每次在执行用户传入的fn之前，先清理上一次的effect。
+
+```js
+class ReactiveEffect {
+  // ......
+  run() {
+    try {
+      this.parent = activeEffect
+      activeEffect = this
+      cleanEffect() // 先清理
+      this.fn()
+    } finally {
+      activeEffect = this.parent
+      this.parent = null
+    }
+  }
+  // ......
+}
+
+// ...
+export function cleanEffect(effect) {
+  // 每次执行之前将之前存放的set清理掉
+  let deps = effect.deps // deps中存放的是所有属性的set
+  for (let i = 0; i < deps.length; i++) {
+    deps[i].delete(effect)
+  }
+  effect.deps.length = 0
+}
+
+// ...
+```
+
+## 停止effect
+
+看这样一个使用场景：
+```js
+const { effect, reactive } = VueReactivity
+    const state = reactive({ name: 'louis', age: 25, flag: true })
+
+    const runner = effect(() => {
+      document.body.innerHTML = state.flag ? state.name : state.age
+    });
+
+    runner.effect.stop()
+
+    setTimeout(() => {
+      state.flag = false;
+    }, 1000)
+```
+
+
+
+
+
+
+
+
 
 
 
