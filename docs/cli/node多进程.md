@@ -43,12 +43,61 @@ cp.exec("ls -al | grep node_modules" ,function(err, stdout, stderr){
 
 对于spawn来说，适合执行耗时任务，比如 npm install 需要不断的打印日志， exec这个命令 开销结果比较小的任务。
 
+## 5.4 fork的使用：
+fork方法类似于require的用法，加载一个指定的文件路径，然后执行。
+
+不太一样的地方是，fork会开启一个子的进程去执行之歌文件。很容易证明这件事情，在执行文件中打印pid，然后在被加载的文件中打印pid。这两个pid是不相同的。
+
+fork方法返回一个child子进程对象，这个对象有一个send方法可以发送信息。这样，在子进程中通过process.on去监听这个事件。
+
+主进程代码：
+
+```js
+const child = cp.fork(path.resolve(__dirname, 'child.js'))
+child.sned("hello child process!", ()=>{
+  child.disconnect() // 断开 如果不断开就是等待状态。
+})
+
+console.log("main pid:", process.pid)
+```
+
+子进程的代码：
+
+```js
+console.log("child process")
+console.log("child pid:", process.pid)
+
+process.on('message', (msg)=>{
+  console.log(msg)
+})
+```
+
+需要注意的是，send 方法是个异步的方法。这点非常重要。
+
+如何让子进程给父进程发送消息呢？
+
+```js
+// 子进程
+process.send("我是子进程")
+
+// 主进程
+child.on("message",(msg)=>{ console.log(msg) })
+```
+
+## 5.5 几个常用的同步方法：
+
+```js
+const ret = child.execSync("ls -al | grep node_modules");
+console.log(ret.toString()) // 这样就能打印出来
+```
+
+
 
 ## 6.1 通用脚手架命令Command类的封装
 
 我们需要在models文件夹下面创建一个 command 文件夹和package平行的，同样的，这个也是一个类，用于封装执行命令。那么我们在init方法中，就调用这个类的实例化，而不是单独的书写逻辑。
 
-我们在初始化的方法中参照lerna实现一个runner方法，这个是一个promsie chain 具体的思想就是将 promise.resolve 保存为一个变量，不断的执行then方法，因为 then 方法返回的还是一个 promise ，所以可以无限的then下去，这样。初始化的检查node版本这种逻辑，就可以下沉到这里去执行。
+我们在初始化的方法中参照lerna实现一个runner方法，这个是一个 `promsie chain` 具体的思想就是将 `promise.resolve` 保存为一个变量，不断的执行then方法，因为 then 方法返回的还是一个 promise ，所以可以无限的then下去，这样。初始化的检查node版本这种逻辑，就可以下沉到这里去执行。
 
 为了保证程序的适度冗余，我其实并没有直接将core里面的代码删除，而是将校验node的功能也下沉到这个 command 实例化中，并且觉得检查两遍版本号并没有什么不妥。
 
