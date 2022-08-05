@@ -80,10 +80,10 @@ process 代表node中的进程：
 - argv: 在执行代码时候传入的参数
 
 ## commonjs规范的内容
-- 每一个文件就是一个模块，
-- 如果想使用别人就使用require语法
-- 如果想要给别人用，就使用module.exports导出
-- 简单来说，我使用require引入一个文件，就是将内容读取过来，然后包装一个函数，并且这个函数是立即执行的。并且会把这个内容赋值给module.exports，最后将这个  module.exports return出去。
+- 每一个文件就是一个模块;
+- 如果想使用别人的包，就使用require语法引入;
+- 如果想要给别人用，就使用`module.exports`导出;
+- 简单来说，我使用require引入一个文件，就是将内容读取过来，然后包装一个函数，并且这个函数是立即执行的。并且会把这个内容赋值给module.exports，最后将这个 module.exports return出去。
 
 ## 模块化规范
 [模块化规范](../module/README.md)
