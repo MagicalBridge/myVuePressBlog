@@ -140,6 +140,54 @@ class Command {
 }
 ```
 
+## 6.4 使用node多进程的spawn执行代码：
+
+```js
+if (rootFile) {
+  try {
+    // const code = "console.log(1)"
+    const code = `require('${rootFile}').call(null, ${JSON.stringify(Array.from(currentArgs))})`
+    // 使用 spawn 利于node多进程的方式来执行命令 第一个参数-e 是执行代码的意思
+    const child = spawn("node", ["-e", code], {
+      cwd: process.cwd(),
+      stdio: "inherit", // 和父进程做通信
+    })
+
+    child.on("error", (e) => {
+      log.error(error.message)
+      process.exit(1)
+    })
+
+    child.on("exit", (e) => {
+      log.verbose("命令执行成功" + e)
+      process.exit(e)
+    })
+  } catch (error) {
+    log.error(error.message)
+  }
+} else {
+  return null
+}
+```
+
+上述代码中 使用spawn将代码所要执行的代码变成了一个字符串执行，这种使用方式需要注意。
+
+
+## 6.5 做好windows系统的兼容处理
+因为不同的系统中，终端的命令的执行存在些许差异，这里做下兼容处理：
+
+```js
+// 对于windows的兼容处理
+function spawn(command, args, options) {
+  const win32 = process.platform === "win32";
+  const cmd = win32 ? "cmd": command
+  const cmdArgs = win32? ['/c'].concat(command,args): args;
+  return cp.spawn(cmd, cmdArgs,options || {})
+}
+```
+
+
+
 
 
 
