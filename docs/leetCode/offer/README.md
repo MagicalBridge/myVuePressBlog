@@ -31,4 +31,5 @@ sidebar: auto
 
 ## DFS
 ### [剑指Offer12.矩阵中的路径](./剑指Offer12.矩阵中的路径.md)
+### [剑指Offer27.二叉树的镜像](./剑指Offer27.二叉树的镜像.md)
 

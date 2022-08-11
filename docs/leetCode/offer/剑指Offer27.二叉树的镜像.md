@@ -1,0 +1,42 @@
+---
+sidebar: auto
+---
+
+# 剑指offer27.二叉树的镜像
+
+[题目描述](https://leetcode.cn/leetbook/read/illustrate-lcof/xsoekm/)
+
+
+## 解题方案：
+
+- 标签: dfs
+- 递归结束条件：
+  - 当节点 root 为 null 时，说明已经到叶子节点了，递归结束
+- 递归过程：
+  - 初始化当前节点，并且赋值
+  - 递归原来树的右子树 mirrorTree(root.right)，并将该结果挂到当前节点的左子树上
+  - 递归原来树的左子树 mirrorTree(root.left)，并将该结果挂到当前节点的右子树上
+- 时间复杂度 O(n)，空间复杂度 O(n)
+
+```js
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val) {
+ *     this.val = val;
+ *     this.left = this.right = null;
+ * }
+ */
+/**
+ * @param {TreeNode} root
+ * @return {TreeNode}
+ */
+var mirrorTree = function (root) {
+  let res = null;
+  if (root != null) {
+    res = new TreeNode(root.val);
+    res.left = mirrorTree(root.right);
+    res.right = mirrorTree(root.left);
+  }
+  return res;
+};
+```
