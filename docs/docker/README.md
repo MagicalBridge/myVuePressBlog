@@ -465,6 +465,21 @@ $docker run --name mynginx -d -p 80:80 -v /usr/local/docker/my-docker-nginx/vuep
 - -v /usr/local/docker/my-docker-nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf 宿主机的文件替换容器文件
 - nginx 启动的是nginx
 
+## 阿里云使用mongoDB
+我已经在将docker3.4.1版本的镜像下载到阿里云上，已经镜像可以构建多个容器。
+
+### 更换端口号：
+
+之前因为使用默认的端口号，并且没有设置密码，导致被黑客攻击。启动的时候需要替换一个不太常用的端口号。
+```sh
+$docker run --name myMongo -d -p 27898:27017 mongo:3.4.1
+```
+
+### 配置阿里云安全组
+
+这样启动之后，阿里云的安全组需要重新配置，才能生效。
+
+
 ## DockerFile 
 ### [dockerFile](./dockerfiles.md)
 
