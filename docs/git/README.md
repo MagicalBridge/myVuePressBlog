@@ -19,19 +19,19 @@ sidebar: auto
 ### centos安装git
 安装命令：
 
-```shell
+```sh
 yum install git
 ```
 
 验证安装的git是否是可以使用的
-```shell
+```sh
 git --version
 git version 1.8.3.1
 # 显示出来git的版本号说明安装成功
 ```
 
 可以配置一些git的基本信息
-```shell
+```sh
 # 配置用户名和邮箱
 git config --global user.name "myname"
 git config --global user.email xxxxxxxx@qq.com
