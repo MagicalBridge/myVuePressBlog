@@ -31,12 +31,42 @@ sidebar: auto
  * @return {TreeNode}
  */
 var mirrorTree = function (root) {
-  let res = null;
-  if (root != null) {
-    res = new TreeNode(root.val);
-    res.left = mirrorTree(root.right);
-    res.right = mirrorTree(root.left);
+  if (root == null) {
+    return null;
   }
-  return res;
+  let leftRoot = mirrorTree(root.right);
+  let rightRoot = mirrorTree(root.left);
+  root.left = leftRoot;
+  root.right = rightRoot;
+  return root;
+};
+```
+
+
+```ts
+/**
+ * Definition for a binary tree node.
+ * class TreeNode {
+ *     val: number
+ *     left: TreeNode | null
+ *     right: TreeNode | null
+ *     constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {
+ *         this.val = (val===undefined ? 0 : val)
+ *         this.left = (left===undefined ? null : left)
+ *         this.right = (right===undefined ? null : right)
+ *     }
+ * }
+ */
+
+function mirrorTree(root: TreeNode | null): TreeNode | null {
+  if (root === null) {
+    return null
+  }
+
+  let leftRoot: TreeNode = mirrorTree(root.right)
+  let rightRoot: TreeNode = mirrorTree(root.left)
+  root.left = leftRoot
+  root.right = rightRoot
+  return root  
 };
 ```
