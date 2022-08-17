@@ -146,12 +146,12 @@ webpack 是基于`Node.js`开发的，plugin也不例外，所以 plugin 的调�
 this.hooks = {
   shouldEmit: new SyncBailHook(["compilation"]), // 这里的声明的事件钩子函数接收的参数是 compilation，
   done: new AsyncSeriesHook(["stats"]), // 这里接收的参数是 stats，以此类推
-	additionalPass: new AsyncSeriesHook([]),
-	beforeRun: new AsyncSeriesHook(["compilation"]),
+  additionalPass: new AsyncSeriesHook([]),
+  beforeRun: new AsyncSeriesHook(["compilation"]),
   run: new AsyncSeriesHook(["compilation"]),
   emit: new AsyncSeriesHook(["compilation"]),
-	afterEmit: new AsyncSeriesHook(["compilation"]),
-	thisCompilation: new SyncHook(["compilation", "params"]),
+  afterEmit: new AsyncSeriesHook(["compilation"]),
+  thisCompilation: new SyncHook(["compilation", "params"]),
   // ...
 };
 ```
@@ -218,6 +218,12 @@ compiler.hooks.done.tap('PluginName', (stats, callback) => {
 通过上面的名称可以看出，有一些类型是可以结合到一起的，如 AsyncParallelBailHook，这样它就具备了更加多样化的特性。
 
 了解了 webpack 中使用的各个事件钩子的类型，才能在开发 plugin 更好地去把握注册事件的输入和输出，同步和异步，来更好地完成我们想要的构建需求。
+
+
+## 常见的钩子
+environment: SyncHook
+
+在编译器准备环境时调用，时机就在配置文件中初始化插件之后。
 
 
 ## Compiler 和 Compilation

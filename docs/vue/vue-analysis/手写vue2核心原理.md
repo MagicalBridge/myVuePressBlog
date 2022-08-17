@@ -125,7 +125,7 @@ export function initState(vm) {
 function initData(vm) {
   let data = vm.$options.data
   // vue2中会将data中的所有数据 进行数据劫持 Object.defineProperty 只能拦截已经存在的属性
-  data = isFunction(data) ? data.call(vm) : data
+  data = vm._data = isFunction(data) ? data.call(vm) : data
   // 响应式处理
   observe(data)
 }
@@ -135,7 +135,95 @@ function initData(vm) {
 
 上面有一个细节需要注意，我们传递的data数据有可能是函数，也有可能是个对象，所以这里需要先做个判断。
 
+这里把 `vm._data ` 然后再把数据赋值给data，这样做的原因是，我们实际上是把 data传给了 observe 函数，这个时候已经和 vm 没有关系了。
+
+为了能在vm上访问到数据，加一个地址引用。
+
 ## observe 函数的实现
+
+```js
+import { isObject } from "../utils"
+
+export function observe(data) {
+  // 如果是对象才观测 
+  if (!isObject(data)) {
+    return
+  }
+  // 默认最外层的data必须是一个对象
+  return new Observer(data)
+}
+
+// 检测数据变化
+class Observer {
+  constructor(data) {
+    this.walk(data) // 对象劫持的逻辑
+  }
+  walk(data) {
+    // 使用Object.keys不会枚举原型链上的属性
+    Object.keys(data).forEach((key) => {
+      // 响应式方法
+      defineReactive(data, key, data[key])
+    })
+  }
+}
+```
+
+上面代码中 observe 是一个函数，接收用户传递的data数据，首先判断传递的data 是否为对象类型，vue文档中规定了，data也必须为对象类型。
+
+这个函数返回一个Observer实例，Observer是一个对象，初始化执行walk方法，这个walk方法就是对对象的属性进行遍历。然后开始响应式处理。
+
+defineReactive 这个方法接收三个参数，当前的对象、当前的属性、属性的值。
+
+这里面就牵扯到一个性能问题，如果data中的属性很多，vue2中就会对每一个对象使用defineProperty进行劫持。
+
+```js
+function defineReactive(data, key, value) {
+  Object.defineProperty(data, key, {
+    get() {
+      return value
+    },
+    set(newVal) {
+      // 新的值和老的值一样，直接return。
+      if(newVal === value) { 
+        return 
+      }
+      value = newVal
+    },
+  })
+}
+```
+
+上面的代码只能解决对象的一层劫持，如果对象有多层嵌套，就不满足需求。还有一种场景是，我们给一个属性重新赋值成一个新的对象，也不会变成响应式。为了解决上述问题，我们需要进行一个递归的处理。
+
+```js{3,14}
+function defineReactive(data, key, value) {
+  // 本身用户默认值是对象套对象 需要递归处理 （性能差）
+  observe(value) 
+  Object.defineProperty(data, key, {
+    get() {
+      return value
+    },
+    set(newVal) {
+      // 新的值和老的值一样，直接return。
+      if(newVal === value) { 
+        return 
+      }
+      // 如果用户赋值一个新对象，需要将这个对象进行劫持
+      observe(newVal) 
+      value = newVal
+    },
+  })
+}
+```
+
+
+
+
+
+
+
+
+
 
 
 
