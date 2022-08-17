@@ -139,6 +139,54 @@ function initData(vm) {
 
 为了能在vm上访问到数据，加一个地址引用。
 
+## 解决属性代理的问题。
+到目前为止，我们在取属性的时候，都是使用`vm._data.xxx`这种形式。但是我们在实际使用中，其实更多的是直接采用 `vm.xxx` 这种方式直接取属性。
+
+为了解决这个问题，我们可以加上一层代理。
+
+```js
+function proxy(vm, source, key) {
+  Object.defineProperty(vm, key, {
+    get() {
+      return vm[source][key]
+    },
+    set(newValue) {
+      vm[source][key] = newValue
+    },
+  })
+}
+```
+
+这样在initData中可以添加这样的函数
+
+```js{17-20}
+import { observe } from "./observer/index" // node_resolve_plugin
+import { isFunction } from "./utils"
+
+export function initState(vm) {
+  // 状态的初始化 先 props methods data computed watch
+  const opts = vm.$options
+  if (opts.data) {
+    initData(vm)
+  }
+}
+
+function initData(vm) {
+  let data = vm.$options.data
+  // vue2中会将data中的所有数据 进行数据劫持 Object.defineProperty 只能拦截已经存在的属性
+  data = vm._data = isFunction(data) ? data.call(vm) : data
+  
+  // 用户访问vm.xxx => vm._data.xxx
+  for (let key in data) {
+    proxy(vm, "_data", key)
+  }
+  
+  // 响应式处理
+  observe(data)
+}
+```
+
+
 ## observe 函数的实现
 
 ```js
@@ -215,6 +263,7 @@ function defineReactive(data, key, value) {
   })
 }
 ```
+
 
 
 
