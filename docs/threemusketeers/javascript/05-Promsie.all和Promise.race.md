@@ -3,8 +3,14 @@ sidebar: auto
 ---
 
 # Promise.all和Promise.race
+[参考文章](https://juejin.cn/post/7069805387490263047#heading-1)
 
 ## Promise.all方法
+- Promise.all 的返回值是一个新的Promise实例。
+- Promise.all 接收一个可遍历的数据容器（这里就认为是数组），容器中的每个元素都是Promise实例。
+- 数组中每个Promise 实例都成功时（由pendding状态转化为fulfilled状态），Promise.all 才成功。这些 Promise 实例所有的 resolve 结果会按照原来的顺序集合在一个数组中作为 Promise.all 的 resolve 的结果。
+- 数组中只要有一个 Promise 实例失败（由pendding状态转化为rejected状态），Promise.all 就失败。Promise.all 的 .catch() 会捕获到这个reject。
+
 简而言之：Promise.all().then()适用于处理多个异步任务，且所有的异步任务都得到结果时的情况。
 
 比如：用户点击按钮，会弹出一个弹出对话框，对话框中有**两部分数据**呈现，这两部分数据分别是不同的后端接口获取的数据。

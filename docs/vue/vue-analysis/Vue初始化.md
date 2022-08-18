@@ -264,6 +264,19 @@ function defineReactive(data, key, value) {
 }
 ```
 
+## 数组的递归监控
+
+vue中并没有和对象一样直接使用defineProperty劫持数组中的每一个元素，原因是这种做法非常消耗性能，并且我们平时使用数组很少通过索引操作数组。
+
+数组中有七个方法，这七个方法会改变原数组。
+
+push、shift、pop、unshift、reverse、sort、splice。
+
+在响应式方法中做一个分流逻辑，针对数组做单独的处理。
+
+
+
+
 
 
 

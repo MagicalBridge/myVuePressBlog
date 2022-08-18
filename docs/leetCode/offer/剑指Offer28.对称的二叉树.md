@@ -44,3 +44,35 @@ const isMirror = (t1, t2) => {
   );
 };
 ```
+
+增加ts的解法
+```ts
+/**
+ * Definition for a binary tree node.
+ * class TreeNode {
+ *     val: number
+ *     left: TreeNode | null
+ *     right: TreeNode | null
+ *     constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {
+ *         this.val = (val===undefined ? 0 : val)
+ *         this.left = (left===undefined ? null : left)
+ *         this.right = (right===undefined ? null : right)
+ *     }
+ * }
+ */
+
+function isSymmetric(root: TreeNode | null): boolean {
+  return isMirror(root, root)
+};
+
+const isMirror = (t1: TreeNode, t2: TreeNode): boolean => {
+  if (t1 === null && t2 === null) {
+    return true
+  }
+  if (t1 === null || t2 === null) {
+    return false
+  }
+
+  return (t1.val === t2.val && isMirror(t1.right, t2.left) && isMirror(t1.left, t2.right))
+}
+```
