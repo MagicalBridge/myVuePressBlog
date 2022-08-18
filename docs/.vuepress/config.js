@@ -13,10 +13,10 @@ module.exports = {
       {
         text: "算法",
         items: [
-          {
-            text: "常用算法",
-            link: "/algorithms/",
-          },
+          // {
+          //   text: "常用算法",
+          //   link: "/algorithms/",
+          // },
           {
             text: "leetCode算题解",
             link: "/leetCode/leetCode/",
@@ -35,14 +35,14 @@ module.exports = {
           }
         ],
       },
-      {
-        text: "数据结构",
-        link: "/dataStructure/",
-      },
-      {
-        text: "计算机网络",
-        link: "/network/",
-      },
+      // {
+      //   text: "数据结构",
+      //   link: "/dataStructure/",
+      // },
+      // {
+      //   text: "计算机网络",
+      //   link: "/network/",
+      // },
       {
         text: "Vue",
         items: [
