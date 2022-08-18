@@ -273,6 +273,53 @@ vue中并没有和对象一样直接使用defineProperty劫持数组中的每一
 push、shift、pop、unshift、reverse、sort、splice。
 
 在响应式方法中做一个分流逻辑，针对数组做单独的处理。
+```js{5-12}
+import { arrayMethods } from "./array"
+// ...
+class Observer {
+  constructor(data) {
+    if (Array.isArray(data)) {
+      // 数组劫持的逻辑
+      // 对数组原来的方法进行改写，切片编程、高阶函数
+      data.__proto__ = arrayMethods
+      // 如果数组中的数据是对象类型，需要监控对象的变化
+    } else {
+      this.walk(data) //对象劫持的逻辑
+    }
+  }
+  walk(data) {
+    // 对象
+    Object.keys(data).forEach((key) => {
+      defineReactive(data, key, data[key])
+    })
+  }
+}
+...
+```
+
+在对数组的处理中又用到了原型链的知识，`data.__proto__ = arrayMethods` 这个非常关键，将数组的原型链做了改写，指向了自己写的方法。
+
+所达到的效果就是，当数组调用自身的api时候，会首先沿着原型链向上查找，这样我们就能拦截这些方法的调用。
+
+来看下 arrayMethods 方法的实现。
+
+```js
+let oldArrayPrototype = Array.prototype
+export let arrayMethods = Object.create(oldArrayPrototype)
+// arrayMethods.__proto__ = Array.prototype 继承
+let methods = ["push", "shift", "unshift", "pop", "reverse", "sort", "splice"]
+methods.forEach((method) => {
+  // 用户调用的如果是以上七个方法 会用我自己重写的，否则用原来的数组方法
+  arrayMethods[method] = function (...args) {
+    // 调用原有的方法
+    oldArrayPrototype[method].call(this, ...args) // arr.push(1,2,3);
+  }
+})
+```
+
+
+
+
 
 
 
