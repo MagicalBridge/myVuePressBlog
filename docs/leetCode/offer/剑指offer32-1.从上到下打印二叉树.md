@@ -17,3 +17,36 @@ sidebar: auto
   - 2、初始化队列，并将初始的 root 节点加入队列之中
   - 3、当队列不为空时不断广度遍历二叉树，遍历时依次从队列中取出节点，取出后如果该节点存在左节点则将左节点放入队列中，如果该节点存在右节点则将右节点放入队列中
   - 4、在遍历过程中存储结果，最后将结果按照要求的格式返回
+
+```js
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val) {
+ *     this.val = val;
+ *     this.left = this.right = null;
+ * }
+ */
+/**
+ * @param {TreeNode} root
+ * @return {number[]}
+ */
+var levelOrder = function(root) {
+  if(root == null) {
+    return [];
+  }
+  let queue = [];
+  queue.push(root);
+  let ans = [];
+  while(queue.length != 0) {
+    let node = queue.shift();
+    ans.push(node.val);
+    if(node.left != null) {
+      queue.push(node.left);
+    }
+    if(node.right != null) {
+      queue.push(node.right);
+    }
+  }
+  return ans;
+}
+```
