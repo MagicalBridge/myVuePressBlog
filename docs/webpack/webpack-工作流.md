@@ -79,7 +79,7 @@ function webpack(options) {
 module.exports = webpack
 ```
 
-我们再看下 Compiler 的逻辑。通过上述代码，可以判断出  Compiler 是一个对象。
+我们再看下 Compiler 的逻辑。通过上述代码，可以判断出 Compiler 是一个对象。
 
 ```js
 const { SyncHook } = require("tapable")
