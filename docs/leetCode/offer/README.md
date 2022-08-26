@@ -42,5 +42,6 @@ sidebar: auto
 
 ## 动态规划
 ### [剑指Offer10-I.斐波那契数列](./剑指Offer10-I.斐波那契数列.md)
+### [剑指Offer10-II.青蛙跳台阶问题](./剑指Offer10-II.青蛙跳台阶问题.md)
 
 
