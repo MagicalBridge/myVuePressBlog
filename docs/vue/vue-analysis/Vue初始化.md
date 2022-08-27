@@ -512,7 +512,7 @@ function parseHTML(html){
   function advance(n){
     html = html.substring(n);
   }
-  
+
   function parseStartTag(){
     const start = html.match(startTagOpen);
     if(start){
@@ -541,11 +541,9 @@ export function compileToFunctions(template){
 
 ## 生成ast雨语法树
 
-上面实现了对于标签的识别，事实上我们识别完标签之后, 还需要构造标签之间的关系，谁是谁的子元素，谁是谁的父元素。
+上面实现了对于标签的识别，事实上我们识别完标签之后, **还需要构造标签之间的关系**，谁是谁的子元素，谁是谁的父元素。
 
-这里用到了栈这种数据结构的特定。
-
-语法树就是用对象描述js语法
+这里用到了栈这种数据结构的特性。语法树就是用对象描述js语法
 
 ```js
 {
@@ -601,47 +599,221 @@ function chars(text) {
   }
 }
 ```
+## codegen根据ast生成对应字符串拼接代码
+
+以下是代码生成的核心逻辑：
+
+```js
+const defaultTagRE = /\{\{((?:.|\r?\n)+?)\}\}/g // {{aaaaa}}
+
+// html字符串 =》 字符串  _c('div',{id:'app',a:1},'hello')
+function genProps(attrs) {
+  // [{name:'xxx',value:'xxx'},{name:'xxx',value:'xxx'}]
+  let str = ""
+  for (let i = 0; i < attrs.length; i++) {
+    let attr = attrs[i]
+    if (attr.name === "style") {
+      // color:red;background:blue
+      let styleObj = {}
+      attr.value.replace(/([^;:]+)\:([^;:]+)/g, function () {
+        styleObj[arguments[1]] = arguments[2]
+      })
+      attr.value = styleObj
+    }
+    str += `${attr.name}:${JSON.stringify(attr.value)},`
+  }
+  return `{${str.slice(0, -1)}}`
+}
+
+function gen(el) {
+  if (el.type == 1) {
+    // element = 1 text = 3
+    return generate(el)
+  } else {
+    let text = el.text
+    if (!defaultTagRE.test(text)) {
+      return `_v('${text}')`
+    } else {
+      // 'hello' + arr + 'world'    hello {{arr}} {{aa}} world
+      let tokens = []
+      let match
+      let lastIndex = (defaultTagRE.lastIndex = 0) // CSS-LOADER 原理一样
+      while ((match = defaultTagRE.exec(text))) {
+        // 看有没有匹配到
+        let index = match.index // 开始索引
+        if (index > lastIndex) {
+          tokens.push(JSON.stringify(text.slice(lastIndex, index)))
+        }
+        tokens.push(`_s(${match[1].trim()})`) // JSON.stringify()
+        lastIndex = index + match[0].length
+      }
+      if (lastIndex < text.length) {
+        tokens.push(JSON.stringify(text.slice(lastIndex)))
+      }
+      return `_v(${tokens.join("+")})`
+    }
+  }
+}
+
+function genChildren(el) {
+  let children = el.children // 获取儿子
+  if (children) {
+    return children.map((c) => gen(c)).join(",")
+  }
+  return false
+}
+
+export function generate(el) {
+  //  _c('div',{id:'app',a:1},_c('span',{},'world'),_v())
+  // 遍历树 将树拼接成字符串
+  let children = genChildren(el)
+  let code = `_c('${el.tag}',${
+    el.attrs.length ? genProps(el.attrs) : "undefined"
+  }${children ? `,${children}` : ""})`
+
+  return code
+}
+```
+
+假设我们有下面的template结构：
+```html
+<div style="color:red">hello {{name}} <span></span></div>
+```
+
+经过我们通过正则匹配生成的ast语法树之后，我们需要拼接成如下字符串的形式:
+```js
+_c('div',{style:{color:'red'}},_v('hello'+_s(name)),_c('span',undefined,''))
+```
+也就是 generate 函数最终返回的 code。
 
 
+拿到 code 之后，我们使用`new Function` 和 with，生成最终的renderFn。
+
+```js
+export function compileToFunctions(template) {
+  // 生成ast语法树
+  let root = parseHTML(template);
+  // 根据ast语法树拼接成字符串
+  let code = generate(root);
+  // 基于new Function 和 with 生成render函数
+  let render = `with(this){return ${code}}`;
+  let renderFn = new Function(render);
+  // 最终 compileToFunctions 就是返回一个render函数
+  return renderFn
+}
+```
+
+## 执行挂载操作
+
+生成render函数之后，我们在`$mount`方法上要进行挂载操作:
+
+```js{18}
+// ....
+Vue.prototype.$mount = function (el) {
+  const vm = this
+  const options = vm.$options
+  el = document.querySelector(el)
+  vm.$el = el
+  // 把模板转化成 对应的渲染函数 => 虚拟dom概念 vnode => diff算法 更新虚拟dom => 产生真实节点，更新
+  if (!options.render) {
+    // 没有render用template，目前没render
+    let template = options.template
+    if (!template && el) {
+      // 用户也没有传递template 就取el的内容作为模板
+      template = el.outerHTML
+      let render = compileToFunction(template)
+      options.render = render
+    }
+  }
+  mountComponent(vm, el)
+}
+...
+```
+
+我们来看下 mountComponent 的实现
+
+```js
+// 这个方法会在index.js 中会被调用，原型上拥有 _update 方法
+// 这个方法接收一个vnode作为参数
+export function lifecycleMixin(Vue) {
+  Vue.prototype._update = function (vnode) {
+    // 这里才是真正生成真实dom的地方
+  }
+}
+
+export function mountComponent(vm, el) {
+  // 更新函数 数据变化后 会再次调用此函数
+  let updateComponent = () => {
+    // 调用render函数，生成虚拟dom
+    vm._update(vm._render()) // 后续更新可以调用updateComponent方法
+    // 用虚拟dom 生成真实dom
+  }
+  // 初始化会首先执行一次
+  updateComponent()
+}
+```
+
+上面代码中的`vm._render`方法，其实内部调用就是我们在上面生成的render方法。之所以在这里可以使用`vm._render`是因为在index.js中会调用 `renderMixin(Vue)`
+
+核心就是实现 `_update` 还有 `_render`。
 
 
+我们来看下 `_render` 的实现: 
 
+```js
+import { createElement, createTextElement } from "./vdom/index"
 
+export function renderMixin(Vue) {
+  Vue.prototype._c = function () {
+    // createElement
+    return createElement(this, ...arguments)
+  }
+  Vue.prototype._v = function (text) {
+    // createTextElement
+    return createTextElement(this, text)
+  }
+  Vue.prototype._s = function (val) {
+    // stringify
+    if (typeof val == "object") return JSON.stringify(val)
+    return val
+  }
+  Vue.prototype._render = function () {
+    const vm = this
+    // 就是我们解析出来的render方法，同时也有可能是用户写的
+    let render = vm.$options.render 
+    let vnode = render.call(vm)
+    return vnode
+  }
+}
+```
 
+`_update` 方法的核心是一个patch方法，用于新老vnode的对比，然后生成新的dom，最后插入到节点上。
 
+```js
+export function patch(oldVnode, vnode) {
+  if (oldVnode.nodeType == 1) {
+    // 用vnode  来生成真实dom 替换原本的dom元素
+    const parentElm = oldVnode.parentNode // 找到他的父亲
+    let elm = createElm(vnode) //根据虚拟节点 创建元素
+    parentElm.insertBefore(elm, oldVnode.nextSibling)
 
+    parentElm.removeChild(oldVnode)
+  }
+}
 
+function createElm(vnode) {
+  let { tag, data, children, text, vm } = vnode
+  if (typeof tag === "string") {
+    // 元素
+    vnode.el = document.createElement(tag) // 虚拟节点会有一个el属性 对应真实节点
+    children.forEach((child) => {
+      vnode.el.appendChild(createElm(child))
+    })
+  } else {
+    vnode.el = document.createTextNode(text)
+  }
+  return vnode.el
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+```
 
