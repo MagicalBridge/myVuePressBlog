@@ -282,7 +282,6 @@ class Observer {
       // 数组劫持的逻辑
       // 对数组原来的方法进行改写，切片编程、高阶函数
       data.__proto__ = arrayMethods
-      // 如果数组中的数据是对象类型，需要监控对象的变化
     } else {
       this.walk(data) //对象劫持的逻辑
     }
@@ -316,6 +315,167 @@ methods.forEach((method) => {
   }
 })
 ```
+
+上面涉及的场景中，数组中存放的都是普通值，在实际的应用场景中，数组中存放的可能是对象类型的结构，当用户改变对象中的数据的时候，理所应当应该进行数据的响应式。因此需要对数组内部的数据进行响应式的监控。
+
+```js{9-10,15-19}
+import { arrayMethods } from "./array"
+// ...
+class Observer {
+  constructor(data) {
+    if (Array.isArray(data)) {
+      // 数组劫持的逻辑
+      // 对数组原来的方法进行改写，切片编程、高阶函数
+      data.__proto__ = arrayMethods
+      // 如果数组中的数据是对象类型，需要监控对象的变化
+      this.observeArray(data)
+    } else {
+      this.walk(data) //对象劫持的逻辑
+    }
+  }
+  observeArray(data) {
+    // 对我们数组的数组 和 数组中的对象再次劫持 递归了
+    // [{a:1},{b:2}]
+    data.forEach((item) => observe(item))
+  }
+  walk(data) {
+    // 对象
+    Object.keys(data).forEach((key) => {
+      defineReactive(data, key, data[key])
+    })
+  }
+}
+```
+
+上面高亮的代码部分就是针对数组中是对象类型的递归响应式处理。
+
+用户在实际操作过程中还有可能直接执行 push、unshift、splice 等操作，此时，对于新放入数组的元素，也应该进行观测。这个时候，就需要在拦截的方法中对这些方法做特殊的处理。
+
+```js{11-24}
+let oldArrayPrototype = Array.prototype
+export let arrayMethods = Object.create(oldArrayPrototype)
+// arrayMethods.__proto__ = Array.prototype 继承
+let methods = ["push", "shift", "unshift", "pop", "reverse", "sort", "splice"]
+methods.forEach((method) => {
+  // 用户调用的如果是以上七个方法 会用我自己重写的，否则用原来的数组方法
+  arrayMethods[method] = function (...args) {
+    // 调用原有的方法
+    oldArrayPrototype[method].call(this, ...args) // arr.push(1,2,3);
+  }
+  let inserted
+  let ob = this.__ob__ // 根据当前数组获取到observer实例
+  switch (method) {
+    case "push":
+    case "unshift":
+      inserted = args // 就是新增的内容
+      break
+    case "splice":
+      inserted = args.slice(2)
+    default:
+      break
+  }
+  // 如果有新增的内容要进行继续劫持, 我需要观测的数组里的每一项，而不是数组
+  if (inserted) ob.observeArray(inserted)
+})
+```
+
+在第12行，我们观察到了一个细节，this上有一个 `__ob__` 属性，这里的this指的是当前的数组，数组上本身是没有这个属性的，事实上，这个属性是在Observer定义的。
+
+```js{4-7}
+class Observer {
+  constructor(data) {
+    // 对象中的所有属性 进行劫持
+    Object.defineProperty(data, "__ob__", {
+      value: this,
+      enumerable: false, // 不可枚举的
+    })
+    // data.__ob__ = this; // 所有被劫持过的属性都有__ob__
+    if (Array.isArray(data)) {
+      // 数组劫持的逻辑
+      // 对数组原来的方法进行改写， 切片编程  高阶函数
+      data.__proto__ = arrayMethods
+      // 如果数组中的数据是对象类型，需要监控对象的变化
+      this.observeArray(data)
+    } else {
+      this.walk(data) //对象劫持的逻辑
+    }
+  }
+  observeArray(data) {
+    // 对我们数组的数组 和 数组中的对象再次劫持 递归了
+    // [{a:1},{b:2}]
+    data.forEach((item) => observe(item))
+  }
+  walk(data) {
+    // 对象
+    Object.keys(data).forEach((key) => {
+      defineReactive(data, key, data[key])
+    })
+  }
+}
+```
+
+这里使用 defineProperty 给data本身添加了一个不可枚举的属性 `__ob__`, 将当前的 Observer 实例放了上去。这样在使用的时候 data上就可以取到实例上的方法。这种设计确实很值得借鉴。
+
+## 处理render方法
+
+上面的章节中，我们已经实现了数据的劫持，下一步就应该处理数据和模板之间的关联关系，我们会在组件中书写template, 需要将数据渲染到模板上面。
+
+```js{11-14}
+export function initMixin(Vue) {
+  // 扩展原型上的方法
+  Vue.prototype._init = function (options) {
+    // 原型方法中的this指向new出来的实例, 所有的单文件组件、页面都具有这个方法，
+    // 这里将this赋值给vm实例，可以使用里面的所有属性。
+    const vm = this
+    // 用户传递进来的options属性挂载到vm上面, 这时我们能够操作 vm.$options    
+    // 将不同的状态放在不同的对象下面进行维护
+    initState(vm)
+
+    if (vm.$options.el) {
+      // 将数据挂载到这个模板上
+      vm.$mount(vm.$options.el)
+    }
+  }
+}
+```
+### 实现`$mount`方法
+
+`$mount` 和 `_init` 都是定义在 initMixin 上的方法 要处理多种场景，比如用户有没有传递 render 方法，如果用户没有传递，就需要我们帮助用户生成 render 方法， compileToFunction 这个函数就是做这个事情的，之所以生成的render方法就是考虑到数据的反复变更，把模板转换成函数，利用函数封装的能力，对模板进行解析、修改对比。借助diff算法，最后生成新的dom。最终进行生成真实dom进行挂载。
+
+```js
+// ....
+Vue.prototype.$mount = function (el) {
+  const vm = this
+  const options = vm.$options
+  el = document.querySelector(el)
+  vm.$el = el
+  // 把模板转化成 对应的渲染函数 => 虚拟dom概念 vnode => diff算法 更新虚拟dom => 产生真实节点，更新
+  if (!options.render) {
+    // 没有render用template，目前没render
+    let template = options.template
+    if (!template && el) {
+      // 用户也没有传递template 就取el的内容作为模板
+      template = el.outerHTML
+      let render = compileToFunction(template)
+      options.render = render
+    }
+  }
+}
+...
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

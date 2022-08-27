@@ -39,6 +39,8 @@ generate 是将AST转化为 render function  字符串的过程，得到结果�
 
 在经过 parse、optimize与generate 这三个阶段以后，组价中就会存在渲染Vnode所需要的 render function 了。
 
+[Vue初始化核心代码实现](./Vue初始化.md)
+
 ### 响应式
 接下来也就是 vue.js的响应式核心部分
 
@@ -200,9 +202,6 @@ o._data.test = "hello"; /*视图更新了*/
 ```
 
 至此，响应式原理已经介绍完毕了，接下来我们来介绍「响应式系统」的另一部分 —— 「依赖收集」。
-
-[Vue初始化](./Vue初始化.md)
-
 
 
 
