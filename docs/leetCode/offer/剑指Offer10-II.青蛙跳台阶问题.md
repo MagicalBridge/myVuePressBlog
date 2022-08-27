@@ -3,6 +3,11 @@ sidebar: auto
 ---
 
 # 剑指 Offer10-II.青蛙跳台阶问题
+[题目描述](https://leetcode.cn/problems/qing-wa-tiao-tai-jie-wen-ti-lcof/)
+
+## 解题思路
+
+这道题目本质上和斐菲波那切数列是一样的。
 
 ```js
 /**
