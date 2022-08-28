@@ -204,6 +204,65 @@ o._data.test = "hello"; /*视图更新了*/
 至此，响应式原理已经介绍完毕了，接下来我们来介绍「响应式系统」的另一部分 —— 「依赖收集」。
 
 
+## 三、响应式系统的依赖收集追踪原理：
+
+我们为什么要依赖收集？
+
+先举一个例子：
+
+```html
+new Vue({
+  template: 
+    `<div>
+      <span>{{text1}}</span> 
+      <span>{{text2}}</span> 
+    <div>`,
+  data: {
+    text1: 'text1',
+    text2: 'text2',
+    text3: 'text3'
+  }
+});
+```
+
+我们做了一个操作:  `this.text3 = 'modify text3';` 我们修改了 data 中 text3 的数据，但是因为视图中并不需要用到 text3, 这个时候我们触发视图的更新显然是不合适的。
+
+我们再看一个例子：假设我们现在有一个全局的对象，我们可能会在多个 Vue 对象中用到它进行展示。
+
+```js
+let globalObj = {
+  text1: 'text1'
+};
+
+let o1 = new Vue({
+  template:
+    `<div>
+      <span>{{text1}}</span> 
+    <div>`,
+  data: globalObj
+});
+
+let o2 = new Vue({
+  template:
+    `<div>
+      <span>{{text1}}</span> 
+    <div>`,
+  data: globalObj
+});
+```
+这个时候，我们执行了如下操作。`globalObj.text1 = 'hello,text1';`, 我们应该需要通知 o1 以及 o2 两个vm实例进行视图的更新，「依赖收集」会让 text1 这个数据知道“哦～有两个地方依赖我的数据，我变化的时候需要通知它们～”。
+
+![依赖收集](../../images/vue/07.png)
+
+### 订阅者Dep
+首先我们来实现一个订阅者 Dep ，它的主要作用是用来存放 Watcher 观察者对象。
+ 
+
+### 观察者Watcher
+
+[依赖收集和更新](./依赖收集和更新.md)
+
+
 
 
 
