@@ -64,13 +64,14 @@ export default {
 
 ## 二.Vue响应式原理
 
-Vue的实现是一个函数声明，为了将各个模块拆分方便, 使用的原型的写法。Vue函数接收一个 options 作为参数，options是一个对象，这个options就是用户传递进来的配置选项，这个配置选项中包含 data el watch computed methods。。。
+Vue的实现是一个函数声明，为了将各个模块拆分方便, 使用的是基于原型链拓展的写法。Vue函数接收一个 options 作为参数，options是一个对象，这个options就是用户传递进来的配置选项，这个配置选项中包含 data el watch computed methods。。。
 
-在使用vue-cli脚手架进行开发的时候，都是单组件文件 每个组件本质上都是Vue实例。
+在使用vue-cli脚手架进行开发的时候，一般使用SFC(单组件的写法) 每个组件本质上都是Vue实例。
 
-导出vue构造函数
+在入口文件中导出vue构造函数。
 
 ```js
+// index.js
 import { initMixin } from './init';
 
 function Vue(options) {
@@ -85,7 +86,7 @@ export default Vue;
 只要加载了index.js, 上面的代码都会依次执行，并且是要首先执行的，那么所有在mixin上挂载的所有原型方法都会预先执行，init方法是在`new Vue`的阶段执行的。
 
 ## 添加 initMixin 方法的实现
-initMixin相当于一个插件，实现起来就是一个函数。 将构造函数作为参数传递进去，对构造函数进行扩展，这里使用了在构造函数的原型上进行扩展的方式，所有的组件实例均可以共享, 表示在vue的基础上做一次混合操作, 这种设计思想也是非常值得借鉴的。
+initMixin相当于一个插件，实现起来就是一个函数。 将构造函数Vue作为参数传递进去，对构造函数进行扩展，这里使用了在构造函数的原型上进行扩展的方式，所有的组件实例均可以共享, 表示在vue的基础上做一次混合操作, 这种设计思想也是非常值得借鉴的。
 
 ```js
 export function initMixin(Vue) {
@@ -131,9 +132,9 @@ function initData(vm) {
 }
 ```
 
-上面代码中，函数接收vm作为参数，会根据条件进行分流，因为组件或者页面中会有很多的配置，data、props、computed 不同的数据放在不同的函数中做处理。
+上面代码中，函数接收vm实例作为参数，会根据条件进行分流， 因为组件或者页面中会有很多的配置，data、props、computed 不同的数据放在不同的函数中做处理。
 
-上面有一个细节需要注意，我们传递的data数据有可能是函数，也有可能是个对象，所以这里需要先做个判断。
+上面有一个细节需要注意，我们传递的data数据有可能是函数，也有可能是个对象，所以这里需要先做个判断，对于函数来说，我们要拿它的执行结果，对于对象来说，直接拿它本身。
 
 这里把 `vm._data ` 然后再把数据赋值给data，这样做的原因是，我们实际上是把 data传给了 observe 函数，这个时候已经和 vm 没有关系了。
 
@@ -189,6 +190,8 @@ function initData(vm) {
 
 ## observe 函数的实现
 
+接下来看响应式处理的细节
+
 ```js
 import { isObject } from "../utils"
 
@@ -216,13 +219,13 @@ class Observer {
 }
 ```
 
-上面代码中 observe 是一个函数，接收用户传递的data数据，首先判断传递的data 是否为对象类型，vue文档中规定了，data也必须为对象类型。
+上面代码中 observe 是一个函数，接收用户传递的data数据，首先判断传递的data是否为对象类型，vue文档中规定了，传递给options参数的data必须为对象类型。
 
-这个函数返回一个Observer实例，Observer是一个对象，初始化执行walk方法，这个walk方法就是对对象的属性进行遍历。然后开始响应式处理。
+这个函数返回一个Observer实例，Observer是一个对象，初始化在constructor中执行walk方法，这个walk方法就是把对象的属性进行遍历。然后开始响应式处理。
 
-defineReactive 这个方法接收三个参数，当前的对象、当前的属性、属性的值。
+defineReactive 这个方法接收三个参数，**当前的对象、当前的属性、属性的值**。
 
-这里面就牵扯到一个性能问题，如果data中的属性很多，vue2中就会对每一个对象使用defineProperty进行劫持。
+这里面就牵扯到一个性能问题，如果data中的属性很多，vue2中就会对每一个对象使用`defineProperty`进行劫持。
 
 ```js
 function defineReactive(data, key, value) {
@@ -245,7 +248,7 @@ function defineReactive(data, key, value) {
 
 ```js{3,14}
 function defineReactive(data, key, value) {
-  // 本身用户默认值是对象套对象 需要递归处理 （性能差）
+  // 被截止的对象的值还是一个对象，需要进行递归劫持
   observe(value) 
   Object.defineProperty(data, key, {
     get() {
@@ -266,9 +269,11 @@ function defineReactive(data, key, value) {
 
 ## 数组的递归监控
 
+上面分析了对象的处理逻辑，我们再来看看数组。
+
 vue中并没有和对象一样直接使用defineProperty劫持数组中的每一个元素，原因是这种做法非常消耗性能，并且我们平时使用数组很少通过索引操作数组。
 
-数组中有七个方法，这七个方法会改变原数组。
+数组中有七个方法，这七个方法会改变原数组，我们称之为变异方法。
 
 push、shift、pop、unshift、reverse、sort、splice。
 
@@ -417,8 +422,11 @@ class Observer {
 这里使用 defineProperty 给data本身添加了一个不可枚举的属性 `__ob__`, 将当前的 Observer 实例放了上去。这样在使用的时候 data上就可以取到实例上的方法。这种设计确实很值得借鉴。
 
 ## 处理render方法
+数据劫持是响应式的其中一部分，还有一部分的依赖收集和更新会在后面提到，我们首先看看如何将数据渲染到页面上。
 
 上面的章节中，我们已经实现了数据的劫持，下一步就应该处理数据和模板之间的关联关系，我们会在组件中书写template, 需要将数据渲染到模板上面。
+
+vue2中有一个render函数的概念，当数据变化的时候，并没有直接直接更新dom, 而是先生成renderFn。
 
 ```js{11-14}
 export function initMixin(Vue) {
@@ -440,7 +448,7 @@ export function initMixin(Vue) {
 ```
 ### 实现`$mount`方法
 
-`$mount` 和 `_init` 都是定义在 initMixin 上的方法 要处理多种场景，比如用户有没有传递 render 方法，如果用户没有传递，就需要我们帮助用户生成 render 方法， compileToFunction 这个函数就是做这个事情的，之所以生成的render方法就是考虑到数据的反复变更，把模板转换成函数，利用函数封装的能力，对模板进行解析、修改对比。借助diff算法，最后生成新的dom。最终进行生成真实dom进行挂载。
+`$mount` 和 `_init` 都是定义在 initMixin 上的方法 要处理多种场景，比如用户有没有传递 render 方法，如果用户没有传递，就需要我们帮助用户生成 render 方法， compileToFunction 这个函数就是做这个事情的，之所以生成的render方法就是考虑到数据的反复变更，把模板转换成函数，利用函数封装的能力，对模板进行解析、修改对比。借助diff算法，最后生成新的dom。最终生成真实dom进行挂载。
 
 ```js
 // ....
@@ -753,6 +761,8 @@ export function mountComponent(vm, el) {
 }
 ```
 
+mountComponent 总结起来就是分为两个步骤，一个是 `vm._render` 生成虚拟dom，另一个步骤就是触发 `vm._update` 更新。
+
 上面代码中的`vm._render`方法，其实内部调用就是我们在上面生成的render方法。之所以在这里可以使用`vm._render`是因为在index.js中会调用 `renderMixin(Vue)`
 
 核心就是实现 `_update` 还有 `_render`。
@@ -814,6 +824,5 @@ function createElm(vnode) {
   }
   return vnode.el
 }
-
 ```
 
