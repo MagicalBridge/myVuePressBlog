@@ -466,22 +466,30 @@ $docker run --name mynginx -d -p 80:80 -v /usr/local/docker/my-docker-nginx/vuep
 - nginx 启动的是nginx
 
 ## 阿里云使用mongoDB
-我已经在将docker3.4.1版本的镜像下载到阿里云上，已经镜像可以构建多个容器。
-
-### 更换端口号：
+我已经在将docker3.4.1版本的镜像下载到阿里云上，一个镜像可以构建多个容器。
 
 之前因为使用默认的端口号，并且没有设置密码，导致被黑客攻击。启动的时候需要替换一个不太常用的端口号。
+
 ```sh
 $docker run --name myMongo -d -p 27898:27017 mongo:3.4.1
 ```
 
-### 配置阿里云安全组
+这样启动之后，阿里云的安全组需要重新配置，才能生效。
+
+## 阿里云使用redis
+我的阿里云服务器上已经下载好了redis镜像，下载的版本是`redis:4.0.6`。
+
+我的诉求是以指定的端口启动，防止被黑客攻击，映射到容器内的6379端口，并能够通过外网访问。
+
+```sh
+$docker run --name my-docker-redis -d -p 6978:6379 redis:4.0.6
+```
 
 这样启动之后，阿里云的安全组需要重新配置，才能生效。
 
-
 ## DockerFile 
 ### [dockerFile](./dockerfiles.md)
+
 
 ## Docker Compose
 
