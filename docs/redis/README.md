@@ -35,6 +35,8 @@ GET name
 ```
 
 ### GETRANGE 获取子串
+Redis Getrange 命令用于获取存储在指定 key 中字符串的子字符串。字符串的截取范围由 start 和 end 两个偏移量决定(包括 start 和 end 在内)。
+
 ```js
 // GETRANGE key start end 
 getrange name 1 2
@@ -47,6 +49,30 @@ SET page_view 20
 INCR page_view 
 GET page_view  // "21" 数字值在 redis 中以字符串的形式保存 
 ```
+
+### 键的常用操作
+```js
+DEL key  删除某一个键 
+DEL user // 删除 user 这个键
+
+EXISTS key 判断一个key是否存在
+EXISTS user // 删除之后返回0
+
+EXPIRE key seconds 设置过期时间
+EXPIRE user 10  // 设置user 这个键10秒钟 就过期
+
+TTL key 以秒为单位返回给定key的剩余生存时间
+TTL user // 查看user的还有多久过期
+
+TYPE key 返回key所存储的值的类型
+TYPE user // 返回string
+```
+还有一些常用的处理键值对的方法：
+[Redis字符串命令](https://www.runoob.com/redis/redis-strings.html)
+
+## 哈希值
+
+
 
 
 
