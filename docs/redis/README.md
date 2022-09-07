@@ -68,11 +68,20 @@ TTL user // 查看user的还有多久过期
 
 TYPE key 返回key所存储的值的类型
 TYPE user // 返回string
+
 ```
 还有一些常用的处理键值对的方法：
 [Redis字符串命令](https://www.runoob.com/redis/redis-strings.html)
 
 ## 哈希值
+主要用于存储对象
+
+### HSET HMSET 设置值
+
+```js
+HSET person name 设置单个值 
+HMSET user name zfpx age 9  设置多个值
+```
 
 
 
