@@ -95,7 +95,8 @@ export function initMixin(Vue) {
     // 原型方法中的this指向new出来的实例, 所有的单文件组件、页面都具有这个方法，
     // 这里将this赋值给vm实例，可以使用里面的所有属性。
     const vm = this
-    // 用户传递进来的options属性挂载到vm上面, 这时我们能够操作 vm.$options    
+    // 用户传递进来的options属性挂载到vm上面, 这时我们能够操作 vm.$options   
+    vm.$options = options 
     // 将不同的状态放在不同的对象下面进行维护
     initState(vm)
   }
@@ -244,7 +245,7 @@ function defineReactive(data, key, value) {
 }
 ```
 
-上面的代码只能解决对象的一层劫持，如果对象有多层嵌套，就不满足需求。还有一种场景是，我们给一个属性重新赋值成一个新的对象，也不会变成响应式。为了解决上述问题，我们需要进行一个递归的处理。
+上面的代码只能解决对象的一层劫持，如果对象有多层嵌套，就不满足需求。还有一种场景是，我们给一个属性重新赋值成一个新的对象，也不会变成响应式。为了解决上述问题，我们需要进行一个递归的处理。在用户set值的时候也进行一个响应式劫持。
 
 ```js{3,14}
 function defineReactive(data, key, value) {
@@ -305,12 +306,14 @@ class Observer {
 
 所达到的效果就是，当数组调用自身的api时候，会首先沿着原型链向上查找，这样我们就能拦截这些方法的调用。
 
-来看下 arrayMethods 方法的实现。
+来看下 arrayMethods 这个对象的实现。
 
 ```js
+// 将数组的原型对象保存下来
 let oldArrayPrototype = Array.prototype
-export let arrayMethods = Object.create(oldArrayPrototype)
+// 基于数组的原型对象，创建一个新的对象 相当于是下面这样
 // arrayMethods.__proto__ = Array.prototype 继承
+export let arrayMethods = Object.create(oldArrayPrototype)
 let methods = ["push", "shift", "unshift", "pop", "reverse", "sort", "splice"]
 methods.forEach((method) => {
   // 用户调用的如果是以上七个方法 会用我自己重写的，否则用原来的数组方法
@@ -448,7 +451,7 @@ export function initMixin(Vue) {
 ```
 ### 实现`$mount`方法
 
-`$mount` 和 `_init` 都是定义在 initMixin 上的方法 要处理多种场景，比如用户有没有传递 render 方法，如果用户没有传递，就需要我们帮助用户生成 render 方法， compileToFunction 这个函数就是做这个事情的，之所以生成的render方法就是考虑到数据的反复变更，把模板转换成函数，利用函数封装的能力，对模板进行解析、修改对比。借助diff算法，最后生成新的dom。最终生成真实dom进行挂载。
+`$mount` 和 `_init` 都是定义在 initMixin 上的方法， 这里要处理多种场景，比如用户有没有传递 render 方法，如果用户没有传递，就需要我们帮助用户生成 render 方法， compileToFunction 这个函数就是做这个事情的，之所以生成的render方法就是考虑到数据的反复变更，把模板转换成函数，利用函数封装的能力，对模板进行解析、修改对比。借助diff算法，最后生成新的虚拟dom，最终生成真实dom进行挂载。
 
 ```js
 // ....
@@ -464,6 +467,7 @@ Vue.prototype.$mount = function (el) {
     if (!template && el) {
       // 用户也没有传递template 就取el的内容作为模板
       template = el.outerHTML
+      // 这个compileToFunction方法就是核心
       let render = compileToFunction(template)
       options.render = render
     }
@@ -607,6 +611,7 @@ function chars(text) {
   }
 }
 ```
+
 ## codegen根据ast生成对应字符串拼接代码
 
 以下是代码生成的核心逻辑：
@@ -684,6 +689,7 @@ export function generate(el) {
 ```
 
 假设我们有下面的template结构：
+
 ```html
 <div style="color:red">hello {{name}} <span></span></div>
 ```
