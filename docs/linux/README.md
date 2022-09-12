@@ -4,7 +4,7 @@ sidebar: auto
 
 # Lunix
 
-## 一、Linux的概述：
+## Linux的概述：
 
 先了解下Unix
 
@@ -16,20 +16,73 @@ Linux是基于Unix的Linux是一种自由和开放源码的操作系统，存在
 
 诞生于1991 年10 月5 日。是由芬兰赫尔辛基大学学生Linus Torvalds和后来加入的众多爱好者共同开发完成。
 
-## 二、Linux的常用命令
+## 目录规范
+- bin 存放的是二进制的命令目录
+- sbin 系统级别的二进制目录
+- lib 当前的库目录 等同于win上面的system32目录
+- lib64 64位比较特殊的库文件
+- boot 引导分区目录
+- dev 设备目录 linux中把硬件也当成文件处理 一切皆文件
+- etc 主要放置配置文件 一般来说，安装数据库的配置文件就会放在这里
+- opt 第三方软件的存放目录，约定俗成
+- media 可识别媒体设备
+- mnt 和media差不多
+- proc 进程目录，系统的进程的映射
+- sys 存放系统硬件信息
+- tmp 临时存放目录
+- var 一般存放一些日志文件
+- home 普通用户的家目录 可以操作
 
-### 1、切换目录命令
+## vim的操作使用
+![vim的操作模式](../images/linux/01.png)
 
-### 重命名一个文件
-```shell
-$mv sourcename  targetname ny-nginx
+### 一般模式的操作：
+- 删除、复制、粘贴
+在一般模式下 yy 命令就是复制的命令，p是粘贴的命令  u是撤销的命令。dd是删除的命令
 
+如果想要删除光标下面的好几行需要在dd前面添加一个数字： 3dd 这就代表删除多行。
+
+## Linux的常用命令
+
+当我登录阿里云服务器显示如下信息：
+```js
+root @ iZuf6j0zu9bm2b8n7do53iZ in ~
+```
+- root 当前登录的用户
+- @iZuf6j0zu9bm2b8n7do53iZ 主机名
+- ~ 当前工作目录,默认是当前用户的家目录，root就是/root
+
+### ls: 查询目录中的内容
+- ls [选项] [文件或者目录]
+  -a 显示所有文件，包括隐藏文件
+  -l 显示详细信息
+  -h 人性化的方式显示文件大小
+  -i 显示inode,也就是i节点，每个节点都有ID号
+
+### mkdir: 创建目录
+- mkdir -p [目录名称] 这里的-p代表递归创建
+
+### pwd: 打印当前的路径
+
+### rmdir：删除空目录
+- rmdir [目录名] 如果目录里面包含内容删除的时候会报错
+
+### rm -rf [文件或者目录]: 递归强制删除所有目录
+- rm -rf node_modules 删除目录
+
+### cp:复制命令
+- -a 比较全能的命令 可以复制目录、文件 可以连带复制属性 还可以复制链接属性
+
+### mv 重命名一个文件或者移动: 
+- 同级目录下就是改名，不是同级目录就是移动
+```sh
+# $mv sourcename  targetname
 # 创建一个文件夹, 命名为 ny-nginx 突然发现是写错了
 $mkdir ny-nginx
-
 # 修改文件名称 改为 my-nginx
 $mv ny-nginx my-nginx 
 ```
+
 
 ## scp 跨机远程拷贝
 
@@ -38,33 +91,33 @@ scp是secure copy的简写，用于在Linux下进行远程拷贝文件的命令�
 > 类似的工具有rsync；scp消耗资源少，不会提高多少系统负荷，在这一点上，rsync就远远不及它了。rsync比scp会快一点，但当小文件多的情况下，rsync会导致硬盘I/O非常高，而scp基本不影响系统正常使用。
 
 ### 命令格式
-```shell
+```sh
 $scp [参数] [原路径] [目标路径]
 ```
 
 ### 使用示例
 
 #### 1、从远处复制文件到本地目录
-```shell
+```sh
 $scp root@10.6.159.147:/opt/soft/demo.tar /opt/soft/
 ```
 
 说明： 从10.6.159.147机器上的/opt/soft/的目录中下载demo.tar 文件到本地/opt/soft/目录中
 
 #### 2、从远处复制到本地
-```shell
+```sh
 $scp -r root@10.6.159.147:/opt/soft/test /opt/soft/
 ```
 说明： 从10.6.159.147机器上的/opt/soft/中下载test目录到本地的/opt/soft/目录来。
 
 #### 3、上传本地文件到远程机器指定目录
-```shell
+```sh
 $scp /opt/soft/demo.tar root@10.6.159.147:/opt/soft/scptest
 ```
 说明： 复制本地opt/soft/目录下的文件demo.tar 到远程机器10.6.159.147的opt/soft/scptest目录
 
 #### 4、上传本地目录到远程机器指定目录
-```shell
+```sh
 $scp -r /opt/soft/test root@10.6.159.147:/opt/soft/scptest
 ```
 说明： 上传本地目录 /opt/soft/test到远程机器10.6.159.147上/opt/soft/scptest的目录中
