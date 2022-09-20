@@ -219,8 +219,7 @@ CREATE TABLE `student` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8
 ```
 
-
-
+### 4 查询操作
 
 
 
