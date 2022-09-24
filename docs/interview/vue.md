@@ -1,3 +1,9 @@
+---
+sidebar: auto
+---
+
+# Vue
+
 ## 谈谈你对MVVM的理解
 这种问题其实并不是很好回答的，需要组织语言，不要乱说，说出的东西务必准确，不要有模棱两可的
 - 1、MVVM 是一种架构模式，我们比较熟悉的还有服务端常见的MVC这种架构模式。**（首先说出这是中架构模式，点出MVC这种模式，说明对于服务端的内容有了解）**
@@ -158,4 +164,37 @@ export const createCompiler = createCompilerCreator(function baseCompile (
 ## Vue的生命周期方法有哪些？一般在哪一步发送请求及其原因
 - beforeCreate 在实例初始化之后，数据观测 (data observer) 和event/watcher 事件配置之前被调用。
 - created 实例已经创建完成之后被调用，在这一步，实例已经完成了以下的配置，数据观测 data observer，属性和方法的运算 watch event事件回调，这里没有$el。
-- 
+
+
+## `Vue.use()`是干什的，原理是什么？
+
+`Vue.use()`是用来使用插件的，它需要在`new Vue({})`启动之前使用。比如我们在项目中配置使用vuex,是在入口文件中实例化vue之前使用`vue.use(vuex)`来调用。
+
+它的源码实现大概是这样的:
+
+```js
+export function initUse (Vue) {
+  // Vue.use使用插件的
+  Vue.use = function (plugin: Function | Object) {
+    const installedPlugins = []
+    if (installedPlugins.indexOf(plugin) > -1) {
+      return this // 如果插件安装过了 直接返回
+    }
+
+    // additional parameters
+    const args = Array.from(arguments).slice(1)
+    args.unshift(this) // [Vue,...arguments]
+    if (typeof plugin.install === 'function') {
+      plugin.install.apply(plugin, args)
+    } else if (typeof plugin === 'function') {
+      plugin.apply(null, args)
+    }
+    installedPlugins.push(plugin)
+    return this
+  }
+}
+```
+
+从上面的代码中可以看出，它传入的值的类型只能是Function或者Object，然后判断了该插件是不是已经注册过，防止重复注册, 会在调用的install方法的时候，向install方法中注入Vue这个构造函数。这种实现方式可以使插件无需依赖Vue库。直接使用运行环境的即可。
+
+
