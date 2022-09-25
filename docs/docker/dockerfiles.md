@@ -6,8 +6,6 @@ sidebar: auto
 
 DockerFile 是用来构建docker镜像的构建文件，是由一些列命令和参数构成的脚本, 必须放在项目的根目录下。
 
-
-
 ## 构建的三个步骤：
 - 编写DockerFile文件
 - docker build
@@ -32,6 +30,12 @@ DockerFile 是用来构建docker镜像的构建文件，是由一些列命令和
 - Docker容器则可以认为是软件的运行态
 
 DockerFile 面向开发，Docker镜像成为交付标准, Docker容器则涉及部署与运维，三者缺一不可。
+
+## 构建镜像的命令
+
+```
+docker build -t <name> .  # 最后的这个 `.` 表示的只 Dockerfile 在当前目录下
+```
 
 ## 具体实例
 
@@ -66,7 +70,7 @@ console.log('Running on http://localhost:' + PORT);
 }
 ```
 
-在项目目录下新建 DockerFile 文件
+在项目目录下新建 `DockerFile` 文件
 
 ```
 FROM node 
@@ -81,9 +85,21 @@ CMD npm start  # 启动服务，只能有一个CMD
 ```
 
 - FROM: 构建镜像的基础源镜像，node如果不指定版本，就是使用最新的版本
-- MAINTAINER 说明镜像的维护者
-- COPY 命令将宿主机的文件拷贝到镜像中，格式为 `COPY [--chown=<user>:<group>] <源路径>... <目标路径>`，这里将项目目录下的所有文件都拷贝到镜像中的 /home/Service 目录下。如果目标路径不存在，docker 将自动创建。如果有部分的文件不想拷贝怎么办，则新建一个`.dockerignore` 文件，来忽略`node_modules`这种文件。
 - WORKDIR 用来指定工作目录，即是 CMD 执行所在的目录。
+- COPY 命令将宿主机的文件拷贝到镜像中，格式为 `COPY [--chown=<user>:<group>] <源路径>... <目标路径>`，这里将项目目录下的所有文件都拷贝到镜像中的 /home/Service 目录下。如果目标路径不存在，docker 将自动创建。如果有部分的文件不想拷贝怎么办，则新建一个`.dockerignore` 文件，来忽略`node_modules`这种文件。
 - RUN 命令用来执行 shell 命令，可以有多个RUN
 - EXPOSE 命令用来 声明 运行时容器提供服务端口，但要注意运行时并不会开启这个端口的服务。这个命令主要是帮助使用者理解这个镜像服务的守护端口，以方便配置映射；另外在使用随机端口映射时，会自动随机映射 EXPOSE 的端口
 - CMD 是默认的容器主进程的启动命令。
+
+如果启动node服务使用的pm2的话，那在启动之后，为了占据控制台，还应该执行类似于 `npx pm2 log` 这种命令来阻塞命令行。
+
+构建成功的镜像和我们下载的nginx镜像本质上没有区别，我们想要使用我们自己构建的镜像启动一个容器。
+
+```sh
+docker run -d  -p 8081:3000 --name myDockerServer editor-server # 创建容器 注意端口的映射
+
+docker ps # 查看启动的容器
+
+# 访问 ip:8081 查看服务
+```
+
