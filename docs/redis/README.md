@@ -83,6 +83,29 @@ HSET person name 设置单个值
 HMSET user name zfpx age 9  设置多个值
 ```
 
+## 列表
+Redis列表是简单的字符串列表，按照插入顺序排序。你可以添加一个元素到列表的头部（左边）或者尾部（右边）
+
+```sh
+redis 127.0.0.1:6379> LPUSH runoobkey redis
+(integer) 1
+redis 127.0.0.1:6379> LPUSH runoobkey mongodb
+(integer) 2
+redis 127.0.0.1:6379> LPUSH runoobkey mysql
+(integer) 3
+redis 127.0.0.1:6379> LRANGE runoobkey 0 10
+
+1) "mysql"
+2) "mongodb"
+3) "redis"
+```
+
+在以上实例中我们使用了 LPUSH 将三个值插入了名为 runoobkey 的列表当中。
+
+### 列表命令
+[常见的列表命令](https://www.runoob.com/redis/redis-lists.html)
+
+
 
 
 
