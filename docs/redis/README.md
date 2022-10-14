@@ -106,9 +106,66 @@ redis 127.0.0.1:6379> LRANGE runoobkey 0 10
 [常见的列表命令](https://www.runoob.com/redis/redis-lists.html)
 
 
+## 集合(无序)
+Redis 的 Set 是 String 类型的无序集合。集合成员是唯一的，这就意味着集合中不能出现重复的数据。
+
+集合对象的编码可以是 intset 或者 hashtable。
+
+Redis 中集合是通过哈希表实现的，所以添加，删除，查找的复杂度都是 O(1)。
+
+```sh
+redis 127.0.0.1:6379> SADD runoobkey redis
+(integer) 1
+redis 127.0.0.1:6379> SADD runoobkey mongodb
+(integer) 1
+redis 127.0.0.1:6379> SADD runoobkey mysql
+(integer) 1
+redis 127.0.0.1:6379> SADD runoobkey mysql
+(integer) 0
+redis 127.0.0.1:6379> SMEMBERS runoobkey
+
+1) "mysql"
+2) "mongodb"
+3) "redis"
+```
+在以上实例中我们通过 SADD 命令向名为 runoobkey 的集合插入的三个元素。
+
+### 集合中的常见命令：
+
+- 查看集合中的所有成员 SMEMBERS key
+- 获取集合的成员数量  SCARD key
+- 返回给定所有集合的交集 SINTER key1 [key2]
+- 返回所有给定集合的并集 SUNION key1 [key2]
+- 返回第一个集合与其他集合之间的差异。SDIFF key1 [key2]
 
 
+## 有序集合(sorted set)
 
+Redis 有序集合和集合一样也是 string 类型元素的集合,且不允许重复的成员。
 
+不同的是每个元素都会关联一个 double 类型的分数。redis 正是通过分数来为集合中的成员进行从小到大的排序。
+
+有序集合的成员是唯一的,但分数(score)却可以重复。
+
+```sh
+redis 127.0.0.1:6379> ZADD runoobkey 1 redis
+(integer) 1
+redis 127.0.0.1:6379> ZADD runoobkey 2 mongodb
+(integer) 1
+redis 127.0.0.1:6379> ZADD runoobkey 3 mysql
+(integer) 1
+redis 127.0.0.1:6379> ZADD runoobkey 3 mysql
+(integer) 0
+redis 127.0.0.1:6379> ZADD runoobkey 4 mysql
+(integer) 0
+redis 127.0.0.1:6379> ZRANGE runoobkey 0 10 WITHSCORES
+
+1) "redis"
+2) "1"
+3) "mongodb"
+4) "2"
+5) "mysql"
+6) "4"
+```
 
 
