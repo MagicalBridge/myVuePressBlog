@@ -81,6 +81,10 @@ console.log(state1 === state2) // false
 
 上面代码中，我们将同一份对象使用 reactive 处理了两次，得到了两个不同的对象，但是因为原对象并没有变化，我们希望有一个缓存，被代理过得对象直接走缓存。
 
+
+Reflect的使用主要是为了解决this的指向问题。
+
+
 使用WeakMap, key是我们传入进来的target，value存放的是proxy。
 
 ```js{3-4,13-16,32-33}
@@ -122,7 +126,7 @@ export function reactive(target) {
 }
 ```
 
-写到这里，依然不是很完善，我们再思考一个场景：proxy 被重复传入代理如何处理
+写到这里，依然不是很完善，我们再思考一个场景：`proxy`被重复传入代理如何处理
 
 ```js
 const obj = { name: 'louis', age: 25, address: { num: 180 } }
@@ -137,6 +141,8 @@ console.log(state1 === state2) // false
 我们期望的结果是：一个对象被代理过了，就不要再被代理一次。
 
 为了解决这个问题，我们可以设置一个代理标识。
+
+第一次代理的是一个普通对象，我们会通过proxy代理一次，下一次你传入的是一个proxy对象，我们可以看看这个对象有没有get方法，如果有get方法说明是proxy对象，而不是普通对象
 
 ```js{6-8,16-20,32-36}
 import { isObject } from "@vue/shared"
