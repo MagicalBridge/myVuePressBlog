@@ -144,6 +144,8 @@ console.log(state1 === state2) // false
 
 第一次代理的是一个普通对象，我们会通过proxy代理一次，下一次你传入的是一个proxy对象，我们可以看看这个对象有没有get方法，如果有get方法说明是proxy对象，而不是普通对象
 
+需要注意的一点是，这个IS_REACTIVE并没有新增。只是借助了get的特性
+
 ```js{6-8,16-20,32-36}
 import { isObject } from "@vue/shared"
 

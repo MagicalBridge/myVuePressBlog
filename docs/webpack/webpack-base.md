@@ -504,6 +504,58 @@ module.exports = {
   }
 ```
 
+### 2.1.4 proxy配置选项
+可以在devServer中配置proxy来设置服务器代理：
+
+```js
+devServer: {
+  proxy: {
+    "/api": 'http://localhost:3000'
+  }
+}
+```
+
+你的webpack启动的端口是8080，你想要请求3000端口的服务，肯定会出现问题，通过配置proxy可以解决这个问题。
+
+
+### 2.1.5 onBeforeSetupMiddleware
+onBeforeSetupMiddleware 在 webpack-dev-server 静态资源中间件处理之前，可以用于拦截部分请求返回特定内容，或者实现简单的数据 mock。
+
+```js
+devServer: {
+  onBeforeSetupMiddleware(devServer){ // express()
+    devServer.app.get('/api/users', (req, res) => {
+      res.json([{ id: 1 }, { id: 2 }]);
+    });
+  }
+}
+```
+
+### 2.1.6 webpack-dev-middleware的使用
+
+webpack-dev-middleware就是在 Express 中提供 webpack-dev-server 静态服务能力的一个中间件。
+
+```js
+const express = require('express');
+const app = express();
+// 引入webpack
+const webpack = require('webpack');
+const webpackDevMiddleware = require('webpack-dev-middleware');
+// 引入配置文件
+const webpackOptions = require('./webpack.config');
+webpackOptions.mode = 'development';
+// 创建一个compiler对象
+const compiler = webpack(webpackOptions);
+// 使用中间件
+app.use(webpackDevMiddleware(compiler, {}));
+
+app.listen(3000);
+```
+
+- webpack-dev-server 的好处是相对简单，直接安装依赖后执行命令即可
+- 使用webpack-dev-middleware的好处是可以在既有的 Express 代码基础上快速添加 webpack-dev-server 的功能，同时利用 Express 来根据需要添加更多的功能，如 mock 服务、代理 API 请求等。
+
+
 ## 2.2 支持CSS
 - css-loader 用来翻译处理 `@import` 和 `url()` 这类css语法
 - style-loader 可以把css插入到DOM中
