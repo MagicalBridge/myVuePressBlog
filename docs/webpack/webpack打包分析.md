@@ -43,7 +43,7 @@ module.exports = {
 
 ## 1 commonJS 加载 commonJS 场景
 
-我们创建一个 title.js 的文件，使用 commonJS 规范导出一个字符串，然后在项目的入口文件 index.js 中导入这个模块。
+我们创建一个 `title.js` 的文件，使用 `commonJS` 规范导出一个字符串，然后在项目的入口文件 `index.js` 中导入这个模块。
 
 ### 1.1 .src/title.js
 ```js
@@ -56,10 +56,14 @@ const title = require('./title')
 console.log(title);
 ```
 
-执行 npm run build 之后，webpack会将打包编译后的文件输出到 dist 目录下，很显然这是我们配置的结果。
+执行 `npm run build` 之后，webpack会将打包编译后的文件输出到 dist 目录下，很显然这是我们配置的结果。
 
 ### 1.3 ./dist/main.js 
+
 打包之后的结果：
+
+我们在入口文件引入了title.js, 这就是一个模块，模块id一般为模块相对项目根目录的相对路径。
+
 ```js{2-6,8,11,18-22,25,34-37}
 ;(() => {
   var __webpack_modules__ = {
@@ -130,8 +134,7 @@ console.log(title);
 
 ### 1.5 总结：
 
-commonjs加载commonjs 代码 本质上 并没有做特别的操作，就是基于函数，通过匹配 moduleId 去找到 另一个函数，利用语法的匹配，最终将其他模块中代码拿过来执行了。
-
+commonJS加载commonJS代码, 本质上并没有做特别的操作，就是基于函数的，通过匹配 `moduleId` 去找到另一个函数，利用语法的匹配，最终将其他模块中代码拿过来执行了。
 
 
 ## 2 commonJS 加载 ESModule 场景
