@@ -23,7 +23,7 @@ Redis 是完全开源免费的，遵守BSD协议，是一个高性能的key-valu
 - 集合
 - 有序列表
 
-## 字符串
+## 字符串(String)
 字符串是最基本的类型 一个key对应一个value
 
 ### SET 设置值
@@ -73,7 +73,7 @@ TYPE user // 返回string
 还有一些常用的处理键值对的方法：
 [Redis字符串命令](https://www.runoob.com/redis/redis-strings.html)
 
-## 哈希值
+## 哈希值(Hash)
 主要用于存储对象
 
 ### HSET HMSET 设置值
@@ -83,8 +83,10 @@ HSET person name 设置单个值
 HMSET user name zfpx age 9  设置多个值
 ```
 
-## 列表
+## 列表(List)
 Redis列表是简单的字符串列表，按照插入顺序排序。你可以添加一个元素到列表的头部（左边）或者尾部（右边）
+
+它的底层实际是个双向链表，对两端的操作性能很高，通过索引下标的操作中间的节点性能会较差。
 
 ```sh
 redis 127.0.0.1:6379> LPUSH runoobkey redis
@@ -106,7 +108,7 @@ redis 127.0.0.1:6379> LRANGE runoobkey 0 10
 [常见的列表命令](https://www.runoob.com/redis/redis-lists.html)
 
 
-## 集合(无序)
+## 集合(Set)
 Redis 的 Set 是 String 类型的无序集合。集合成员是唯一的，这就意味着集合中不能出现重复的数据。
 
 集合对象的编码可以是 intset 或者 hashtable。
@@ -139,7 +141,7 @@ redis 127.0.0.1:6379> SMEMBERS runoobkey
 - 返回第一个集合与其他集合之间的差异。SDIFF key1 [key2]
 
 
-## 有序集合(sorted set)
+## 有序集合(Zset)
 
 Redis 有序集合和集合一样也是 string 类型元素的集合,且不允许重复的成员。
 
@@ -167,5 +169,39 @@ redis 127.0.0.1:6379> ZRANGE runoobkey 0 10 WITHSCORES
 5) "mysql"
 6) "4"
 ```
+
+## redis 配置文件
+
+redis的配置文件是：`redis.conf`
+
+### 网络相关的配置
+
+**bind=127.0.0.1** 只能接受本机的访问请求, 不写的情况下，无限制接受任何ip地址的访问, 生产环境肯定要写你应用服务器的地址；服务器是需要远程访问的，所以需要将其注释掉。
+
+**protected-mode**: 本机访问限制  默认是yes，设置为no。
+
+**port**: 端口 默认是6379，这个没有什么可说的，就是redis的默认配置。
+
+timeout: 一个空闲的客户端维持多少秒会关闭, 默认值是0，表示永远不关闭
+
+tcp-keepalive：对访问客户端的一种心跳检测，每个n秒检测一次，单位为秒，如果设置为0，则不会进行Keepalive检测，建议设置成60 。
+
+loglevel： 指定日志记录级别，Redis总共支持四个级别：debug、verbose、notice、warning，默认为notice。
+
+密码：访问密码的查看、设置和取消，在命令中设置密码，只是临时的。重启redis服务器，密码就还原了。永久设置，需要再配置文件中进行设置。
+
+maxclients：设置redis同时可以与多少个客户端进行连接。默认是10000个
+
+maxmemory：建议必须设置，否则，将内存占满，造成服务器宕机，设置redis可以使用的内存量。一旦到达内存使用上限，redis将会试图移除内部数据。移除规则可以通过maxmemory-policy来指定。
+
+maxmemory-policy： 
+- volatile-lru：使用LRU算法移除key，只对设置了过期时间的键；（最近最少使用）
+- allkeys-lru：在所有集合key中，使用LRU算法移除key
+- volatile-random：在过期集合中移除随机的key，只对设置了过期时间的键
+- allkeys-random：在所有集合key中，移除随机的key
+- volatile-ttl：移除那些TTL值最小的key，即那些最近要过期的key
+- noeviction：不进行移除。针对写操作，只是返回错误信息
+
+
 
 
