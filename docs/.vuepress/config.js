@@ -73,7 +73,7 @@ module.exports = {
         link: "/react/",
       },
       {
-        text: "webpack",
+        text: "前端工程化",
         items: [
           {
             text: "webpack基础",
