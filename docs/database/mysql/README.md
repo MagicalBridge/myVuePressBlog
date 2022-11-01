@@ -220,6 +220,31 @@ CREATE TABLE `student` (
 ```
 
 ### 4 查询操作
+我这里使用尚硅谷提供的练习表来进行下面内容的学习
+
+[表的创建语句](./atguigudb.md)
+
+#### 4.1 最基本的查询语句 SELECT 字段1,字段2 FROM 表名
+```sql
+# 最基本的查询语句 SELECT 字段1,字段2 FROM 表名
+# * 代表的是查询所有的列
+SELECT * FROM employees
+```
+
+#### 4.2 只想查询 员工id 和 姓名
+```sql
+# 只想查询 员工id 和 姓名 
+SELECT employee_id, last_name FROM employees
+```
+
+#### 4.3 可以给列设置别名
+```sql
+# 给 last_name 设置别名
+SELECT employee_id, last_name name FROM employees
+
+# 别名使用AS这个关键字
+SELECT employee_id, last_name AS name FROM employees
+```
 
 
 
