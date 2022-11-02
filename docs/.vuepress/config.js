@@ -143,6 +143,10 @@ module.exports = {
           },{
             text: "redis",
             link: "/redis/"
+          },
+          {
+            text: "MQ",
+            link: "/MQ/"
           }
         ],
       },

@@ -246,6 +246,12 @@ SELECT employee_id, last_name name FROM employees
 SELECT employee_id, last_name AS name FROM employees
 ```
 
+#### 4.4 去除重复数据
+```sql
+# 去除重复数据 只保留不重复的部门id
+SELECT DISTINCT department_id FROM employees
+```
+
 
 
 
