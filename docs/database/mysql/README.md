@@ -252,6 +252,33 @@ SELECT employee_id, last_name AS name FROM employees
 SELECT DISTINCT department_id FROM employees
 ```
 
+#### 4.5 空值参与运算
+```sql
+# 1.空值： NULL
+# 2.NULL 不等同于 0 '' 'null'
+# 3.空值参与计算：结果也一定为空
+SELECT employee_id, salary "月工资", salary * (1 + commission_pct) * 12 "年工资", commission_pct FROM employees
+
+# 4.使用流程控制语句，防止空值的出现
+SELECT employee_id, salary "月工资", salary * (1 + IFNULL(commission_pct,0)) * 12 "年工资", commission_pct FROM employees
+```
+
+#### 4.6 着重号
+```sql
+# 如果表名称是个关键字，需要使用 着重号包裹一下，防止出错
+SELECT * FROM `order`
+```
+
+#### 4.7 过滤数据 
+
+```sql
+# 查询 90号部门的员工信息
+SELECT * FROM employees WHERE department_id = 90
+
+# 查询 last_name 为King的员工信息
+SELECT * FROM employees WHERE last_name = 'King'
+```
+
 
 
 
