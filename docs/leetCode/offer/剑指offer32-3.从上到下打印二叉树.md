@@ -31,30 +31,34 @@ sidebar: auto
  * @param {TreeNode} root
  * @return {number[][]}
  */
-var levelOrder = function(root) {
+var levelOrder = function (root) {
   let res = [];
-  if(root == null) {
+  if (root == null) {
     return res;
   }
   let queue = [];
   queue.push(root);
-  
-  while(queue.length != 0) {
+
+  while (queue.length != 0) {
+    // 分层管理
     let list = [];
     const len = queue.length;
-    for(let i = 0;i < len;i++) {
-        let treeNode = queue.shift();
-        if(res.length % 2 == 0) {
-            list.push(treeNode.val);
-        } else {
-            list.unshift(treeNode.val);
-        }
-        if(treeNode.left != null) {
-            queue.push(treeNode.left);
-        }
-        if(treeNode.right != null) {
-            queue.push(treeNode.right);
-        }
+    for (let i = 0; i < len; i++) {
+      // 取出当前节点
+      let treeNode = queue.shift();
+      // 区分奇数行还是偶数行
+      if (res.length % 2 === 0) {
+        list.push(treeNode.val);
+      } else {
+        list.unshift(treeNode.val);
+      }
+      
+      if (treeNode.left !== null) {
+        queue.push(treeNode.left);
+      }
+      if (treeNode.right !== null) {
+        queue.push(treeNode.right);
+      }
     }
     res.push(list);
   }

@@ -6,11 +6,12 @@ sidebar: auto
 [题目描述](https://leetcode.cn/leetbook/read/illustrate-lcof/xswwvg/)
 
 ## 解题方案
+这道题目本质上就是二叉树的层序遍历
 
 ### 思路：
 - 标签: 树的广度遍历
-- 通过广度遍历BFS 可以进行每一层的节点值获取，通过队列的方式，将当前层节点的下一层子节点放入队列中，用于下一次循环取值，同时将本层的节点放入到本层数组中，当前层循环结束后塞入结果数组中
-- 时间复杂度：O(n)O(n)，空间复杂度：O(n)O(n)
+- 通过广度遍历BFS，可以进行每一层的节点值获取，通过队列的方式，将当前层节点的下一层子节点放入队列中，用于下一次循环取值，同时将本层的节点放入到本层数组中，当前层循环结束后塞入结果数组中
+- 时间复杂度：O(n)，空间复杂度：O(n)
 
 ### 算法流程：
 - 1、初始化队列queue和结果res
@@ -41,21 +42,23 @@ var levelOrder = function(root) {
   
   queue.push(root);
   
-  while(queue.length != 0) {
+  while(queue.length !== 0) {
+    // 每一层都需要一个数组存储
     let level = [];
     const len = queue.length;
     
     for(let i = 0; i < len; i++) {
+      // 拿出当前的元素
       let treeNode = queue.shift();
       level.push(treeNode.val);
-      if(treeNode.left != null) {
+      if(treeNode.left !== null) {
         queue.push(treeNode.left);
       }
-      if(treeNode.right != null) {
+      if(treeNode.right !== null) {
         queue.push(treeNode.right);
       }
     }
-    
+    // 一层完成之后放进数组中
     res.push(level);
   }
   return res;

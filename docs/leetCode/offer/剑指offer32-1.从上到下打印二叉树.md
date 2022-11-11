@@ -9,7 +9,7 @@ sidebar: auto
 
 ### 思路：
 - 标签：树的广度遍历
-- 整体思路：广度遍历的最常见的思路，使用队列按照层次存储，然后依次取出，达到按照层次进行遍历的效果
+- 整体思路：广度遍历的最常见思路，就是使用队列按照层次存储，然后依次取出，达到按照每一层进行遍历的效果
 - 时间复杂度：O(n) 空间复杂度 O(n)
 
 算法流程：
@@ -31,19 +31,29 @@ sidebar: auto
  * @return {number[]}
  */
 var levelOrder = function(root) {
-  if(root == null) {
+  // 判空处理
+  if(root === null) {
     return [];
   }
+  // 初始化空的队列
   let queue = [];
+  // 先将根节点放进去
   queue.push(root);
+  // 初始化结果数组
   let ans = [];
-  while(queue.length != 0) {
+  // 开始循环
+  while(queue.length !== 0) {
+    // 取出队列的头部元素
     let node = queue.shift();
+    // 将值放入结果数组中
     ans.push(node.val);
-    if(node.left != null) {
+
+    // 判断将左边的节点放进去
+    if(node.left !== null) {
       queue.push(node.left);
     }
-    if(node.right != null) {
+    // 将右边的节点放进去
+    if(node.right !== null) {
       queue.push(node.right);
     }
   }
