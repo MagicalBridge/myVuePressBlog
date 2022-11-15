@@ -59,25 +59,43 @@ compiler.run((err,stats) => {
 
 ```js
 const Compiler = require("./Compiler")
-// 这是webpack核心代码
+
+// webpack 内部实现是一个函数 
 function webpack(options) {
   
   // 1 初始化参数，从配置文件和shell语句中读取并合并参数，得到最终的配置对象
+  // 在真实执行webpack命令时，会传递参数  webpack --mode=production 这个会作为命令行参数传递过去
   let shellConfig = process.argv.slice(2).reduce((shellConfig, item) => {
+    // 使用=分割成 key value
     let [key, value] = item.split("=")
+    // 构造成 { mode : production } 这种形式
     shellConfig[key.slice(2)] = value
     return shellConfig
   }, {})
-
+  
+  // 将从webpack.config.js 中拿到的配置文件和传入的参数合并  
   let finalConfig = { ...options, ...shellConfig }
 
-  // - 2 用上一步得到的参数初始化Compiler对象
+  // 2 用上一步得到的参数初始化Compiler对象 是一个类
   let compiler = new Compiler(finalConfig)
+  
+  // 3 加载所有配置的插件
+  // 每个插件都有一个 apply 方法，执行这个方法的时候，将compiler传递进去。
+  for (let plugin of plugins) {
+    plugin.apply(compiler)
+  }
+
+  // 返回 compiler 
   return compiler
 }
 
+// 导出webpack函数
 module.exports = webpack
 ```
+
+返回的compiler在整个构建过程中，只有一份，是单例的。不会轻易消失，我们在plugin中拿到的就是这个。
+
+对于插件来说，会提供一个apply方法，接收 compiler 对象，插件中注册钩子函数，注册完毕之后，由webpack在合适的时机调用。
 
 我们再看下 Compiler 的逻辑。通过上述代码，可以判断出 Compiler 是一个对象。
 
