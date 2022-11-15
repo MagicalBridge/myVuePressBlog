@@ -131,14 +131,14 @@ webpack 是基于`Node.js`开发的，plugin也不例外，所以 plugin 的调�
 
 ## 深入hooks
 
-看了上述 plugin 基础模样的例子，聪明的读者会发现，我们需要开发 plugin 时，最重要的就是了解和使用 webpack 提供的 hooks。
+看了上述 plugin 基础模样的例子，聪明的读者会发现，我们需要开发 `plugin` 时，最重要的就是了解和使用 `webpack` 提供的 hooks。
 
 当开发需要时，我们可以查阅官方文档中提供的事件钩子列表：
 
 [compiler hooks](https://webpack.js.org/api/compiler-hooks/)
 [compilation hooks](https://github.com/webpack/webpack/blob/v4.42.1/lib/Compilation.js#L250)
 
-我们可以看到在事件钩子列表中看到，webpack 中会有相当多的事件钩子，基本覆盖了 webpack 构建流程中的每一个步骤，你可以在这些步骤都注册自己的处理函数，来添加额外的功能，这就是 webpack 提供的 plugin 扩展。
+我们可以看到在事件钩子列表中看到，`webpack` 中会有相当多的事件钩子，基本覆盖了 webpack 构建流程中的每一个步骤，你可以在这些步骤都注册自己的处理函数，来添加额外的功能，这就是 webpack 提供的 plugin 扩展。
 
 如果你查看了前面 compiler hooks 或者 compilation hooks 的源码链接，你会看到事件钩子是这样声明的：
 
@@ -156,18 +156,18 @@ this.hooks = {
 };
 ```
 
-从这里你可以看到各个事件钩子函数接收的参数是什么，你还会发现事件钩子会有不同的类型，例如 SyncBailHook，AsyncSeriesHook，SyncHook，接下来我们再介绍一下事件钩子的类型以及我们可以如何更好地利用各种事件钩子的类型来开发我们需要的 plugin。
+从这里你可以看到各个事件钩子函数接收的参数是什么，你还会发现事件钩子会有不同的类型，例如 `SyncBailHook，AsyncSeriesHook，SyncHook`，接下来我们再介绍一下事件钩子的类型以及我们可以如何更好地利用各种事件钩子的类型来开发我们需要的 plugin。
 
 ## hooks 类型
 
-上述提到的 webpack compiler 中使用了多种类型的事件钩子，根据其名称就可以区分是同步还是异步的，对于同步的事件钩子来说，注册事件方法tap可用，例如上述的 `shouldEmit` 应该这样来注册事件函数的：
+上述提到的 webpack compiler 中使用了多种类型的事件钩子，根据其名称就可以区分是同步还是异步的，对于同步的事件钩子来说，注册事件方法`tap`可用，例如上述的 `shouldEmit` 应该这样来注册事件函数的：
 ```js
 apply(compiler) {
   compiler.hooks.shouldEmit.tap('PluginName', (compilation) => { /* ... */ })
 }
 ```
 
-但是如果是异步的事件钩子，那么可以使用 tapPromise 或者 tapAsync 来注册事件函数，tapPromise 要求返回 Promsie 以便处理异步，而 tapAsync 则需要使用callback来返回结果，例如：
+但是如果是异步的事件钩子，那么可以使用 `tapPromise` 或者 `tapAsync` 来注册事件函数，`tapPromise` 要求返回 Promsie 以便处理异步，而 `tapAsync` 则需要使用callback来返回结果，例如：
 
 ```js
 compiler.hooks.done.tapPromise('PluginName', (stats) => {
@@ -190,7 +190,7 @@ compiler.hooks.done.tap('PluginName', (stats, callback) => {
 })
 ```
 
-关于 webpack hooks 底层的实现，其实都是基于 webpack 作者开发的[tapable](https://github.com/webpack/tapable/)
+关于 `webpack hooks` 底层的实现，其实都是基于 webpack 作者开发的[tapable](https://github.com/webpack/tapable/)
 
 而这个工具库提供的钩子类型远不止上述我们提到的这几种，多样化的钩子类型，主要是为了能够覆盖多种场景。
 
@@ -306,23 +306,4 @@ module.exports = FlowPlugin;
 ```
 
 通过 compiler 和 compilation 的生命周期 hooks，读者们也可以更好地深入了解 webpack 的整个构建工作是如何进行的，以后也能更好地应对 webpack 构建中遇见的疑难杂症。
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
