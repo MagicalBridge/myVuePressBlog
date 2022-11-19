@@ -42,6 +42,10 @@ services:
 
 在服务的配置文件中，将redis的配置文件中的host修改成 editor-redis 这个名字一定要和  docker-compose.yml 中redis的 service 一样。
 
+## 在阿里云上使用docker部署nginx
+
+我的这个博客就是部署在阿里云上的。
+
 ## 连接MySql 和 Mongodb
 和redis不同之处在于，redis 是缓存 而 MySql 和 Mongodb是数据库 需要数据持久化
 
