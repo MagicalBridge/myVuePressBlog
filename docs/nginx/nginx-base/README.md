@@ -31,7 +31,7 @@ sidebar: auto
 
 ### 3.2 安装依赖的模块
 
-```bash
+```sh
 yum  -y install gcc gcc-c++ autoconf pcre pcre-devel make automake openssl openssl-devel
 ```
 
@@ -97,6 +97,33 @@ yum install nginx -y //安装nginx
 nginx -v //查看安装的版本
 nginx -V //查看编译时的参数
 ```
+
+### 5.3 macos 下面的安装：
+
+homebrew是Mac中的一款软件包管理工具，通过brew可以很方便的在Mac中安装软件或者是卸载软件。
+
+有关brew常用的指令如下：
+
+```
+brew搜索软件命令： brew search nginx
+brew安装软件命令： brew install nginx
+brew卸载软件命令: brew uninstall nginx
+brew升级命令： sudo brew update
+查看安装信息(比如查看安装目录等) sudo brew info nginx
+查看已经安装的软件：brew list
+```
+
+使用brew安装nginx，如下命令所示：
+```sh
+brew install nginx
+```
+
+查看nginx的配置信息，如下命令：
+
+```sh
+brew info nginx
+```
+
 
 ## 6.目录
 
