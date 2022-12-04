@@ -1,5 +1,9 @@
-module.exports = function selectBlock (
+const { resolveScript } = require('./resolveScript')
+
+module.exports = function selectBlock(
   descriptor,
+  scopeId,
+  options,
   loaderContext,
   query,
   appendExtension
@@ -19,14 +23,11 @@ module.exports = function selectBlock (
 
   // script
   if (query.type === `script`) {
+    const script = resolveScript(descriptor, scopeId, options, loaderContext)
     if (appendExtension) {
-      loaderContext.resourcePath += '.' + (descriptor.script.lang || 'js')
+      loaderContext.resourcePath += '.' + (script.lang || 'js')
     }
-    loaderContext.callback(
-      null,
-      descriptor.script.content,
-      descriptor.script.map
-    )
+    loaderContext.callback(null, script.content, script.map)
     return
   }
 
@@ -36,22 +37,14 @@ module.exports = function selectBlock (
     if (appendExtension) {
       loaderContext.resourcePath += '.' + (style.lang || 'css')
     }
-    loaderContext.callback(
-      null,
-      style.content,
-      style.map
-    )
+    loaderContext.callback(null, style.content, style.map)
     return
   }
 
   // custom
   if (query.type === 'custom' && query.index != null) {
     const block = descriptor.customBlocks[query.index]
-    loaderContext.callback(
-      null,
-      block.content,
-      block.map
-    )
+    loaderContext.callback(null, block.content, block.map)
     return
   }
 }

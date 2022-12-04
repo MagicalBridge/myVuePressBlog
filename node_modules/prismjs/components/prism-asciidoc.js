@@ -28,14 +28,14 @@
 
 	var asciidoc = Prism.languages.asciidoc = {
 		'comment-block': {
-			pattern: /^(\/{4,})(?:\r?\n|\r)(?:[\s\S]*(?:\r?\n|\r))??\1/m,
+			pattern: /^(\/{4,})$[\s\S]*?^\1/m,
 			alias: 'comment'
 		},
 		'table': {
 			pattern: /^\|={3,}(?:(?:\r?\n|\r(?!\n)).*)*?(?:\r?\n|\r)\|={3,}$/m,
 			inside: {
 				'specifiers': {
-					pattern: /(?!\|)(?:(?:(?:\d+(?:\.\d+)?|\.\d+)[+*])?(?:[<^>](?:\.[<^>])?|\.[<^>])?[a-z]*)(?=\|)/,
+					pattern: /(?:(?:(?:\d+(?:\.\d+)?|\.\d+)[+*](?:[<^>](?:\.[<^>])?|\.[<^>])?|[<^>](?:\.[<^>])?|\.[<^>])[a-z]*|[a-z]+)(?=\|)/,
 					alias: 'attr-value'
 				},
 				'punctuation': {
@@ -47,7 +47,7 @@
 		},
 
 		'passthrough-block': {
-			pattern: /^(\+{4,})(?:\r?\n|\r)(?:[\s\S]*(?:\r?\n|\r))??\1$/m,
+			pattern: /^(\+{4,})$[\s\S]*?^\1$/m,
 			inside: {
 				'punctuation': /^\++|\++$/
 				// See rest below
@@ -55,7 +55,7 @@
 		},
 		// Literal blocks and listing blocks
 		'literal-block': {
-			pattern: /^(-{4,}|\.{4,})(?:\r?\n|\r)(?:[\s\S]*(?:\r?\n|\r))??\1$/m,
+			pattern: /^(-{4,}|\.{4,})$[\s\S]*?^\1$/m,
 			inside: {
 				'punctuation': /^(?:-+|\.+)|(?:-+|\.+)$/
 				// See rest below
@@ -63,7 +63,7 @@
 		},
 		// Sidebar blocks, quote blocks, example blocks and open blocks
 		'other-block': {
-			pattern: /^(--|\*{4,}|_{4,}|={4,})(?:\r?\n|\r)(?:[\s\S]*(?:\r?\n|\r))??\1$/m,
+			pattern: /^(--|\*{4,}|_{4,}|={4,})$[\s\S]*?^\1$/m,
 			inside: {
 				'punctuation': /^(?:-+|\*+|_+|=+)|(?:-+|\*+|_+|=+)$/
 				// See rest below
@@ -109,7 +109,7 @@
 			alias: 'punctuation'
 		},
 		'admonition': {
-			pattern: /^(?:TIP|NOTE|IMPORTANT|WARNING|CAUTION):/m,
+			pattern: /^(?:CAUTION|IMPORTANT|NOTE|TIP|WARNING):/m,
 			alias: 'keyword'
 		},
 		'callout': [
@@ -129,7 +129,7 @@
 				'function': /^[a-z\d-]+(?=:)/,
 				'punctuation': /^::?/,
 				'attributes': {
-					pattern: /(?:\[(?:[^\]\\"]|(["'])(?:(?!\1)[^\\]|\\.)*\1|\\.)*\])/,
+					pattern: /(?:\[(?:[^\]\\"']|(["'])(?:(?!\1)[^\\]|\\.)*\1|\\.)*\])/,
 					inside: attributes.inside
 				}
 			}
@@ -149,7 +149,7 @@
 			Those do not have the restrictions of the constrained quotes.
 			They are, in order: __emphasis__, **strong**, ++monospace++, +++passthrough+++, ##unquoted##, $$passthrough$$, ~subscript~, ^superscript^, {attribute-reference}, [[anchor]], [[[bibliography anchor]]], <<xref>>, (((indexes))) and ((indexes))
 			 */
-			pattern: /(^|[^\\])(?:(?:\B\[(?:[^\]\\"]|(["'])(?:(?!\2)[^\\]|\\.)*\2|\\.)*\])?(?:\b_(?!\s)(?: _|[^_\\\r\n]|\\.)+(?:(?:\r?\n|\r)(?: _|[^_\\\r\n]|\\.)+)*_\b|\B``(?!\s).+?(?:(?:\r?\n|\r).+?)*''\B|\B`(?!\s)(?:[^`'\s]|\s+\S)+['`]\B|\B(['*+#])(?!\s)(?: \3|(?!\3)[^\\\r\n]|\\.)+(?:(?:\r?\n|\r)(?: \3|(?!\3)[^\\\r\n]|\\.)+)*\3\B)|(?:\[(?:[^\]\\"]|(["'])(?:(?!\4)[^\\]|\\.)*\4|\\.)*\])?(?:(__|\*\*|\+\+\+?|##|\$\$|[~^]).+?(?:(?:\r?\n|\r).+?)*\5|\{[^}\r\n]+\}|\[\[\[?.+?(?:(?:\r?\n|\r).+?)*\]?\]\]|<<.+?(?:(?:\r?\n|\r).+?)*>>|\(\(\(?.+?(?:(?:\r?\n|\r).+?)*\)?\)\)))/m,
+			pattern: /(^|[^\\])(?:(?:\B\[(?:[^\]\\"']|(["'])(?:(?!\2)[^\\]|\\.)*\2|\\.)*\])?(?:\b_(?!\s)(?: _|[^_\\\r\n]|\\.)+(?:(?:\r?\n|\r)(?: _|[^_\\\r\n]|\\.)+)*_\b|\B``(?!\s).+?(?:(?:\r?\n|\r).+?)*''\B|\B`(?!\s)(?:[^`'\s]|\s+\S)+['`]\B|\B(['*+#])(?!\s)(?: \3|(?!\3)[^\\\r\n]|\\.)+(?:(?:\r?\n|\r)(?: \3|(?!\3)[^\\\r\n]|\\.)+)*\3\B)|(?:\[(?:[^\]\\"']|(["'])(?:(?!\4)[^\\]|\\.)*\4|\\.)*\])?(?:(__|\*\*|\+\+\+?|##|\$\$|[~^]).+?(?:(?:\r?\n|\r).+?)*\5|\{[^}\r\n]+\}|\[\[\[?.+?(?:(?:\r?\n|\r).+?)*\]?\]\]|<<.+?(?:(?:\r?\n|\r).+?)*>>|\(\(\(?.+?(?:(?:\r?\n|\r).+?)*\)?\)\)))/m,
 			lookbehind: true,
 			inside: {
 				'attributes': attributes,
@@ -186,7 +186,7 @@
 			}
 		},
 		'replacement': {
-			pattern: /\((?:C|TM|R)\)/,
+			pattern: /\((?:C|R|TM)\)/,
 			alias: 'builtin'
 		},
 		'entity': /&#?[\da-z]{1,8};/i,
