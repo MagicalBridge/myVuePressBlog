@@ -1,3 +1,9 @@
+---
+sidebar: auto
+---
+
+# 剑指Offer39.数组中出现次数超过一半的数字
+
 题目描述
 
 数组中有一个数字出现的次数超过数组长度的一半，请找出这个数字。
@@ -5,6 +11,7 @@
 你可以假设数组是非空的，并且给定的数组元素总是存在多数元素。
 
 示例：
+
 ```
 输入：[1, 2, 3, 2, 2, 2, 5, 4, 2]
 输出：2
@@ -14,6 +21,43 @@
 1 <= 数组长度 <= 50000
 
 ## 解题方案
+
+哈希表:
+
+我们知道出现次数最多的元素大于 `n/2` 次，所以可以使用hash表来快速统计每个元素出现的次数。
+
+我们使用哈希映射（HashMap）来存储每个元素以及出现的次数。对于哈希映射中的每个键值对，键表示一个元素，值表示该元素出现的次数。
+
+我们用一个循环遍历数组 nums 并将数组中的每个元素加入哈希映射中。在这之后，我们遍历哈希映射中的所有键值对，返回值最大的键。
+
+```js
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var majorityElement = function (nums) {
+  const map = new Map()
+
+  for (let i = 0; i < nums.length; i++) {
+    const num = nums[i]
+    // 如果map中存在
+    if (!map.has(num)) {
+      map.set(num, 1)
+    } else {
+      map.set(num, map.get(num) + 1)
+    }
+  }
+
+  // 遍历map使用 entries 这个方法 非常合适
+  for(let [key,value] of map.entries()) {
+    if (value > (nums.length / 2)) {
+      return key
+    }
+  }
+};
+```
+
+
 思路：
 - 标签：摩尔投票
 - 本题的常见的解法有三种
