@@ -48,6 +48,34 @@ function newAst(){}
 
 ![抽象语法树](../images/webpack/03.png)
 
+或者换一个解析工具[esprima](https://esprima.org/demo/parse.html#), 生成一个我们比较熟悉的对象结构：
+
+```js
+{
+  "type": "Program",
+  "body": [
+    {
+      "type": "FunctionDeclaration",
+      "id": {
+        "type": "Identifier",
+        "name": "ast"
+      },
+      "params": [],
+      "body": {
+        "type": "BlockStatement",
+        "body": []
+      },
+      "generator": false,
+      "expression": false,
+      "async": false
+    }
+  ],
+  "sourceType": "script"
+}
+```
+
+从上面两种结果的比较可以看出，不同平台生成的结构存在些许的差异，但是基本的结构是相同的。
+
 从图中我们可以看到，抽象语法树其实是一个对象，type 字段标识的是层级结构类型，里面还有一些字段，标识具体的类型、参数等等。
 
 我们要做的就是将函数生成这样的结构，然后解析，最后返回出一个新的函数。
@@ -57,6 +85,7 @@ function newAst(){}
 ```bash
 npm i esprima estraverse escodegen -S
 ```
+
 - esprima: 这个包能将源代码生成抽象语法树
 - estraverse: 这个包能遍历抽象语法树，修改树上的代码
 - escodegen: 将抽象语法树，重新生成代码
@@ -76,6 +105,7 @@ let indent = 0
 const padding = () => " ".repeat(indent)
 
 // 调用 traverse方法遍历语法树
+// function ESTraverse.traverse(root: Node, visitor: estraverse.Visitor): void
 estraverse.traverse(ast, {
   enter(node) {
     console.log(padding() + node.type + "进入")
@@ -108,9 +138,12 @@ Program进入
     BlockStatement离开
   FunctionDeclaration离开
 Program离开
+```
 
-function newAst() {
-}
+最终打印的新生成的函数结果是：
+
+```js
+function newAst() {}
 ```
 
 通过上面的小例子，是不是感觉似曾相识，如果你有这种感觉就对了，这个就特别类似于我们在平时工作中使用的babel。
@@ -215,9 +248,14 @@ let selfArrowFunctionsPlugin = function () {
       // 处理所有的箭头函数节点
       // nodePath 是节点路径
       ArrowFunctionExpression(path) {
+        // path的node节点，才是真正的节点
         let node = path.node
-        // 将node的类型修改成 函数声明的形式
-        node.type = "FunctionExpression"
+        let params = node.params
+        let body = node.body
+        // 使用types生成新的函数声明，有些参数是从老的函数中直接拿来复用
+        let func = types.functionExpression(null, params, body, false, false)
+        // 替换老的节点
+        path.replaceWith(func)
       },
     },
   }
@@ -243,10 +281,12 @@ console.log(targetCode.code)
 // };
 ```
 
-上面代码中，我们遍历node节点，修改node节点的type，修改为函数声明。就可以了。但是还有一个 this的问题没有解决。
+上面代码中，我们遍历node节点，利用`babel-types`来生成新的函数，但是还有一个 this的问题没有解决。
 
 ## 解决this指向的问题
+
 为了更加了解细节，我们把访问器函数中的 path 属性打印出来
+
 ```js
 NodePath {
   contexts: [

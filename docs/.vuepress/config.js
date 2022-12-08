@@ -70,7 +70,16 @@ module.exports = {
       },
       {
         text: "React",
-        link: "/react/",
+        items: [
+          {
+            text: "React中的性能优化",
+            link: "/react/React中的性能优化/",
+          },
+          {
+            text: "React中的useRef",
+            link: "/react/React中的useRef/",
+          }
+        ],
       },
       {
         text: "前端工程化",

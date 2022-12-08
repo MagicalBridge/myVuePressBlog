@@ -5,6 +5,8 @@ sidebar: auto
 # 1.webpack基础
 本质上, webpack是一个用于现代`JavaScript`应用程序的静态模块打包工具，当webpack处理程序的时候，它会在内部构建一个依赖图(dependency graph), 这个依赖图对应映射到项目所需要的每个模块，并生成一个或者多个`bundle`。
 
+
+
 ## 1.1如何安装
 在 npm 项目中执行如下命令，可以安装对应的模块。
 ```bash
@@ -22,16 +24,16 @@ npm install  webpack webpack-cli --save-dev
 ```
 :::
 
-webpack-cli 是使用webpack的命令行工具，在4.x版本之后不再作为webpack的依赖了，我们使用的时候需要单独安装这个工具。
+webpack-cli 是使用webpack的命令行工具，在4.x版本之后不再作为webpack的依赖了，使用webpack的时候需要单独安装这个工具。
 
 我们优先选择使用本地开发依赖安装的webpack，即上述的这种方式，这么做的好处是：
 
 - 1、可以为项目指定依赖的webpack版本，不同项目可以使用不同版本的webpack
 - 2、clone代码后可以快速使用npm 或者 yarn 安装依赖的webpack
-- 3、协作的多人可以确保项目使用版本相同的webpack，避免使用全局安装的不同版本webpack而出现问题。
+- 3、协作的多人可以确保项目使用版本相同的webpack，避免使用全局安装的不同版本webpack而出现问题
 
 
-webpack的配置其实是一个Node的脚本，这个脚本对外暴露一个配置对象，webpack通过这个对象来读取相关的一些配置。因为是node脚本，所以灵活度非常高，可以使用node上的任何模块，如上面提到的`path`模块。当然第三方模块也可以。
+webpack的配置其实是一个node脚本，这个脚本对外暴露一个配置对象，webpack通过这个对象来读取相关的一些配置。因为是node脚本，所以灵活度非常高，可以使用node上的任何模块，如上面提到的`path`模块。当然第三方模块也可以。
 
 
 ## 1.2 入口(entry)
@@ -63,7 +65,7 @@ entry: {
 },
 ```
 
-### 1.2.1 src\index.js
+### 1.2.1 src/index.js
 我们在`src`目录中创建`index.js`,添加代码如下。
 
 ```js
