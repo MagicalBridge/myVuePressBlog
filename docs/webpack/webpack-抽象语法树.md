@@ -281,7 +281,163 @@ console.log(targetCode.code)
 // };
 ```
 
-上面代码中，我们遍历node节点，利用`babel-types`来生成新的函数，但是还有一个 this的问题没有解决。
+上面代码中，我们遍历node节点，利用`babel-types`来生成新的函数。
+
+## 解决代码块的问题
+
+思考一个场景, 我们在写箭头函数的时候, 当代码块只有一行语句时，我们一般可以省略大括号。
+
+```js
+// 带有代码块包裹
+const sum = (a,b) => {
+  return a + b
+}
+// 以上两种写法是等价的
+const sum = (a,b) =>  a + b
+```
+
+使用ast工具解析出来的tree类型
+```js
+{
+  "type": "Program",
+  "body": [
+    {
+      "type": "VariableDeclaration",
+      "declarations": [
+        {
+          "type": "VariableDeclarator",
+          "id": {
+            "type": "Identifier",
+            "name": "sum"
+          },
+          "init": {
+            "type": "ArrowFunctionExpression",
+            "id": null,
+            "params": [
+              {
+                "type": "Identifier",
+                "name": "a"
+              },
+              {
+                "type": "Identifier",
+                "name": "b"
+              }
+            ],
+            "body": {
+              "type": "BlockStatement",
+              "body": [
+                {
+                  "type": "ReturnStatement",
+                  "argument": {
+                    "type": "BinaryExpression",
+                    "operator": "+",
+                    "left": {
+                      "type": "Identifier",
+                      "name": "a"
+                    },
+                    "right": {
+                      "type": "Identifier",
+                      "name": "b"
+                    }
+                  }
+                }
+              ]
+            },
+            "generator": false,
+            "expression": false,
+            "async": false
+          }
+        }
+      ],
+      "kind": "const"
+    }
+  ],
+  "sourceType": "script"
+}
+```
+
+不携带return
+```js
+{
+  "type": "Program",
+  "body": [
+    {
+      "type": "VariableDeclaration",
+      "declarations": [
+        {
+          "type": "VariableDeclarator",
+          "id": {
+            "type": "Identifier",
+            "name": "sum"
+          },
+          "init": {
+            "type": "ArrowFunctionExpression",
+            "id": null,
+            "params": [
+              {
+                "type": "Identifier",
+                "name": "a"
+              },
+              {
+                "type": "Identifier",
+                "name": "b"
+              }
+            ],
+            "body": {
+              "type": "BinaryExpression",
+              "operator": "+",
+              "left": {
+                "type": "Identifier",
+                "name": "a"
+              },
+              "right": {
+                "type": "Identifier",
+                "name": "b"
+              }
+            },
+            "generator": false,
+            "expression": true,
+            "async": false
+          }
+        }
+      ],
+      "kind": "const"
+    }
+  ],
+  "sourceType": "script"
+}
+```
+
+从生成的两份ast来看，只有部分内容有差异，但是我们确实需要针对这部分差异做一些处理，否则编译的时候就会报错。
+
+```js{12-15}
+// ...
+let selfArrowFunctionsPlugin = function () {
+  return {
+    visitor: {
+      // 处理所有的箭头函数节点
+      // nodePath 是节点路径
+      ArrowFunctionExpression(path) {
+        // path的node节点，才是真正的节点
+        let node = path.node
+        let params = node.params
+        let body = node.body
+        if (!types.isBlockStatement(body)) {
+          let returnStatement = types.returnStatement(body)
+          body = types.blockStatement([returnStatement])
+        }
+        // 使用types生成新的函数声明，有些参数是从老的函数中直接拿来复用
+        let func = types.functionExpression(null, params, body, false, false)
+        // 替换老的节点
+        path.replaceWith(func)
+      },
+    },
+  }
+}
+// ...
+```
+
+
 
 ## 解决this指向的问题
 
