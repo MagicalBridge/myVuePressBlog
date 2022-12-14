@@ -165,6 +165,9 @@ effect(() => {
 })
 ```
 
+外部采用weakMap,内部使用 map effect为了去重使用 set 存储。
+
+
 ```js{2,27-28,40-64}
 // 借助js单线程的特性，先设置一个全局的变量
 export let activeEffect = undefined
@@ -215,14 +218,14 @@ export function track(target, propKey) {
       targetMap.set(target, (depsMap = new Map()))
     }
 
-    // 开始处理key相关
+    // 开始处理key相关 name 或者 age
     let deps = depsMap.get(propKey)
     if (!deps) {
       // 这里把deps设计成一个set，因为在同一个effect中
       // 可能会多次使用同一个属性，无需重复收集
       depsMap.set(propKey, (deps = new Set()))
     }
-    // 没有收集这个依赖
+    // 假设 name 对应的set中 没有收集这个effect 才去添加
     let shouldTrack = !deps.has(activeEffect)
     if (shouldTrack) {
       // 就把当前activeEffect放进去
@@ -312,7 +315,7 @@ export function track(target, propKey) {
     if (shouldTrack) {
       // 就把 activeEffect 放进去
       deps.add(activeEffect)
-      // 双向记忆
+      // 双向记忆deps activeEffect.deps 记录的是当前effect关联属性对应的effect
       activeEffect.deps.push(deps)
     }
   }
@@ -404,19 +407,20 @@ export function cleanEffect(effect) {
 ## 停止effect
 
 看这样一个使用场景：
+
 ```js
 const { effect, reactive } = VueReactivity
-    const state = reactive({ name: 'louis', age: 25, flag: true })
+const state = reactive({ name: 'louis', age: 25, flag: true })
 
-    const runner = effect(() => {
-      document.body.innerHTML = state.flag ? state.name : state.age
-    });
+const runner = effect(() => {
+  document.body.innerHTML = state.flag ? state.name : state.age
+});
 
-    runner.effect.stop()
+runner.effect.stop()
 
-    setTimeout(() => {
-      state.flag = false;
-    }, 1000)
+setTimeout(() => {
+  state.flag = false;
+}, 1000)
 ```
 
 
