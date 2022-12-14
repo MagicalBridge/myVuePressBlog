@@ -78,6 +78,10 @@ module.exports = {
           {
             text: "React中的useRef",
             link: "/react/React中的useRef/",
+          },
+          {
+            text: "React中的forwardRef",
+            link: "/react/React中的forwardRef/",
           }
         ],
       },
