@@ -95,19 +95,21 @@ finally {
 
 ```js
 effect(() => { // e1
-  state.name //  
+  app.innerHTML = state.name
   effect(() => { // e2
-    state.age
+    app.innerHTML = state.age
   })
-  state.address 
+  app.innerHTML = state.address 
 })
 ```
 
-上面代码中, 我们的effect出现了嵌套使用的场景，这样就会存在一个问题，当我们进入e2函数取age属性完毕之后，这个函数就是执行完毕了，完毕之后，会将avtiveEffect变量置为undefined，但是当我们的访问 address 属性的时候，就找不到了。
+上面代码中, effect出现了嵌套使用的场景，name属性会记住 e1，age属性会记住e2, 这样就会存在一个问题，当我们进入e2函数取age属性完毕之后，这个函数就是执行完毕了，完毕之后，会将avtiveEffect变量置为undefined，但是当我们的访问 address 属性的时候，就找不到了。
 
-为此，我们需要维护一种关系。在早期的vue3版本中，使用的是栈这种数据结构来维护的关系。就拿上面的例子来说，进入函数之后，name属性依赖于e1, age属性依赖于e2,这个时候将e2入栈，执行完毕之后将e2出栈，这个时候address就能够找到e1了。
+为此，我们需要维护一种关系。在早期的vue3版本中，使用的是栈这种数据结构来维护的关系。就拿上面的例子来说，进入函数之后，name属性依赖于e1, e1入栈，age属性依赖于e2, 这个时候将e2入栈，执行完毕之后将e2出栈，这个时候address就能够找到e1了。
 
 在新的版本中，使用的是一个属性标识，简单来说，就是让每个effect记住自己的父亲是谁，当自己运行完毕之后，再把全局变量赋值回自己的父亲。
+
+来看一下具体的代码实现。
 
 ```js{7,16,21-22}
 // 借助js单线程的特性，先设置一个全局的变量
@@ -131,7 +133,7 @@ class ReactiveEffect {
     } finally {
       // 因为我们的变量是放在全局上的，当我们函数执行完毕之后，还应该把这个值清空
       avtiveEffect = this.parent
-      this.parent = null
+      this.parent = undefined
     }
   }
 }
@@ -147,10 +149,21 @@ export function effect(fn) {
 ```
 [try finnally的用法](https://segmentfault.com/a/1190000015196493)
 
-还拿上面的例子说明，执行外层的effect时，avtiveEffect是个undefined，this.parent就是undefined
-
+还拿上面的例子说明，执行外层的effect时，avtiveEffect 是个undefined，this.parent就是undefined, 进入内层的时候e2的 this.parent 属性记录为e1, avtiveEffect此时为e2, 当e2执行完毕之后，avtiveEffect 重置为e1, 最后，当e1也执行完毕之后，avtiveEffect重置为最初的undefined。 
 
 ## 依赖收集实现
+
+在具体的使用场景中，一个属性可以对应多个effect，同样的，一个effect可以对应多个属性，如下面的代码所示：
+
+```js
+effect(() => { 
+  app.innerHTML = state.name + state.address 
+})
+
+effect(() => { 
+  app.innerHTML = state.name
+})
+```
 
 ```js{2,27-28,40-64}
 // 借助js单线程的特性，先设置一个全局的变量
@@ -174,7 +187,7 @@ class ReactiveEffect {
     } finally {
       // 因为我们的变量是放在全局上的，当我们函数执行完毕之后，还应该把这个值清空
       activeEffect = this.parent
-      this.parent = null
+      this.parent = undefined
     }
   }
 }
