@@ -381,7 +381,7 @@ class ReactiveEffect {
     try {
       this.parent = activeEffect
       activeEffect = this
-      cleanEffect() // 先清理
+      cleanEffect(this) // 先清理
       this.fn()
     } finally {
       activeEffect = this.parent
@@ -404,9 +404,36 @@ export function cleanEffect(effect) {
 // ...
 ```
 
+在每次渲染之前，都先清理之前的依赖，但是这会有一个问题，在执行`this.fn()`的时候会进行收集依赖，这样边删除，边收集会造成死循环。
+为了解决这个问题，需要在trigger方法中做一些处理，创建一个副本，这样就不会死循环了。
+
+
+```js
+// ....
+export function trigger(target, propKey, value) {
+  // 一层一层的查找
+  let depsMap = targetMap.get(target)
+  if (!depsMap) {
+    // 如果没有找到，说明没有依赖任何effect
+    return
+  }
+  let effects = depsMap.get(propKey)
+  
+  // 创建一个副本
+  if (effects) {
+    effects = new Set(effects)
+  }
+  // 获取到对应的set之后，遍历执行里面的run方法
+  effects && effects.forEach((effect) => { effect.run() })
+}
+// ...
+```
+
+
+
 ## 停止effect
 
-看这样一个使用场景：
+看这样一个使用场景：如果我们手动的停止依赖收集的操作，当我们在更改属性的时候，页面就不应该更新了。这里需要注意，目前的代码中effect函数是直接调用的run方法，源码的设计中，返回的是一个runner。
 
 ```js
 const { effect, reactive } = VueReactivity
@@ -423,11 +450,110 @@ setTimeout(() => {
 }, 1000)
 ```
 
+实现stop方法:
+
+```js{23-28}
+class ReactiveEffect {
+  public active: boolean = true
+  public fn
+  public parent = null
+  public deps = [] // 实例上挂载一个deps数组
+  constructor(fn) {
+    this.fn = fn
+  }
+  run() {
+    // 执行这个函数的时候，就会到proxy上去取值，就会触发get方法。
+    // 取值的时候，要让当前的属性和对应的effect关联起来 这就是依赖收集
+    // 执行run函数的时候，将当前的这个实例赋值给这个变量, 也就放在了全局上
+    try {
+      this.parent = activeEffect
+      activeEffect = this
+      this.fn()
+    } finally {
+      // 因为我们的变量是放在全局上的，当我们函数执行完毕之后，还应该把这个值清空
+      activeEffect = this.parent
+      this.parent = null
+    }
+  }
+  stop() {
+    if (this.active) {
+      this.active = false
+      cleanEffect(this)
+    }
+  }
+}
+```
+
+同样的，针对返回runner，需要修改effect函数的实现
+```js
+export function effect(fn) {
+  // 将用户传递的函数编程响应式的effect
+  const _effect = new ReactiveEffect(fn)
+  // 更改runner中的this
+  _effect.run()
+  const runner = _effect.run.bind(_effect)
+  runner.effect = _effect // 暴露effect的实例
+  return runner // 用户可以手动调用runner重新执行
+}
+```
+
+## 批量更新
+effect函数接收接收两个参数，一个是fn, 还可以提供一个调度函数，这个调度函数允许用户自定义指定一些操作。
+
+```js
+  const { effect, reactive } = VueReactivity;
+  // 会对属性进行劫持 proxy， 监听用户的获取操作和设置操作
+  const state = reactive({ flag: true, name: 'jw', age: 30, n: { n: 100 } })
+  let waiting = false
+  const runner = effect(() => { // 副作用函数 (effect执行渲染了页面)
+    console.log('runner')
+    document.body.innerHTML = state.age;
+  }, {
+    scheduler() { // 调度函数
+      if (!waiting) {
+        waiting = true
+        Promise.resolve().then(() => {
+          runner();
+          waiting = false;
+        })
+      }
+    }
+  });
+  setTimeout(() => {
+    state.age++
+    state.age++
+    state.age++
+  }, 1000)
+```
+scheduler 函数内部模拟了一个微任务，当宏任务执行完成后，开始执行内部的代码。因为是支持用户的自定义操作，trigger对应的内容也应该做相应的修改。
 
 
-
-
-
+```js
+// ....
+export function trigger(target, propKey, value) {
+  // 一层一层的查找
+  let depsMap = targetMap.get(target)
+  if (!depsMap) {
+    // 如果没有找到，说明没有依赖任何effect
+    return
+  }
+  let effects = depsMap.get(propKey)
+  
+  // 创建一个副本
+  if (effects) {
+    effects = new Set(effects)
+  }
+  // 获取到对应的set之后，遍历执行里面的run方法
+  effects && effects.forEach((effect) => { 
+    if (effect.scheduler) {
+      effect.scheduler(); // 可以提供一个调度函数，用户实现自己的逻辑
+    } else {
+      effect.run() 
+    }
+  })
+}
+// ...
+```
 
 
 

@@ -103,6 +103,10 @@ module.exports = {
           {
             text:"webpack-抽象语法树",
             link:"/webpack/webpack-抽象语法树"
+          },
+          {
+            text:"rollup",
+            link:"/rollup/"
           }
         ],
       },
