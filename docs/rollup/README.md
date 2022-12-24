@@ -136,7 +136,6 @@ console.log(result);
 }
 ```
 
-
 更新配置文件：
 
 ```js{1,10-15}
@@ -156,9 +155,245 @@ export default {
     }),
   ],
 }
+```
+
+重新编译, 变成了普通函数。
+
+```js
+'use strict';
+// 最简单的打包配置
+// console.log("hello rollup");
+
+// 使用新的语法，用babel来转义
+var sum = function sum(a, b) {
+  return a + b;
+};
+var result = sum(1, 2);
+console.log(result);
+```
+
+## 使用第三方模块
+
+rollup编译源码中的模块引用，默认只支持ESM的模块加载方式 `import/export`
+
+### 安装依赖
+
+```bash
+npm install @rollup/plugin-node-resolve @rollup/plugin-commonjs  lodash  --save-dev
+```
+
+更新配置文件：
+
+```js{2-3,17-18}
+import babel from "@rollup/plugin-babel"
+import resolve from "@rollup/plugin-node-resolve"
+import commonjs from "@rollup/plugin-commonjs"
+
+export default {
+  input: "src/main.js",
+  output: {
+    file: "dist/bundle.cjs.js", //输出文件的路径和名称
+    format: "cjs", //五种输出格式：amd/es6/iife/umd/cjs
+    name: "rollup-bundleName", //当format为iife和umd时必须提供，将作为全局变量挂在window下
+  },
+  plugins: [
+    babel({
+      babelHelpers: "bundled", // 这个配置babel希望被显示的配置上去
+      exclude: "node_modules/**",
+    }),
+    resolve(),
+    commonjs(),
+  ],
+}
 
 ```
 
+安装完毕之后，`src\main.js`中引用 lodash 看看效果。
+
+
+## 如何使用CDN
+
+一些类库会使用到CDN这种形式，而不是本地安装的包，这种场景下rollup也是支持的。
+
+`src\main.js`
+
+```js
+import _ from 'lodash';
+import $ from 'jquery';
+console.log(_.concat([1,2,3],4,5));
+console.log($);
+export default 'main';
+```
+
+`dist\index.html`
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>rollup</title>
+</head>
+<body>
+  <script src="https://cdn.jsdelivr.net/npm/lodash/lodash.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery/jquery.min.js"></script>
+  <script src="bundle.cjs.js"></script>
+</body>
+</html>
+```
+
+rollup.config.js
+
+```js
+import babel from "@rollup/plugin-babel"
+import resolve from "@rollup/plugin-node-resolve"
+import commonjs from "@rollup/plugin-commonjs"
+
+export default {
+  input: "src/main.js",
+  output: {
+    file: "dist/bundle.cjs.js", //输出文件的路径和名称
+    format: "iife", //五种输出格式：amd/es6/iife/umd/cjs
+    name: "bundleName", //当format为iife和umd时必须提供，将作为全局变量挂在window下
+    global: {
+      lodash: "_",
+      jquery: "$",
+    },
+  },
+  external: ["lodash", "jquery"],
+  plugins: [
+    babel({
+      babelHelpers: "bundled", // 这个配置babel希望被显示的配置上去
+      exclude: "node_modules/**",
+    }),
+    resolve(),
+    commonjs(),
+  ],
+}
+
+```
+
+重新编译打印出来的 budle.cjs.js
+```js
+var bundleName = (function (_, $) {
+	'use strict';
+
+	function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
+
+	var ___default = /*#__PURE__*/_interopDefaultLegacy(_);
+	var $__default = /*#__PURE__*/_interopDefaultLegacy($);
+
+	// 最简单的打包配置
+	console.log(___default["default"].concat([1, 2, 3], 4, 5));
+	console.log($__default["default"]);
+	var main = 'main';
+
+	return main;
+
+})(_, $);
+```
+
+
+## 如何支持typescript 并进行代码压缩
+
+首先也是需要安装支持的插件：
+
+```bash
+npm install tslib typescript @rollup/plugin-typescript --save-dev
+```
+
+如果想要实现代码压缩，还需要使用一个插件 `terser`
+
+```bash
+npm install rollup-plugin-terser --save-dev
+```
+
+添加 tsconfig.json 文件
+
+```js
+{
+  "compilerOptions": {  
+    "target": "es5",                          
+    "module": "ESNext",                     
+    "strict": true,                         
+    "skipLibCheck": true,                    
+    "forceConsistentCasingInFileNames": true 
+  }
+}
+```
+
+`src\main.ts`
+
+```js
+let myName:string = 'name';
+let age:number=12;
+console.log(myName,age);
+```
+
+rollup.config.js
+
+```js{2-3,6,17-18}
+import babel from "@rollup/plugin-babel";
+import typescript from '@rollup/plugin-typescript';
+import { terser } from 'rollup-plugin-terser';
+
+export default {
+  input: "src/main.ts",
+  output: {
+    file: "dist/bundle.cjs.js", //输出文件的路径和名称
+    format: "cjs", //五种输出格式：amd/es6/iife/umd/cjs
+    name: "bundleName", //当format为iife和umd时必须提供，将作为全局变量挂在window下
+  },
+  plugins: [
+    babel({
+      babelHelpers: "bundled", // 这个配置babel希望被显示的配置上去
+      exclude: "node_modules/**",
+    }),
+    typescript(),
+    terser()
+  ],
+}
+```
+
+编译出来的文件：只有一行，连变量声明都没有了，只有打印的语句
+
+```js
+"use strict";console.log("zhufeng",12);
+```
+
+## 支持启动本地服务器
+
+安装依赖
+
+```bash
+npm install rollup-plugin-serve --save-dev
+```
+
+修改配置文件：
+
+```js{2,13-17}
+import typescript from "@rollup/plugin-typescript"
+import serve from "rollup-plugin-serve"
+
+export default {
+  input: "src/main.ts",
+  output: {
+    file: "dist/bundle.cjs.js", //输出文件的路径和名称
+    format: "cjs", //五种输出格式：amd/es6/iife/umd/cjs
+    name: "bundleName", //当format为iife和umd时必须提供，将作为全局变量挂在window下
+  },
+  plugins: [
+    typescript(),
+    serve({
+      open: true,
+      port: 8081,
+      contentBase: "./dist",
+    }),
+  ],
+}
+```
 
 
 
