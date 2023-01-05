@@ -73,16 +73,20 @@ module.exports = {
         items: [
           {
             text: "React中的性能优化",
-            link: "/react/React中的性能优化/",
+            link: "/react/React中的性能优化",
           },
           {
             text: "React中的useRef",
-            link: "/react/React中的useRef/",
+            link: "/react/React中的useRef",
           },
           {
             text: "React中的forwardRef",
-            link: "/react/React中的forwardRef/",
-          }
+            link: "/react/React中的forwardRef",
+          },
+          {
+            text: "React中的useMemo",
+            link: "/react/React中的useMemo",
+          },
         ],
       },
       {

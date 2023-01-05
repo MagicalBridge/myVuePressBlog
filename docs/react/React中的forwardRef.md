@@ -61,7 +61,7 @@ import React from 'react';
 const Foo = React.forwardRef((props, myRef) => {
   return (
     <div>
-      <p>....一些其他节点</p>								{/*4*/}
+      <p>....一些其他节点</p>								                         {/*4*/}
       <input type="text" defaultValue='ref 成功转发到 Foo 组件内部的 input节点上' ref={myRef}/>
       <p>....一些其他节点</p>
       <p>....一些其他节点</p>
@@ -92,7 +92,7 @@ export default Foo;
 第一个很好理解，我们上面的例子已经体现了这一点, ref 最终被挂载到了 input 节点上, input是一个HTML元素，所以current中保留的是DOM元素。
 
 
-对于第二点，我们现在用另一个组件来演示
+对于第二点，我们现在用另一个组件来演示：
 
 ```jsx
 // Bar.jsx
@@ -150,7 +150,7 @@ export default class App extends React.Component {
 
 第一条打印是 Bar 组件挂载后生命周期函数打印的
 
-第二条打印是点击按钮后打印的，证明确实只是挂载到了组件实例上。后面的高阶组件中还会出现类似的问题。
+第二条打印是点击按钮后打印的，证明确实只是挂载到了组件实例上。
 
 对于第三个，不能在函数组件上使用 ref 属性，因为他们没有实例 这点特别重要。
 
@@ -184,7 +184,7 @@ export default Baz;
 const Baz = React.forwardRef((props, ref) => {
   return (
     <div>
-      啊？
+      被forwardRef包裹的函数组件
     </div>
   );
 })
