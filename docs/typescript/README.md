@@ -13,7 +13,7 @@ sidebar: auto
 * [TypeScript 泛型](./chapter2/generic.md)
 * [TypeScript 类型推断](./chapter2/inference.md)
 * [type & interface](https://zhuanlan.zhihu.com/p/92906055)
-* [TypeScript 关键字extends用法总结 ](https://juejin.cn/post/6998736350841143326#comment)
+* [TypeScript关键字extends用法总结](TypeScript%E5%85%B3%E9%94%AE%E5%AD%97extends%E7%94%A8%E6%B3%95%E6%80%BB%E7%BB%93.md)
 * [一文读懂 TypeScript 泛型及应用](https://juejin.cn/post/6844904184894980104)
 * [TypeScript 高级用法](https://juejin.cn/post/6926794697553739784)
 * [Ts高手篇：22个示例深入讲解Ts最晦涩难懂的高级类型工具](https://juejin.cn/post/6994102811218673700#heading-8)

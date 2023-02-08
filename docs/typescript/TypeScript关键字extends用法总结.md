@@ -2,7 +2,8 @@
 sidebar: auto
 ---
 
-# Typescript中的extends用法总结
+# TypeScript关键字extends用法总结
+[参考文章](https://juejin.cn/post/6998736350841143326#comment)
 
 ## 1.接口继承
 
@@ -83,6 +84,37 @@ const a: A = 'this is string';
 A1，A2两个接口，满足A2的接口一定可以满足A1，所以条件为真，A的类型取string
 
 到目前为止已经介绍了extends的基本的用法，非常好理解。
+
+
+### 泛型用法
+- 分配条件类型
+
+先看示例：
+
+```ts
+type A1 = 'x' extends 'x' ? string : number; // string 
+type A2 = ('x' | 'y') extends 'x' ? string : number; // number
+
+type P<T> = T extends 'x' ? string : number;
+type A3 = P<'x' | 'y'> // string | number
+```
+
+A1和A2是extends条件判断的普通用法，和上面的判断方法一样, 'y' extends 'x' 值为假，所以 'x' | 'y' extends 'x' 值为假。
+
+P是带参数的T的泛型类型，它的表达式和A1, A2的形式完全相同，A3是泛型类型P传入参数'x' | 'y'得到的类型，如果将'x' | 'y'带入泛型类的表达式，可以看到和A2类型的形式是完全一样的，那是不是说明，A3和A2的类型就是完全一样的呢？
+
+有兴趣可以自己试一试，这里就直接给结论了
+
+```ts
+type P<T> = T extends 'x' ? string : number;
+type A3 = P<'x' | 'y'>  // A3的类型是 string | number
+```
+
+
+
+
+
+
 
 
 
