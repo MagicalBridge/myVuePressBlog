@@ -176,6 +176,80 @@ type A2 = P<never> // string
 
 在条件判断类型的定义中，将泛型参数使用[]括起来，即可阻断条件判断类型的分配，此时，传入参数T的类型将被当做一个整体，不再分配。
 
+### 在高级类型中的应用
+
+- Exclude
+
+`Exclude` 是TS中的一个高级类型，其作用是从第一个联合类型参数中，将第二个联合类型中出现的联合项全部排除，只保留没有出现过的参数。
+
+示例：
+```ts
+type A = Exclude<'key1' | 'key2', 'key2'> // 'key1'
+```
+
+Exclude的定义是
+
+> type Exclude<T, U> = T extends U ? never : T
+
+事实上，这个定义就利用了条件类型中的分配原则，我们来尝试拆解出来看看发生了什么：
+
+```ts
+type A = `Exclude<'key1' | 'key2', 'key2'>`
+
+// 等价于
+type A = `Exclude<'key1', 'key2'>` | `Exclude<'key2', 'key2'>`
+
+// =>
+type A = ('key1' extends 'key2' ? never : 'key1') | ('key2' extends 'key2' ? never : 'key2')
+
+// =>
+
+// never是所有类型的子类型
+type A = 'key1' | never = 'key1'
+```
+
+- Extract
+
+高级类型 `Extract` 和上面的 `Exclude` 刚好相反，它是将第二个参数的联合项从第一个参数的联合项中提取出来，当然，第二个参数可以含有第一个参数没有的项。
+
+示例:
+
+```ts
+type Extract<T, U> = T extends U ? T : never
+type A = Extract<'key1' | 'key2', 'key1'> // 'key1'
+```
+
+- Pick
+
+`extends` 的条件判断，除了定义条件类型，还能在泛型表达式中用来约束泛型参数
+
+```ts
+// 高级类型Pick的定义
+type Pick<T, K extends keyof T> = {
+  [P in K]: T[P]
+}
+
+interface A {
+  name: string;
+  age: number;
+  sex: number;
+}
+
+type A1 = Pick<A, 'name'|'age'>
+// 报错：类型“"key" | "noSuchKey"”不满足约束“keyof A”
+type A2 = Pick<A, 'name'|'noSuchKey'>
+```
+
+`Pick`的意思是，从接口T中，将联合类型K中涉及到的项挑选出来，形成一个新的接口，其中 `K extends keyof T` 则是用来约束K的条件，即，传入K的参数必须使得这个条件为真，否则TS就会报错，也就是说，K的联合类型必须来自接口T的属性。
+
+
+
+
+
+
+
+
+
 
 
 
