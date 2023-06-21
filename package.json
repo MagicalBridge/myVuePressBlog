@@ -7,7 +7,7 @@
     "vuepress": "^1.9.7"
   },
   "scripts": {
-    "dev": "vuepress dev docs",
+    "start": "vuepress dev docs",
     "docs:build": "vuepress build docs"
   }
 }
