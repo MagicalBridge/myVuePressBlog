@@ -83,7 +83,40 @@ Linux是基于Unix的Linux是一种自由和开放源码的操作系统，存在
 - :s/old/new 替换当前行匹配到的第一个old为new
 - :s/old/new/g 替换当前行匹配到的所有old为new
 
+## Linux的系统管理
+
+### 查看防火墙状态
+systemctl status firewalld 
+
+我在阿里云服务器上输入命令,会输出下面的
+```
+firewalld.service - firewalld - dynamic firewall daemon
+  Loaded: loaded (/usr/lib/systemd/system/firewalld.service; disabled; vendor >
+  Active: inactive (dead)
+  Docs: man:firewalld(1)
+```
+
+这个命令是关于firewalld服务的系统服务单元文件的输出。firewalld是一个动态防火墙管理工具，它用于管理Linux系统上的防火墙规则和网络连接。根据输出信息：
+
+- `Loaded` 行指示firewalld服务单元文件的位置：`/usr/lib/systemd/system/firewalld.service`。
+- `Active` 行指示firewalld服务当前的状态为`inactive (dead)`，表示该服务当前处于非活动状态且已停止。
+- `Docs` 行提供了有关firewalld命令的man页文档的参考信息：`man:firewalld(1)`。
+
+根据这些信息，你的阿里云服务器上并未启用firewalld服务，因此该服务当前处于停止状态。如果你希望启用该服务并配置防火墙规则，请参考相关文档或咨询阿里云服务器的支持。
+
+### 临时关闭防火墙
+systemctl stop firewalld
+
+### 查看防火墙开机启动状态
+enable firewalld.service
+
+### 设置开机时关闭防火墙
+systemctl disable firewalld.service
+
+
+
 ## Linux的常用命令
+Shell 可以看作是一个命令解释器，为我们提供了交互式的文本控制台界面。我们可以 通过终端控制台来输入命令，由 shell 进行解释并最终交给内核执行。 本章就将分类介绍 常用的基本 shell 命令。
 
 当我登录阿里云服务器显示如下信息：
 ```js
@@ -92,6 +125,10 @@ root @ iZuf6j0zu9bm2b8n7do53iZ in ~
 - root 当前登录的用户
 - @iZuf6j0zu9bm2b8n7do53iZ 主机名
 - ~ 当前工作目录,默认是当前用户的家目录，root就是/root
+
+### man: 获取帮助信息
+- man [命令或者配置文件]
+- man ls 查看ls命令的帮助信息
 
 ### ls: 查询目录中的内容
 - ls [选项] [文件或者目录]
