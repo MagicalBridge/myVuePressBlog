@@ -184,11 +184,16 @@ $mv ny-nginx my-nginx
 ### more 分屏显示文件内容
 more 指令是一个基于 VI 编辑器的文本过滤器，它以全屏幕的方式按页显示文本文件的内容。
 
+### > 输出重定向 >> 追加
+- ls -l > 文件   列表的内容写入文件a.txt中（覆盖写）
+- ls -al >> 文件  列表的内容追加到文件aa.txt的末尾
+
 ### echo 输出内容到控制台
 ```shell
 echo "hello\tworld"
 hello	world
 ```
+- echo “内容” >> 文件 将内容追加到文件的末尾
 
 ### head 显示文件头部内容
 head 用于显示文件的开头部分内容，默认情况下 head 指令显示文件的前 10 行内容。
