@@ -326,15 +326,25 @@ houge.txt
 - uzip [选项] xxx.zip 解压 -d 代表的是解压后存放的目录
 
 ```sh
+# 压缩 houge.txt 和bailongma.txt，压缩后的名称为mypackage.zip
 [root@hadoop101 opt]# touch bailongma.txt
 [root@hadoop101 ~]# zip mypackage.zip houge.txt bailongma.txt
   adding: houge.txt (stored 0%)
   adding: bailongma.txt (stored 0%) 
 [root@hadoop101 opt]# ls
 houge.txt bailongma.txt mypackage.zip
+
+# 解压 mypackage.zip
+[root@hadoop101 opt]# unzip mypackage.zip
+  Archive:  houma.zip
+  extracting: houge.txt
+  extracting: bailongma.txt 
+[root@hadoop101 ~]# ls
+houge.txt bailongma.txt mypackage.zip
+
+# 解压mypackage.zip到指定目录-d
+[root@hadoop101 opt]# unzip  mypackage.zip -d /opt
 ```
-
-
 
 
 ## scp 跨机远程拷贝
