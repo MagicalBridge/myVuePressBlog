@@ -300,6 +300,43 @@ find xiyou/ -name "*.txt"
 find /home -size +204800
 ```
 
+## 压缩和解压类
+
+### gzip/gunzip压缩
+- gzip file :压缩文件，只能将文件压缩成*.gz文件
+- gunzip 文件.gz :解压文件
+
+这个命令只能压缩文件，不能压缩目录，并且不会保留原来的文件，同时压缩多个文件会产生多个压缩包
+
+```sh
+# gzip 压缩
+[root@101 ~]# gzip houge.txt
+[root@101 ~]# ls
+houge.txt.gz
+
+# gunzip解压缩文件
+[root@101 ~]# gunzip houge.txt.gz
+[root@101 ~]# ls
+houge.txt
+```
+
+### zip/unzip 压缩
+
+- zip [选项] xxx.zip 压缩文件和目录 -r 代表的是压缩目录
+- uzip [选项] xxx.zip 解压 -d 代表的是解压后存放的目录
+
+```sh
+[root@hadoop101 opt]# touch bailongma.txt
+[root@hadoop101 ~]# zip mypackage.zip houge.txt bailongma.txt
+  adding: houge.txt (stored 0%)
+  adding: bailongma.txt (stored 0%) 
+[root@hadoop101 opt]# ls
+houge.txt bailongma.txt mypackage.zip
+```
+
+
+
+
 ## scp 跨机远程拷贝
 
 scp是secure copy的简写，用于在Linux下进行远程拷贝文件的命令，和它类似的命令有cp，不过cp只是在本机进行拷贝不能跨服务器，而且scp传输是加密的。当你服务器硬盘变为只读 read only system时，用scp可以帮你把文件移出来。
