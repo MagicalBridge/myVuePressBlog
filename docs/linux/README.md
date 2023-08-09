@@ -346,6 +346,39 @@ houge.txt bailongma.txt mypackage.zip
 [root@hadoop101 opt]# unzip  mypackage.zip -d /opt
 ```
 
+### tar打包命令： 
+- tar [选项] XXX.tar.gz 将要打包进去的内容
+```
+选项 功能
+-c 产生.tar 打包文件
+-v 显示详细信息
+-f 指定压缩后的文件名 
+-z 打包同时压缩
+-x 解包.tar 文件
+-C 解压到指定目录
+```
+实操案例：
+```sh
+# 压缩多个文件
+[root@hadoop101 opt]# tar -zcvf houma.tar.gz houge.txt bailongma.txt
+houge.txt
+bailongma.txt 
+[root@101 opt]# ls
+houma.tar.gz houge.txt bailongma.txt
+
+# 压缩目录
+[root@hadoop101 ~]# tar -zcvf xiyou.tar.gz xiyou/
+xiyou/
+xiyou/mingjie/
+xiyou/dssz/
+xiyou/dssz/houge.txt
+
+# 解压到当前目录
+[root@101 ~]# tar -zxvf houma.tar.gz
+
+# 解压到指定目录
+[root@101 ~]# tar -zxvf houma.tar.gz -C /opt
+```
 
 ## scp 跨机远程拷贝
 
