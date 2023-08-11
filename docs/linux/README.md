@@ -380,6 +380,32 @@ xiyou/dssz/houge.txt
 [root@101 ~]# tar -zxvf houma.tar.gz -C /opt
 ```
 
+## 磁盘查看分区类：
+- du 查看文件和目录占用的磁盘空间 dist usage
+
+选项的说明：
+-h: 以人们比较容易阅读的格式展示
+-s: 只显示总和
+
+```sh
+# 查看当前用户主目录占用的磁盘空间大小
+[root@101 ~]# du -sh
+```
+
+- df 查看磁盘空间的使用情况 dist free 
+
+选项的说明：
+-h: 以人们比较容易阅读的格式展示
+
+```sh
+[root@101 ~]# df -h
+Filesystem Size  Used Avail Use% Mounted on
+/dev/sda2  15G   3.5G  11G  26%  /
+tmpfs      939M  224K  939M   1% /dev/shm
+/dev/sda1  190M   39M  142M  22% /boot
+```
+
+
 ## scp 跨机远程拷贝
 
 scp是secure copy的简写，用于在Linux下进行远程拷贝文件的命令，和它类似的命令有cp，不过cp只是在本机进行拷贝不能跨服务器，而且scp传输是加密的。当你服务器硬盘变为只读 read only system时，用scp可以帮你把文件移出来。
