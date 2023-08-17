@@ -435,6 +435,25 @@ tmpfs      939M  224K  939M   1% /dev/shm
 - TIME:CPU 时间
 - CMD:启动进程所用的命令和参数
 
+### kill 终止进程
+- kill [选项] 进程号：通过进程号杀死进程
+- killall 进程名称 通过进程名称杀死进程，也支持通配符
+
+```sh
+[root@101 ~]# kill -9 5102
+[root@101 ~]# killall firefox
+```
+
+### pstree 查看进程树
+- pstree [选项]
+
+```sh
+# 显示进程pid
+[root@101 ~]# pstree -p 
+
+# 显示进程所属用户
+[root@101 ~]# pstree -u
+```
 
 ## scp 跨机远程拷贝
 
