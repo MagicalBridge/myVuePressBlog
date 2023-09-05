@@ -34,6 +34,9 @@ Linux是基于Unix的Linux是一种自由和开放源码的操作系统，存在
 - home 普通用户的家目录 可以操作
 
 ## vim的操作使用
+- VI 是 Unix 操作系统和类 Unix 操作系统中最通用的文本编辑器。
+- VIM 编辑器是从 VI 发展出来的一个性能更强大的文本编辑器。可以主动的以字体颜 色辨别语法的正确性，方便程序设计。VIM 与 VI 编辑器完全兼容。
+
 ![vim的操作模式](../images/linux/01.png)
 
 ### 操作：删除、复制、粘贴
@@ -83,10 +86,35 @@ Linux是基于Unix的Linux是一种自由和开放源码的操作系统，存在
 - :s/old/new 替换当前行匹配到的第一个old为new
 - :s/old/new/g 替换当前行匹配到的所有old为new
 
+## Linux的网络配置
+
+### 配置网络 ip 地址
+- ifconfig (功能描述:显示所有网络接口的配置信息)
+
+### ping 测试主机之间网络连通性
+- ping 目的主机 (功能描述:测试当前服务器是否可以连接目的主机)
+
+### 修改hosts映射文件
+打开 `/etc/hosts` 
+- vim /etc/hosts
+
+```bash
+192.168.2.100 hadoop100
+192.168.2.101 hadoop101
+192.168.2.102 hadoop102
+192.168.2.103 hadoop103
+192.168.2.104 hadoop104
+192.168.2.105 hadoop105
+```
+
 ## Linux的系统管理
 
+计算机中，一个正在执行的程序或命令，被叫做“进程”(process)。 启动之后一只存在、常驻内存的进程，一般被称作“服务”(service)。
+
 ### 查看防火墙状态
+```bash
 systemctl status firewalld 
+```
 
 我在阿里云服务器上输入命令,会输出下面的
 ```
@@ -112,7 +140,6 @@ enable firewalld.service
 
 ### 设置开机时关闭防火墙
 systemctl disable firewalld.service
-
 
 
 ## Linux的常用命令
