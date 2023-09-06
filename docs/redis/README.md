@@ -27,13 +27,16 @@ Redis 是完全开源免费的，遵守BSD协议，是一个高性能的key-valu
 String是Redis最基本的类型，你可以理解成与Memcached一模一样的类型，一个key对应一个value。String类型是二进制安全的。意味着Redis的string可以包含任何数据。比如jpg图片或者序列化的对象。String类型是Redis最基本的数据类型，一个Redis中字符串value最多可以是512M。
 
 ### SET 设置值
-```js
-SET name '褚鹏飞'
+```bash
+set name '褚鹏飞'
+
+# 只有在 key 不存在时    设置 key 的值
+setnx key value
 ```
 
 ### GET 获取值
 ```js
-GET name
+get name
 ```
 
 当我们给相同的key重复设置值，就会把之前的值覆盖掉。
