@@ -526,3 +526,13 @@ $scp -r /opt/soft/test root@10.6.159.147:/opt/soft/scptest
 ```
 说明： 上传本地目录 /opt/soft/test到远程机器10.6.159.147上/opt/soft/scptest的目录中
 
+## shell编程
+一般来说，脚本都是以 `#!/bin/bash` 开头的
+
+### 第一个shell脚本：创建一个脚本。输出 helloworld
+
+```sh
+#!/bin/bash
+
+echo "helloworld"
+```
