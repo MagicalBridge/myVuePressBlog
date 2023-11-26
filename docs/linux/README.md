@@ -536,3 +536,18 @@ $scp -r /opt/soft/test root@10.6.159.147:/opt/soft/scptest
 
 echo "helloworld"
 ```
+
+### 脚本执行的方式
+- 第一种：采用bash或者sh + 脚本的相对路径或者绝对路径
+- 第二种：采用输入脚本的绝对路径或者相对路径 （必须具有可执行的权限 +x）
+- 第三种：可以使用source命令来执行
+
+前两种方式都是在当前 shell 中打开一个子 shell 来执行脚本内容，当脚本内容结束，则 子 shell 关闭，回到父 shell 中。
+
+第三种，也就是使用在脚本路径前加 source 的方式，可以使脚本内容在当前 shell 里执行，而无需打开子 shell! 这也是为什么我们每次要修改完/etc/profile 文件以后，需 要 source 一下的原因。
+
+### 变量
+
+#### 常用的系统变量
+`$HOME $PWD $SHELL $USER`
+
