@@ -107,6 +107,56 @@ Linux是基于Unix的Linux是一种自由和开放源码的操作系统，存在
 192.168.2.105 hadoop105
 ```
 
+### mac本机无密登录阿里云服务器
+一般来说，我们登录阿里云服务器每次都需要通过终端输入密码，这样太麻烦了，我们可以通过ssh实现快速登录。
+
+具体的，我们可以分为三个步骤：
+- 拿到mac本机上的公钥和私钥
+- 将公钥放在服务器上
+- 配置ssh的config
+
+#### 在自己本地电脑上查看已经生成的公钥和私钥
+
+```sh
+# 打开终端，进入 .ssh 目录中
+cd ~/.ssh 
+
+# 输入ls命令，查看文件，本机会有 id_rsa(私钥)，id_rsa.pub(公钥) 文件
+
+# 如果不存在的话，可以下面的命令生成一对私钥和公钥，将公钥的内容复制出来
+ssh-keygen -t rsa 
+
+```
+
+#### 进入阿里云服务器进行操作
+```sh
+# 在终端中输入阿里云的ip,按照提示输入密码进入
+ssh root@xxx.xxx.xxx.xxx
+
+# 进入 ssh目录 
+cd ~/.ssh
+
+# 查看是否有`authorized_keys`文件，
+ls  
+
+# 没有的话 可以通过，touch ~/.ssh/authorized_keys 新建一个
+
+# 将复制的公钥内容添加到authorized_keys中去, 此时就能在客户端免密登录云服务器了
+```
+
+#### 如何给服务器起个别名
+我们可能回管理多个服务器，每次都输入ip地址会比较麻烦，这个时候我们可以通过简单的配置实现
+```sh
+# 在 ~/.ssh/config 中添加如下内容 config文件没有的话自己可以创建
+
+Host server1
+  User root
+  HostName 'server1 的ip'
+Host server2
+  User root
+  HostName 'server2 的ip'
+```
+
 ## Linux的系统管理
 
 计算机中，一个正在执行的程序或命令，被叫做“进程”(process)。 启动之后一只存在、常驻内存的进程，一般被称作“服务”(service)。
