@@ -596,12 +596,10 @@ echo "helloworld"
 
 第三种，也就是使用在脚本路径前加 source 的方式，可以使脚本内容在当前 shell 里执行，而无需打开子 shell! 这也是为什么我们每次要修改完/etc/profile 文件以后，需 要 source 一下的原因。
 
-### 变量
-
-#### 常用的系统变量
+### 常用的系统变量
 `$HOME $PWD $SHELL $USER`
 
-#### 自定义变量
+### 自定义变量
 - 基本的语法：变量名=变量值 （注意=号前后不能有空格）
 - 撤销变量：unset 变量名
 - 声明静态变量：readonly变量，注意：不能unset
@@ -616,5 +614,56 @@ echo "helloworld"
 
 如何将变量提升为全局变量？ 可以使用export关键字将变量导出，我们使用的配置文件中的变量就是这种规范。
 
-#### 特殊变量
+### 条件判断
+
+有两种条件判断的方式可以选择：
+- test condition
+- [ condition ] (注意condition前后需要加上空格)
+
+一些常见的判断条件：整数之间的比较
+```sh
+-eq 等于(equal) 
+-ne 不等于(not equal)
+-lt 小于(less than)
+-gt 大于(greater than)
+-le 小于等于(less equal)
+-ge 大于等于(greater equal)
+```
+
+一些常见的判断条件：文件之间的比较
+
+```sh
+-r 有读的权限(read)
+-w 有写的权限(write)
+-x 有执行的权限(execute) (3)按照文件类型进行判断
+-e 文件存在(existence)
+-f 文件存在并且是一个常规的文件(file) 
+-d 文件存在并且是一个目录(directory)
+```
+
+一些常见的例子：
+
+```sh
+# 23 是否大于等于 22
+[atguigu@101 shells]$ [ 23 -ge 22 ]
+[atguigu@101 shells]$ echo $?
+0
+
+# helloworld.sh 是否具有写权限
+[atguigu@101 shells]$ [ -w helloworld.sh ]
+[atguigu@101 shells]$ echo $?
+0
+
+#  /home/atguigu/cls.txt 目录中的文件是否存在
+[atguigu@101 shells]$ [ -e /home/atguigu/cls.txt ]
+[atguigu@101 shells]$ echo $?
+1
+
+# 多条件判断(&& 表示前一条命令执行成功时，才执行后一条命令，|| 表示上一条命令执行失败后，才执行下一条命令)
+[atguigu@101 ~]$ [ atguigu ] && echo OK || echo notOK
+OK
+[atguigu@101 shells]$ [ ] && echo OK || echo notOK
+notOK
+```
+
 
