@@ -19,13 +19,37 @@ MongoDB 将数据存储为一个文档，数据结构由键值(key=>value)对组
 
 ![和mysql关系](../../images/database/mongodb/02.jpeg)
 
-## 使用docker-compose安装mongoDB并设置密码
+## 使用docker-compose启动mongodb容器服务，并设置用户名和密码
 在服务器上部署mongo服务还是需要注意，如果不设置用户名和密码，很有可能被别人公网盗取自己的数据库文件。
 
+- 1、新建一个文件夹来管理mongodb的数据库容器卷，这里我创建的文件夹名称是 docker-mongo
 
-## 在阿里云服务器上安装moongodb
+- 2、进入docker-mongo文件夹，进件 docker-compose.yml 文件
 
-[mongoose.md](./mongoose.md)
+- 3、文件中写入配置信息：
+
+```yml
+version: '3.1'
+services:
+  mongodb:
+    image: mongo
+    container_name: "mongodb5.0"
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: "username"
+      MONGO_INITDB_ROOT_PASSWORD: "password"
+    ports:
+      - 27017:27017
+    volumes:
+      - ./mongodb_data:/data/db
+      - ./mongodb_logs:/var/log/mongodb
+```
+
+- 4、根据配置文件启动容器
+
+```sh
+docker-compose up -d
+```
 
 
 
