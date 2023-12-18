@@ -96,3 +96,6 @@ process 代表node中的进程：
 
 ## node中的发布订阅
 [node中的发布订阅](../docs/node中的发布订阅.md)
+
+## node中Buffer
+[node中Buffer](./Buffer.md)
