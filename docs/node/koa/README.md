@@ -51,6 +51,60 @@ ctx.body 赋值的时候，即使多次赋值，也不会报错，而是会等�
 
 最终将request 和 response 放到了 context 上，原生的req和res也会被放在 context 上。
 
+
+## koa中路由中间件的使用
+在 Koa 中，定义路由通常使用第三方路由中间件，因为 Koa 本身并没有内置路由功能。最常用的 Koa 路由中间件之一是 `koa-router`。
+
+首先，你需要安装 `koa-router`：
+
+```bash
+npm install koa-router
+```
+
+然后，使用它在 Koa 应用中定义路由：
+
+```javascript
+const Koa = require('koa');
+const Router = require('koa-router');
+
+const app = new Koa();
+const router = new Router();
+
+// 定义一个简单的GET请求路由
+router.get('/', async (ctx) => {
+  ctx.body = 'Hello, Koa!';
+});
+
+// 定义带参数的路由
+router.get('/users/:id', async (ctx) => {
+  const userId = ctx.params.id;
+  ctx.body = `User ID: ${userId}`;
+});
+
+// 定义一个POST请求路由
+router.post('/users', async (ctx) => {
+  // 处理POST请求，例如从请求体中获取数据
+  const postData = ctx.request.body;
+  ctx.body = `Received data: ${JSON.stringify(postData)}`;
+});
+
+// 将路由中间件挂载到Koa应用
+app.use(router.routes());
+
+// 启动服务
+app.listen(3000, () => {
+  console.log('Server is running on port 3000');
+});
+```
+
+在上述例子中，`koa-router` 被用来创建一个新的路由对象，然后通过调用不同的 HTTP 方法函数（例如 `get`、`post`）定义不同的路由。路由中可以包含动态参数，例如 `:id`，这些参数可以通过 `ctx.params` 来访问。
+
+这里定义了一个路由 /users/:id，其中 :id 是一个动态参数。当请求匹配到这个路由时，koa-router 会将实际的参数值放入 ctx.params 对象中。在中间件的回调函数中，我们通过 ctx.params.id 访问了这个参数，并在响应中返回了用户ID。
+
+你可以通过访问 http://localhost:3000/users/123 来测试这个路由，其中 123 是用户ID。这个值将被捕获并在响应中显示。
+
+最后，通过调用 `app.use(router.routes())` 将路由中间件挂载到 Koa 应用中，使得定义的路由生效。
+
 ## 手写一版koa
 
 ### 环境的搭建
