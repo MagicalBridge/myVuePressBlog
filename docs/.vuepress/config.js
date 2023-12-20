@@ -46,12 +46,16 @@ module.exports = {
       {
         text: "Vue",
         items: [
+          // {
+          //   text: "Vue2原理剖析",
+          //   link: "/vue/vue-analysis/",
+          // },
           {
-            text: "Vue2内部原理剖析",
-            link: "/vue/vue-analysis/",
+            text: "Vue2源码解析",
+            link: "/vue/vue2-analysis/",
           },
           {
-            text: "Vue3内部原理剖析",
+            text: "Vue3源码解析",
             link: "/vue/vue3-analysis/",
           },
           {
@@ -111,6 +115,10 @@ module.exports = {
           {
             text:"rollup",
             link:"/rollup/"
+          },
+          {
+            text:"babel",
+            link:"/babel/"
           }
         ],
       },
