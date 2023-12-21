@@ -75,3 +75,70 @@ console.log(0.1 + 0.2);  // 输出 0.30000000000000004
 ```
 
 这个过程将一直重复下去，得到的二进制表示是一个循环小数。实际上，0.1 在二进制中是一个无限循环的二进制表示，因此在计算机中无法完全精确表示。在JavaScript和许多其他编程语言中，浮点数的表示使用的是 IEEE 754 标准，它在表示小数时可能会引入舍入误差。这就是为什么在计算机中进行浮点数运算时可能出现微小误差的原因。
+
+## Buffer 中的一些常用方法
+
+1. **Buffer.from()**:
+   - 用于创建一个新的 Buffer，可以从字符串、数组、或其他 Buffer 中复制数据。
+
+   ```javascript
+   const buf = Buffer.from('Hello, World!', 'utf-8');
+   ```
+
+2. **Buffer.alloc()**:
+   - 用于创建一个指定大小的新 Buffer，该 Buffer 的内容被初始化为零。
+
+   ```javascript
+   const buf = Buffer.alloc(10); // <Buffer 00 00 00 00 00 00 00 00 00 00>
+   ```
+
+3. **Buffer.isBuffer()**:
+   - 用于检查一个对象是否为 Buffer。
+
+   ```javascript
+   const isBuffer = Buffer.isBuffer(buf); // true
+   ```
+
+4. **Buffer.concat()**:
+   - 用于将多个 Buffer 合并成一个新的 Buffer。
+
+   ```javascript
+   const concatenatedBuffer = Buffer.concat([buf1, buf2, buf3]);
+   // <Buffer e6 88 91 e7 88 b1 e4 bd a0 00 00 00 00 00 00 00 00 00 00>
+   ```
+
+5. **Buffer.byteLength()**:
+   - 返回字符串的字节长度。可选参数指定编码，默认为 'utf-8'。
+
+   ```javascript
+   const length = Buffer.byteLength('我爱你', 'utf-8'); // 9
+   ```
+
+6. **buf.toString()**:
+   - 将 Buffer 转换为字符串。
+
+   ```javascript
+   const str = buf.toString('utf-8');
+   ```
+
+7. **buf.write()**:
+   - 将字符串写入 Buffer。
+
+   ```javascript
+   buf.write('Hello, World!', 'utf-8');
+   ```
+
+8. **buf.slice()**:
+   - 创建一个新的 Buffer，与原始 Buffer 共享一部分内存。
+
+   ```javascript
+   const slicedBuffer = buf.slice(0, 5);
+   ```
+
+9. **buf.copy()**:
+   - 将一个 Buffer 的数据复制到另一个 Buffer。
+
+   ```javascript
+   const targetBuffer = Buffer.alloc(5);
+   buf.copy(targetBuffer, 0, 0, 5);
+   ```

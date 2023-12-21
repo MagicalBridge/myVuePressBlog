@@ -194,7 +194,8 @@ class Observer {
 }
 
 function defineReactive(data, key, value){
-  
+  // 在真实的应用场景中，value 可能是个嵌套的对象
+  // 这个时候，我们就需要进行递归的劫持
   observe(value);
   
   Object.defineProperty(data,key,{
@@ -202,7 +203,9 @@ function defineReactive(data, key, value){
       return value
     },
     set(newValue){
-      if(newValue == value) return;
+      if (newValue == value) return;
+      // vm._data.a = {b:1} 对于这种用户直接设置值的场景
+      // 我们也需要进行响应式处理。
       observe(newValue);
       value = newValue
     }
@@ -217,7 +220,7 @@ export function observe(data) {
   }
   // 这里的返回值比较有讲究，将响应式的逻辑抽象为了一个单独的类
   // 最终返回的是类的实例。这里使用类的原因是，它的逻辑比较耦合
-  // 并且也不需要和原型有关联。
+  // 类有类型，对象没有类型
   return new Observer(data);
 }
 ``` 
@@ -229,8 +232,7 @@ export function observe(data) {
 - 在 `get` 方法中，返回属性的值
 - 在 `set` 方法中，当属性值发生变化的时候，触发setter，并在这里进行一些处理。这里会递归调用 observe 确保这个新的值也会被观测。
 
-
-
+### 3.数组方法的劫持
 
 
 
