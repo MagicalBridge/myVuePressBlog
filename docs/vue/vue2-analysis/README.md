@@ -161,14 +161,73 @@ data，使我们平时用到的最多的属性，我们会再上面挂载一些�
 ### 1.初始化数据
 
 ```js
-import {observe} from './observer/index.js'
+// 将响应式的模块单独抽离出来
+import { observe } from './observer/index.js'
 
 function initData(vm) {
   let data = vm.$options.data;
+  // 这个data可以写成一个对象，也可以写成一个函数，这个时候需要进行兼容处理
+  // 如果是函数的话，我就取它的返回值，如果是对象的话，就直接使用对象
   data = vm._data = typeof data === 'function' ? data.call(vm) : data;
+  // vue2中会将data中的所有数据进行数据劫持
   observe(data);
 }
 ```
+
+### 2.递归属性劫持
+
+```js
+class Observer { 
+  constructor(value){
+    this.walk(value);
+  }
+  walk(data){ // 让对象上的所有属性依次进行观测
+    // 使用Object.keys 这个方法不会取到原型链上的属性
+    let keys = Object.keys(data);
+    for(let i = 0; i < keys.length; i++){
+      let key = keys[i];
+      let value = data[key];
+      // 三个参数 原始对象 当前key 当前value
+      defineReactive(data, key, value);
+    }
+  }
+}
+
+function defineReactive(data, key, value){
+  
+  observe(value);
+  
+  Object.defineProperty(data,key,{
+    get(){
+      return value
+    },
+    set(newValue){
+      if(newValue == value) return;
+      observe(newValue);
+      value = newValue
+    }
+  })
+}
+
+export function observe(data) {
+  // vue2 中规定，最外层必须是一个对象，这里进行了判空的处理
+  // 只有data是对象的场景才进行响应式的观测
+  if(typeof data === 'object' && data !== null){
+    return;
+  }
+  // 这里的返回值比较有讲究，将响应式的逻辑抽象为了一个单独的类
+  // 最终返回的是类的实例。这里使用类的原因是，它的逻辑比较耦合
+  // 并且也不需要和原型有关联。
+  return new Observer(data);
+}
+``` 
+
+上面代码中：
+- `Observer` 类接受一个 value 参数，通常是一个对象。
+- `walk` 方法用于遍历对象的所有属性，并对每个属性调用 `defineReactive` 函数进行观测
+- `defineReactive` 函数用于定义对象的属性，使其具有 getter 和 setter
+- 在 `get` 方法中，返回属性的值
+- 在 `set` 方法中，当属性值发生变化的时候，触发setter，并在这里进行一些处理。这里会递归调用 observe 确保这个新的值也会被观测。
 
 
 
