@@ -233,8 +233,71 @@ export function observe(data) {
 - 在 `set` 方法中，当属性值发生变化的时候，触发setter，并在这里进行一些处理。这里会递归调用 observe 确保这个新的值也会被观测。
 
 ### 3.数组方法的劫持
+在vue2中，在对数组的处理中，没有响应式的监听数组中的每一项，而是采用了一种讨巧的方式。重写数组的方法。
 
+对于数组中的一些变异方法：push shift pop unshift reverse sort splice 可能会更改原数组的方法
 
+```js
+import {arrayMethods} from './array';
+class Observer { 
+  constructor(value){
+    if(Array.isArray(value)){
+      // 重写数组原型方法
+      value.__proto__ = arrayMethods; 
+      // 对于 data: { arr: [{anme:'text'},{name:'value'}] } 当我们做这样的更改
+      // vm.arr[0].name = 'louis' 这种场景下 每一项都是一个数组，我们是需要监控数组的每一项
+      this.observeArray(value);
+    }else{
+      this.walk(value);
+    }
+  }
 
+  observeArray(value){
+    for(let i = 0 ; i < value.length; i++){
+      // 循环遍历数组的每一项 进行监控
+      observe(value[i]);
+    }
+  }
+}
+```
 
+上面代码中，对于data是数组的形式做了逻辑分流处理，虽然数组没有监控索引的变化，但是索引对应的内容是对象类型，需要被监控。
+我们来看看具体是怎么实现的。
 
+```js
+let oldArrayProtoMethods = Array.prototype;
+
+export let arrayMethods = Object.create(oldArrayProtoMethods);
+
+let methods = [
+  'push',
+  'pop',
+  'shift',
+  'unshift',
+  'reverse',
+  'sort',
+  'splice'
+];
+
+methods.forEach(method => {
+  // 用户调用以上7个方法会用自己重写的，否则用原来的数组
+  arrayMethods[method] = function (...args) {
+    const result = oldArrayProtoMethods[method].call(this, ...args);
+    const ob = this.__ob__;
+    let inserted;
+    switch (method) {
+      case 'push':
+      case 'unshift':
+        inserted = args;
+        break;
+      case 'splice':
+        // 刨除前两个，最后一个才是新增的
+        inserted = args.slice(2)
+      default:
+        break;
+    }
+    if (inserted) ob.observeArray(inserted); // 对新增的每一项进行观测
+    return result
+  }
+})
+```
