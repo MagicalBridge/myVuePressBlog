@@ -301,3 +301,54 @@ methods.forEach(method => {
   }
 })
 ```
+添加__ob__属性，
+
+```js
+class Observer { 
+  constructor(value){
+    Object.defineProperty(value,'__ob__',{
+      enumerable:false,
+      configurable:false,
+      value:this
+    });
+    // ...
+  }
+ }
+```
+> 给所有响应式数据增加标识，并且可以在响应式上获取Observer实例上的方法
+
+
+## 三.模板编译
+上面的操作中，做的都是数据劫持的相关操作，在数据变化的时候可以监听到，下面我们需要处理数据的挂载操作。就是将我们写的data中的数据，渲染到模板上面。
+在实际的渲染中，我们需要将模板转换为渲染函数，函数的效率肯定是非常高的，这样在渲染函数中可以进行dom-diff操作。
+
+```js
+Vue.prototype._init = function (options) {
+  const vm = this;
+  vm.$options = options;
+  // 初始化状态
+  initState(vm);
+  // 页面挂载
+  if (vm.$options.el) {
+    vm.$mount(vm.$options.el);
+  }
+}
+Vue.prototype.$mount = function (el) {
+  const vm = this;
+  const options = vm.$options;
+  el = document.querySelector(el);
+
+  // 如果没有render方法
+  if (!options.render) {
+    let template = options.template;
+    // 如果没有模板但是有el
+    if (!template && el) {
+      template = el.outerHTML;
+    }
+    const render= compileToFunctions(template);
+    // 将render函数挂载到options上。
+    options.render = render;
+  }
+}
+```
+
