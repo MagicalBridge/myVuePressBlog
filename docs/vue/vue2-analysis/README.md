@@ -345,10 +345,138 @@ Vue.prototype.$mount = function (el) {
     if (!template && el) {
       template = el.outerHTML;
     }
-    const render= compileToFunctions(template);
+    const render = compileToFunctions(template);
     // 将render函数挂载到options上。
     options.render = render;
   }
 }
 ```
+编译的核心就是将模板转换成render函数，这个转换过程可以分为以下几个步骤：
+
+### 1、解析标签和内容：
+```js
+const ncname = `[a-zA-Z_][\\-\\.0-9_a-zA-Z]*`;  
+const qnameCapture = `((?:${ncname}\\:)?${ncname})`;
+const startTagOpen = new RegExp(`^<${qnameCapture}`); // 标签开头的正则 捕获的内容是标签名
+const endTag = new RegExp(`^<\\/${qnameCapture}[^>]*>`); // 匹配标签结尾的 </div>
+const attribute = /^\s*([^\s"'<>\/=]+)(?:\s*(=)\s*(?:"([^"]*)"+|'([^']*)'+|([^\s"'=<>`]+)))?/; // 匹配属性的
+const startTagClose = /^\s*(\/?)>/; // 匹配标签结束的 >
+const defaultTagRE = /\{\{((?:.|\r?\n)+?)\}\}/g
+
+function start(tagName,attrs){
+  console.log(tagName,attrs)
+}
+function end(tagName){
+  console.log(tagName)
+}
+function chars(text){
+  console.log(text);
+}
+
+function parseHTML(html){
+  while(html){
+    let textEnd = html.indexOf('<');
+    if(textEnd == 0){
+      const startTagMatch = parseStartTag();
+      if(startTagMatch){
+        start(startTagMatch.tagName,startTagMatch.attrs);
+        continue;
+      }
+      const endTagMatch = html.match(endTag);
+      if(endTagMatch){
+        advance(endTagMatch[0].length);
+        end(endTagMatch[1]);
+        continue;
+      }
+    }
+    let text;
+    if(textEnd >= 0){
+      text = html.substring(0,textEnd);
+    }
+    if(text){
+      advance(text.length);
+      chars(text);
+    }
+  }
+  function advance(n){
+    html = html.substring(n);
+  }
+  function parseStartTag(){
+    const start = html.match(startTagOpen);
+    if(start){
+      const match = {
+        tagName:start[1],
+        attrs:[]
+      }
+      advance(start[0].length);
+      let attr,end;
+      while(!(end = html.match(startTagClose)) && (attr = html.match(attribute))){
+        advance(attr[0].length);
+        match.attrs.push({name:attr[1],value:attr[3]});
+      }
+      if(end){
+        advance(end[0].length);
+        return match
+      }
+    }
+  }
+}
+
+export function compileToFunctions(template){
+  const root = parseHTML(template)
+  return function(){}
+}
+```
+上面这一段代码是vue关于标签解析的核心代码，本质上就是通过正则进行标签解析，解析出来属性，开始、结尾最后构造成一个树结构。
+
+### 2、生成ast语法树
+```json
+// 语法树就是用对象描述js语法
+{
+  tag:'div',
+  type:1,
+  children:[{tag:'span',type:1,attrs:[],parent:'div对象'}],
+  attrs:[{name:'zf',age:10}],
+  parent:null
+}
+```
+
+### 3、生成代码
+
+### 4、最终生成render函数
+```js
+export function compileToFunctions(template) {
+  const root = parseHTML(template);
+  let code = generate(root);
+  let render = `with(this){return ${code}}`;
+  let renderFn = new Function(render);
+  return renderFn
+}
+```
+我们在mount中最终`options.render = render;`执行了这样的代码，后续需要调用render方法，渲染成真实的dom，替换掉页面的内容。
+
+
+## 四.创建渲染watcher
+```js
+import { mountComponent } from './lifecycle'
+Vue.prototype.$mount = function (el) {
+  const vm = this;
+  const options = vm.$options;
+  el = document.querySelector(el);
+
+  // 如果没有render方法
+  if (!options.render) {
+    let template = options.template;
+    // 如果没有模板但是有el
+    if (!template && el) {
+      template = el.outerHTML;
+    }
+
+    const render= compileToFunctions(template);
+    options.render = render;
+  }
+  mountComponent(vm,el);
+}
+```
+从上面代码可以看出，我们在mount中，最终调用的是mountComponent这个方法，传入的是vm和el。
 
