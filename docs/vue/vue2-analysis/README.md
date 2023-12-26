@@ -457,6 +457,8 @@ export function compileToFunctions(template) {
 
 
 ## 四.创建渲染watcher
+
+### 1.初始化渲染Watcher
 ```js
 import { mountComponent } from './lifecycle'
 Vue.prototype.$mount = function (el) {
@@ -478,5 +480,55 @@ Vue.prototype.$mount = function (el) {
   mountComponent(vm,el);
 }
 ```
-从上面代码可以看出，我们在mount中，最终调用的是mountComponent这个方法，传入的是vm和el。
+从上面代码可以看出，我们在mount中，最终调用的是mountComponent这个方法，传入的是vm和el。这个方法是定义在lifecycle中的。
+
+lifecycle.js
+
+```js
+export function lifecycleMixin() {
+  Vue.prototype._update = function (vnode) {}
+}
+export function mountComponent(vm, el) {
+  vm.$el = el;
+  let updateComponent = () => {
+    // 将虚拟节点 渲染到页面上
+    vm._update(vm._render());
+  }
+  new Watcher(vm, updateComponent, () => {}, true);
+}
+```
+
+render.js
+
+```js
+export function renderMixin(Vue){
+  Vue.prototype._render = function () {}
+}
+```
+
+watcher.js
+
+```js
+let id = 0;
+class Watcher {
+  constructor(vm, exprOrFn, cb, options) {
+    this.vm = vm;
+    this.exprOrFn = exprOrFn;
+    if (typeof exprOrFn == 'function') {
+      this.getter = exprOrFn;
+    }
+    this.cb = cb;
+    this.options = options;
+    this.id = id++;
+    this.get();
+  }
+  get() {
+    this.getter();
+  }
+}
+
+export default Watcher;
+```
+
+先调用_render方法生成虚拟dom, 通过_update方法将虚拟dom创建成真实的dom。
 
