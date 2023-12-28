@@ -486,6 +486,7 @@ lifecycle.js
 
 ```js
 export function lifecycleMixin() {
+  // 这个更新的方法非常重要，在初始化的时候调用它，在更新的时候也会调用它
   Vue.prototype._update = function (vnode) {}
 }
 export function mountComponent(vm, el) {
@@ -502,6 +503,7 @@ render.js
 
 ```js
 export function renderMixin(Vue){
+  // 还记得我们拼接的字符串吗？ 通过这个方法将字符串解析成vnode
   Vue.prototype._render = function () {}
 }
 ```
