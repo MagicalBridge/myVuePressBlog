@@ -35,7 +35,6 @@ ajax('https://api.example.com?search=' + query).then(handleResponse);
 首先确保你的电脑安装了node环境，我们使用npm就可以安装rollup。首先创建一个npm的开发环境。
 
 
-
 ### 安装学习中使用到的依赖
 
 终端中执行下述命令：
@@ -70,10 +69,13 @@ export default {
   output: {
     file: 'dist/bundle.cjs.js', // 输出文件的路径和名称
     format: 'cjs', // 五种输出格式：amd/es6/iife/umd/cjs
-    name: 'rollup-bundleName' // 当format为iife和umd时必须提供，将作为全局变量挂在window下
+    name: 'rollup-bundleName' 
   }
 }
 ```
+
+当format为iife和umd时必须提供，将作为全局变量挂在window下。
+
 
 新建 src/main.js
 
@@ -393,6 +395,200 @@ export default {
     }),
   ],
 }
+```
+
+## rollup源码实现
+
+在源码实现之前， 来准备一些前置知识。
+
+### 1.1 初始化项目
+
+```bash
+npm install rollup magic-string acorn --save
+```
+
+### 1.2 magic-string
+magic-string是一个操作字符串和生成source-map的工具
+
+```js
+let MagicString = require('magic-string');
+let sourceCode = `export var name = "学习rollup"`;
+let ms = new MagicString(sourceCode);
+console.log(ms); // 打印的是实例
+
+// 裁剪出原始字符串开始和结束之间所有的内容
+// 返回一个克隆后的MagicString的实例
+console.log(ms.snip(0, 6).toString());//sourceCode.slice(0,6);
+// 删除0, 7之间的内容
+console.log(ms.remove(0, 7).toString());//sourceCode.slice(7);
+
+// 还可以用用来合并代码 
+let bundle = new MagicString.Bundle();
+bundle.addSource({
+  content: 'var a = 1;',
+  separator: '\n'
+});
+bundle.addSource({
+  content: 'var b = 2;',
+  separator: '\n'
+});
+
+console.log(bundle.toString());
+```
+
+这段代码使用了 `magic-string` 库，这是一个用于处理字符串的库，主要用于在字符串中进行插入、删除、替换等操作，特别适用于处理源代码字符串。下面对你提供的代码进行解释：
+
+1. **创建 `MagicString` 实例：**
+   ```javascript
+   let MagicString = require('magic-string');
+   let sourceCode = `export var name = "学习rollup"`;
+   let ms = new MagicString(sourceCode);
+   console.log(ms);
+   ```
+   - 引入 `magic-string` 库并创建了一个 `MagicString` 实例 `ms`。
+   - `sourceCode` 是原始的源代码字符串。
+
+2. **裁剪出原始字符串开始和结束之间所有的内容：**
+   ```javascript
+   console.log(ms.snip(0, 6).toString());
+   ```
+   - 使用 `snip(start, end)` 方法裁剪字符串，裁剪的范围是从索引 `start` 到索引 `end` 之间的字符。
+   - 这里裁剪的范围是从索引 0 到索引 6，即裁剪 "export"。
+   - `toString()` 方法用于获取裁剪后的字符串。
+
+3. **删除 0 到 7 之间的内容：**
+   ```javascript
+   console.log(ms.remove(0, 7).toString());
+   ```
+   - 使用 `remove(start, end)` 方法删除字符串，删除的范围是从索引 `start` 到索引 `end` 之间的字符。
+   - 这里删除的范围是从索引 0 到索引 7，即删除 "export "。
+
+4. **用于合并代码的 `MagicString.Bundle`：**
+   ```javascript
+   let bundle = new MagicString.Bundle();
+   bundle.addSource({
+     content: 'var a = 1;',
+     separator: '\n'
+   });
+   bundle.addSource({
+     content: 'var b = 2;',
+     separator: '\n'
+   });
+   console.log(bundle.toString());
+   ```
+   - 创建了一个 `MagicString.Bundle` 实例 `bundle`，用于合并多个源代码字符串。
+   - 使用 `addSource({ content, separator })` 方法向 `bundle` 中添加源代码片段，`content` 是源代码字符串，`separator` 是每个源代码片段之间的分隔符。
+   - 在这个例子中，向 `bundle` 添加了两个源代码片段，分别是 `'var a = 1;'` 和 `'var b = 2;'`，它们由换行符 `\n` 分隔。
+   - `bundle.toString()` 方法用于获取合并后的字符串。
+
+### 1.3 AST
+- 通过JavaScript Parser可以把代码转化为一颗抽象语法树AST, 这颗树定义了代码的结构，通过操纵这颗树，我们可以精准的定位到声明语句、赋值语句、运算语句等等，实现对代码的分析、优化、变更等操作。
+
+AST的工作流：
+- Parse(解析) 将源代码转换成抽象语法树，树上有很多的estree节点
+- Transform(转换) 对抽象语法树进行转换
+- Generate(代码生成) 将上一步经过转换过的抽象语法树生成新的代码
+
+### 1.4 acorn
+
+acorn 解析结果符合The Estree Spec规范，在webpack和rollup中使用的都是这个库去处理的。
+
+`acorn` 是一个 JavaScript 解析器（Parser）库，用于将 JavaScript 代码解析为抽象语法树（AST）。这个库是由 Marijn Haverbeke 编写的，被广泛用于各种与 JavaScript 代码分析和处理相关的工具和项目中。以下是一个简单的示例，演示了如何使用 `acorn` 库来解析 JavaScript 代码：
+
+首先，确保你已经安装了 `acorn` 库：
+
+```bash
+npm install acorn
+```
+
+然后，你可以使用以下代码来解析 JavaScript 代码：
+
+```javascript
+const acorn = require('acorn');
+
+// 要解析的 JavaScript 代码
+const code = 'const message = "Hello, Acorn!";';
+
+// 使用 acorn 解析代码，得到 AST
+const ast = acorn.parse(code, {
+  ecmaVersion: 'latest', // 使用最新的 ECMAScript 版本
+  sourceType: 'module',  // 解析模块代码
+});
+
+// 打印解析得到的 AST
+console.log(JSON.stringify(ast, null, 2));
+```
+下面是使用工具生成的json结构的AST语法树。
+```json
+{
+  "type": "Program",
+  "start": 0,
+  "end": 32,
+  "body": [
+    {
+      "type": "VariableDeclaration",
+      "start": 0,
+      "end": 32,
+      "declarations": [
+        {
+          "type": "VariableDeclarator",
+          "start": 6,
+          "end": 31,
+          "id": {
+            "type": "Identifier",
+            "start": 6,
+            "end": 13,
+            "name": "message"
+          },
+          "init": {
+            "type": "Literal",
+            "start": 16,
+            "end": 31,
+            "value": "Hello, Acorn!",
+            "raw": "\"Hello, Acorn!\""
+          }
+        }
+      ],
+      "kind": "const"
+    }
+  ],
+  "sourceType": "module"
+}
+```
+
+上述代码中：
+
+1. `acorn.parse(code, options)` 方法用于将传入的 JavaScript 代码 `code` 解析成一个抽象语法树（AST）。
+2. `options` 对象是可选的，用于指定解析的选项。在上面的例子中，使用了 `ecmaVersion` 设置为 `'latest'`，表示使用最新的 ECMAScript 版本，以及 `sourceType` 设置为 `'module'`，表示解析模块代码。
+3. `JSON.stringify(ast, null, 2)` 用于将得到的 AST 对象格式化为漂亮的 JSON 字符串，并打印出来。
+
+## 2. 实现rollup
+
+### 2.1 目录结构
+
+```
+├── package.json
+├── README.md
+├── src
+    ├── ast
+    │   ├── analyse.js //分析AST节点的作用域和依赖项
+    │   ├── Scope.js //有些语句会创建新的作用域实例
+    │   └── walk.js //提供了递归遍历AST语法树的功能
+    ├── Bundle//打包工具，在打包的时候会生成一个Bundle实例，并收集其它模块，最后把所有代码打包在一起输出
+    │   └── index.js 
+    ├── Module//每个文件都是一个模块
+    │   └── index.js
+    ├── rollup.js //打包的入口模块
+    └── utils
+        ├── map-helpers.js
+        ├── object.js
+        └── promise.js
+```
+
+### 2.2 src\main.js
+
+```js
+console.log('hello');
 ```
 
 

@@ -499,6 +499,15 @@ export function mountComponent(vm, el) {
 }
 ```
 
+对于初始化渲染的场景，我们已经可以按照上面的逻辑实现，其实关键的核心就是通过vm._render()生成虚拟dom，然后通过vm._update更新页面视图。通过这个我们可以想到，我们可以在数据改变的时候，手动调用 vm._update(vm._render()); 这个函数，就能做到页面的更新渲染。
+
+上面代码中，我们执行了 `new Watcher(vm, updateComponent, () => {}, true);` 这样一句代码，传入了四个参数：
+- vm传入，可以将上面的属性带过去，上面有需要观测的数据
+- updateComponent 需要指定的渲染函数，里面其实封装的是 `vm._update(vm._render());` 
+- 回调函数
+- 是否是渲染watcher标识。
+
+
 render.js
 
 ```js
@@ -532,5 +541,7 @@ class Watcher {
 export default Watcher;
 ```
 
-先调用_render方法生成虚拟dom, 通过_update方法将虚拟dom创建成真实的dom。
+先调用_render方法生成虚拟dom, 通过_update方法将虚拟dom创建成真实的dom。 对于watcher而言，我们可以创建多个观察者，也就是可以创建多个实例。这里设计成一个类。
+
+
 
