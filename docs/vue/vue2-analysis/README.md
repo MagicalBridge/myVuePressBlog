@@ -507,6 +507,8 @@ export function mountComponent(vm, el) {
 - 回调函数
 - 是否是渲染watcher标识。
 
+当我们调用 mountComponent 这个方法的时候，就会调用渲染watcher。
+
 
 render.js
 
@@ -530,6 +532,7 @@ class Watcher {
     }
     this.cb = cb;
     this.options = options;
+    // 每new一次，就会将这个id++;
     this.id = id++;
     this.get();
   }
@@ -541,7 +544,17 @@ class Watcher {
 export default Watcher;
 ```
 
-先调用_render方法生成虚拟dom, 通过_update方法将虚拟dom创建成真实的dom。 对于watcher而言，我们可以创建多个观察者，也就是可以创建多个实例。这里设计成一个类。
+当我们调用渲染watcher的时候，本质上是什么呢？我们是会重现调用render方法，这个render方法会调用vm重新取值。
+
+先调用_render方法生成虚拟dom, 通过_update方法将虚拟dom创建成真实的dom。 对于watcher而言，我们可以创建多个观察者，也就是可以创建多个实例。这里设计成一个类。按照单文件的组件的开发模式来说，每个组件都有一个渲染watcher。
+
+每个属性，可能会有多个watcher，比如vuex, 会在多个组件中使用，如果更新了数据，就要通知所有依赖它的数据都更新。
+
+还有一个结论：一个组件中可能有多个属性，这个很好理解，那这些属性其实都归属于当前组件的watcher。这是个多对多的关系。
+
+自此，我们还需要设计一个类 Dep，这个类的作用是：每个属性，我都给它分配一个dep, dep可以存放watcher。凡是用到这个属性的watcher，我们都存放在这个dep中。当然watcher也要存放dep。
+
+
 
 
 
