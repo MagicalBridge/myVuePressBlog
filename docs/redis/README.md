@@ -28,11 +28,26 @@ String是Redis最基本的类型，你可以理解成与Memcached一模一样的
 
 ### SET 设置值
 ```bash
+# SET key value  设置指定key的值
 set name '褚鹏飞'
 
-# 只有在 key 不存在时    设置 key 的值
-setnx key value
+# GET key 获取指定key的值
+get name
+
+# SETEX key seconds value 设置指定key的值，并将 key 的过期时间设为 seconds 秒
+set age "18" 
+
+# 只有在 key 不存在时  设置 key 的值
+SETNX key value
+
+SETNX userId "001"
+
+SETNX userId "002"
+
+# 这里拿到的值是 "001"
+GET userId 
 ```
+这里有一个点需要注意，如果我们对同一个key进行两次set，值会被覆盖。
 
 ### GET 获取值
 ```js
@@ -83,17 +98,54 @@ TYPE user // 返回string
 
 ### HSET HMSET 设置值
 
-```js
-HSET person name 设置单个值 
-HMSET user name zfpx age 9  设置多个值
+```shell
+# HSET key field value 	将哈希表 key 中的字段 field 的值设为 value
+# HGET key field 	获取存储在哈希表中指定字段的值
+# HDEL key field	删除存储在哈希表中的指定字段
+# HKEYS key 		获取哈希表中所有字段
+# HVALS key 		获取哈希表中所有值
+# HGETALL key 		获取在哈希表中指定 key 的所有字段和值
+
+// 设置用户 的名字
+HSET 001 name 小明
+
+// 设置用户 的年龄
+HSET 001 age 10
+
+// 获取用户名字
+HGET 001 name
+
+// 获取用户年龄
+HGET 001 age
+
+// 删除年龄
+HDEL 001 age
+
+// 获取指定key中的所有字段
+HKEYS 001
+
+// 获取指定key的所有的value
+HVALS 001
+
+// 获取所有字段和值
+HGETALL 001
+
+// 获取不存在的key 返回空
+HGET 002 age
 ```
 
 ## 列表(List)
-Redis列表是简单的字符串列表，按照插入顺序排序。你可以添加一个元素到列表的头部（左边）或者尾部（右边）
+Redis列表是简单的**字符串**列表，按照插入顺序排序。你可以添加一个元素到列表的头部（左边）或者尾部（右边）
 
 它的底层实际是个双向链表，对两端的操作性能很高，通过索引下标的操作中间的节点性能会较差。
 
 ```sh
+# LPUSH key value1 [value2] 	将一个或多个值插入到列表头部
+# LRANGE key start stop 		获取列表指定范围内的元素
+# RPOP key 			            移除并获取列表最后一个元素
+# LLEN key 			            获取列表长度
+# BRPOP key1 [key2 ] timeout 	移出并获取列表的最后一个元素， 如果列表没有元素会阻塞列表直到等待超时或发现可弹出元素为止
+
 redis 127.0.0.1:6379> LPUSH runoobkey redis
 (integer) 1
 redis 127.0.0.1:6379> LPUSH runoobkey mongodb
@@ -255,7 +307,7 @@ public class PhoneCode {
     //2 每个手机每天只能发送三次，验证码放到redis中，设置过期时间120
     public static void verifyCode(String phone) {
         //连接redis
-        Jedis jedis = new Jedis("192.168.44.168",6379);
+        Jedis jedis = new Jedis("192.168.44.168", 6379);
 
         //拼接key
         //手机发送次数key
@@ -265,6 +317,7 @@ public class PhoneCode {
 
         //每个手机每天只能发送三次
         String count = jedis.get(countKey);
+        
         if(count == null) {
             //没有发送次数，第一次发送
             //设置发送次数是1
