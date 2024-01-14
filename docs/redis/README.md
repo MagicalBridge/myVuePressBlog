@@ -73,7 +73,7 @@ GET page_view  // "21" 数字值在 redis 中以字符串的形式保存
 ```
 
 ### 键的常用操作
-```js
+```sh
 DEL key  删除某一个键 
 DEL user // 删除 user 这个键
 
@@ -88,6 +88,21 @@ TTL user // 查看user的还有多久过期
 
 TYPE key 返回key所存储的值的类型
 TYPE user // 返回string
+
+// 通用命令
+keys * 
+
+// 检查给定 key 是否存在
+EXISTS 001
+
+// 返回 key 所储存的值的类型
+TYPE 001
+
+// 返回给定 key 的剩余生存时间(TTL, time to live)，以秒为单位 返回-1永久
+TTL 001
+
+// 该命令用于在 key 存在是删除 key
+DEL name
 
 ```
 还有一些常用的处理键值对的方法：
@@ -173,6 +188,14 @@ Redis 的 Set 是 String 类型的无序集合。集合成员是唯一的，这�
 Redis 中集合是通过哈希表实现的，所以添加，删除，查找的复杂度都是 O(1)。
 
 ```sh
+# SADD key member1 [member2] 	向集合添加一个或多个成员
+# SMEMBERS key 		            返回集合中的所有成员
+# SCARD key 			        获取集合的成员数
+# SINTER key1 [key2] 		    返回给定所有集合的交集
+# SUNION key1 [key2] 		    返回所有给定集合的并集
+# SDIFF key1 [key2] 		    返回给定所有集合的差集
+# SREM key member1 [member2] 	移除集合中一个或多个成员
+
 redis 127.0.0.1:6379> SADD runoobkey redis
 (integer) 1
 redis 127.0.0.1:6379> SADD runoobkey mongodb
@@ -186,6 +209,30 @@ redis 127.0.0.1:6379> SMEMBERS runoobkey
 1) "mysql"
 2) "mongodb"
 3) "redis"
+
+// Redis 操作 set
+// 添加三个元素
+SADD myset redis mongo node
+
+// 查看所有的成员 可以看到返回的顺序和加入的顺序是不一样的
+SMEMBERS myset
+
+// 获取集合的成员数量 3
+SCARD myset
+
+// 返回给定所有集合的交集
+SADD myset2 redis mongo java ts
+
+// 返回 redis 和 mongo
+SINTER myset myset2
+
+// 返回给定的所有集合的并集 
+SUNION myset myset2
+
+// 返回给定所有集合的差集 node 
+// 不同的顺序获得的结果是不一样的
+SDIFF myset myset2
+SDIFF myset2 myset
 ```
 在以上实例中我们通过 SADD 命令向名为 runoobkey 的集合插入的三个元素。
 
@@ -207,6 +254,11 @@ Redis 有序集合和集合一样也是 string 类型元素的集合,且不允�
 有序集合的成员是唯一的,但分数(score)却可以重复。
 
 ```sh
+# ZADD key score1 member1 [score2 member2] 	向有序集合添加一个或多个成员，或者更新已存在成员的分数
+# ZRANGE key start stop [WITHSCORES] 		通过索引区间返回有序集合中指定区间内的成员
+# ZINCRBY key increment member 			    有序集合中对指定成员的分数加上增量 increment
+# ZREM key member [member ...] 			    移除有序集合中的一个或多个成员
+
 redis 127.0.0.1:6379> ZADD runoobkey 1 redis
 (integer) 1
 redis 127.0.0.1:6379> ZADD runoobkey 2 mongodb
@@ -225,6 +277,77 @@ redis 127.0.0.1:6379> ZRANGE runoobkey 0 10 WITHSCORES
 4) "2"
 5) "mysql"
 6) "4"
+
+
+// Redis操作zset
+ZADD zsetkey 1 redis
+
+ZADD zsetkey 2 mongo
+
+// 获取所有成员 返回从小到大的排列
+ZRANGE zsetkey 0 -1 withscores
+
+// 会放在 redis 和 mongo 中间
+ZADD zsetkey 1.5 node
+
+// redis 加上5 变成了 6
+ZINCRBY zsetkey 5 redis
+
+// 移除元素
+ZREM zsetkey redis
+```
+## express 中使用ioredis
+
+```js
+const express = require('express');
+const Redis = require('ioredis');
+
+const app = express();
+const port = 3000;
+
+// 创建一个连接到本地 Redis 服务器的客户端
+const redis = new Redis();
+
+app.use(express.json());
+
+// 设置一个示例路由，将数据存储到 Redis 中
+app.post('/set-data', async (req, res) => {
+  try {
+    const { key, value } = req.body;
+
+    // 使用 SET 命令将数据存储到 Redis 中
+    await redis.set(key, value);
+
+    res.status(200).json({ success: true, message: 'Data stored successfully.' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+});
+
+// 设置一个示例路由，从 Redis 中获取数据
+app.get('/get-data/:key', async (req, res) => {
+  try {
+    const key = req.params.key;
+
+    // 使用 GET 命令从 Redis 中获取数据
+    const value = await redis.get(key);
+
+    if (value !== null) {
+      res.status(200).json({ success: true, data: { key, value } });
+    } else {
+      res.status(404).json({ success: false, message: 'Data not found.' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+});
+
+app.listen(port, () => {
+  console.log(`Server  on http://localhost:${port}`);
+});
+
 ```
 
 ## redis 配置文件
