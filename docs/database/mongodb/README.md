@@ -19,6 +19,74 @@ MongoDB 将数据存储为一个文档，数据结构由键值(key=>value)对组
 
 ![和mysql关系](../../images/database/mongodb/02.jpeg)
 
+## macos 本机安装
+
+### 下载安装包
+
+```sh
+# 进入 /usr/local 目录下面
+cd /usr/local
+
+# 下载
+sudo curl -O https://fastdl.mongodb.org/osx/mongodb-osx-ssl-x86_64-4.0.9.tgz
+
+# 解压
+sudo tar -zxvf mongodb-osx-ssl-x86_64-4.0.9.tgz
+
+# 重命名为 mongodb 目录
+sudo mv mongodb-osx-x86_64-4.0.9/ mongodb
+```
+
+### 添加配置文件
+安装完成后，我们可以把 MongoDB 的二进制命令文件目录（安装目录/bin）添加到 PATH 路径中, 我的mac上使用的是zshrc的配置文件，所以需要在文件中添加这个配置
+
+```sh
+# mongodb path config
+export PATH=/usr/local/mongodb/bin:$PATH
+```
+
+### 创建日志及数据存放的目录并赋予操作权限：
+- 数据存放路径：
+
+```sh
+sudo mkdir -p /usr/local/var/mongodb
+```
+
+- 日志文件路径：
+```sh
+sudo mkdir -p /usr/local/var/log/mongodb
+```
+
+接下来要确保当前用户对以上两个目录有读写的权限：
+```sh
+sudo chown chupengfei /usr/local/var/mongodb
+sudo chown chupengfei /usr/local/var/log/mongodb
+```
+
+### 启动MongoDB
+接下来我们使用以下命令在后台启动 mongodb：
+
+```sh
+mongod --dbpath /usr/local/var/mongodb --logpath /usr/local/var/log/mongodb/mongo.log --fork
+```
+- dbpath 设置数据存放目录
+- logpath 设置日志存放目录
+- fork 在后台运行
+
+### 关闭程序
+如何关闭mongo应用程序
+
+```sh
+# 1. 打开终端或命令提示符窗口。
+
+# 2. 输入以下命令并按下回车键，以连接到MongoDB实例：
+mongo
+
+# 3. 在MongoDB shell中，输入以下命令并按下回车键，以关闭MongoDB：
+use admin
+db.shutdownServer();
+```
+
 ## 使用docker-compose启动mongodb容器服务，并设置用户名和密码
 在服务器上部署mongo服务还是需要注意，如果不设置用户名和密码，很有可能被别人公网盗取自己的数据库文件。
 
