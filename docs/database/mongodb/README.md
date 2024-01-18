@@ -2,7 +2,7 @@
 sidebar: auto
 ---
 
-# Mongodb
+# MongoDB
 
 ## 什么是MongoDB ?
 
