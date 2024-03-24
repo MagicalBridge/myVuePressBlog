@@ -3,7 +3,7 @@ home: true
 heroImage: /logo.jpeg
 heroText: 褚鹏飞的博客
 tagline: 读书、写作、投资、健身、帮朋友、陪家人
-actionText: 快点我 →
+actionText: 日常写作 →
 actionLink: /writing/
 features:
 - title: 个人微信号
