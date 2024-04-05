@@ -11,7 +11,7 @@ module.exports = {
     head: [["link", { rel: "icon", href: "/icon.png" }]],
     nav: [
       {
-        text: "算法",
+        text: "算法学习",
         items: [
           // {
           //   text: "常用算法",
