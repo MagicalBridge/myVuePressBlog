@@ -18,19 +18,19 @@ module.exports = {
           //   link: "/algorithms/",
           // },
           {
-            text: "leetCode算题解",
+            text: "LeetCode算法题解",
             link: "/leetCode/leetCode/",
           },
           {
-            text: "牛客算题解",
+            text: "牛客算法题解",
             link: "/leetCode/niuke/",
           },
           {
-            text: "面试题",
+            text: "面试题算法题解",
             link: "/leetCode/valuableBook/",
           },
           {
-            text: "剑指offer",
+            text: "剑指offer算法题解",
             link: "/leetCode/offer/",
           }
         ],
@@ -97,6 +97,10 @@ module.exports = {
         text: "前端工程化",
         items: [
           {
+            text:"Babel",
+            link:"/babel/"
+          },
+          {
             text: "webpack基础",
             link: "/webpack/webpack-base",
           },
@@ -104,21 +108,17 @@ module.exports = {
             text: "webpack进阶",
             link: "/webpack/webpack-advance",
           },
+          // {
+          //   text: "webpack打包分析",
+          //   link: "/webpack/webpack打包分析",
+          // },
+          // {
+          //   text:"webpack-抽象语法树",
+          //   link:"/webpack/webpack-抽象语法树"
+          // },
           {
-            text: "webpack打包分析",
-            link: "/webpack/webpack打包分析",
-          },
-          {
-            text:"webpack-抽象语法树",
-            link:"/webpack/webpack-抽象语法树"
-          },
-          {
-            text:"rollup",
+            text:"Rollup",
             link:"/rollup/"
-          },
-          {
-            text:"babel",
-            link:"/babel/"
           }
         ],
       },
@@ -143,40 +143,40 @@ module.exports = {
         text: "服务端",
         items: [
           {
-            text: "linux",
+            text: "Linux",
             link: "/linux/",
           },
+          // {
+          //   text: "Git工具",
+          //   link: "/git/",
+          // },
           {
-            text: "git工具",
-            link: "/git/",
-          },
-          {
-            text: "nginx",
+            text: "Nginx",
             link: "/nginx/nginx-base/",
           },
           {
-            text: "docker",
+            text: "Docker",
             link: "/docker/",
           },
+          // {
+          //   text: "kubernetes",
+          //   link: "/k8s/",
+          // },
           {
-            text: "kubernetes",
-            link: "/k8s/",
-          },
-          {
-            text: "mySql",
+            text: "MySQL",
             link: "/database/mysql/",
           },
           {
-            text: "mongodb",
+            text: "MongoDB",
             link: "/database/mongodb/",
           },{
-            text: "redis",
+            text: "Redis",
             link: "/redis/"
           },
-          {
-            text: "MQ",
-            link: "/MQ/"
-          }
+          // {
+          //   text: "MQ",
+          //   link: "/MQ/"
+          // }
         ],
       },
       // {
@@ -184,14 +184,14 @@ module.exports = {
       //   link: "/writing/",
       // },
       {
-        text: "前端三剑客",
+        text: "前端基础",
         items:[
           {
-            text: "javascript",
+            text: "JavaScript",
             link: "/threemusketeers/javascript/",
           },
           {
-            text: "typescript",
+            text: "TypeScript",
             link: "/typescript/",
           },
           {
@@ -199,7 +199,7 @@ module.exports = {
             link: "/threemusketeers/html/",
           },
           {
-            text: "css",
+            text: "CSS",
             link: "/threemusketeers/css/",
           }
         ],
