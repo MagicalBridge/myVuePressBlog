@@ -199,7 +199,7 @@ Promise.all = function(promises) {
     let times = 0
 
     // 需要封装一个方法处理成功的逻辑
-    const processSuccess = (index,value) => {
+    const processSuccess = (index, value) => {
       // 创建映射关系，存放进数组中
       result[index] = value
       if (++times === promises.length) {
@@ -218,7 +218,7 @@ Promise.all = function(promises) {
         // 走入then 方法的时候 for循环已经执行完毕了
         p.then((data) => {
           processSuccess(i, data)
-        },reject); // 其中任何一个promise失败了直接执行reject即可
+        }, reject); // 其中任何一个promise失败了直接执行reject即可
       } else {
         processSuccess(i, p)
       }
