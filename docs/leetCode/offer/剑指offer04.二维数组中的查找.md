@@ -1,9 +1,6 @@
----
-sidebar: auto
----
-
 # 剑指offer04.二维数组中的查找
 
+## 题目描述：
 在一个 n * m 的二维数组中，每一行都按照从**左到右递增**的顺序排序，每一列都按照**从上到下递增**的顺序排序。请完成一个高效的函数，输入这样的一个二维数组和一个整数，判断数组中是否含有该整数。
 
 示例:
@@ -39,8 +36,6 @@ sidebar: auto
 这里其实可以建立一个直角坐标系，这个坐标系是比较反直觉的，以 1 这个数字为坐标原点，y 轴向下延伸，x 轴向右延伸。这样就能确定每一个元素的位置了。
 
 
-
-
 ```js
 /**
  * @param {number[][]} matrix
@@ -71,6 +66,26 @@ var findNumberIn2DArray = function(matrix, target) {
   // 遍历完成之后没有找到直接返回 false
   return false;
 };
+```
+
+```go
+func findNumberIn2DArray(matrix [][]int, target int) bool {
+    if len(matrix) == 0 {
+        return false
+    }
+    x := 0
+    y := len(matrix) - 1
+    for x < len(matrix[0]) && y >= 0 {
+        if matrix[y][x] > target {
+            y--
+        } else if matrix[y][x] < target {
+            x++
+        } else {
+            return true 
+        }
+    }
+    return false
+}
 ```
 
 复杂度分析：
